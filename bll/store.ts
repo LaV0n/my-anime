@@ -1,16 +1,19 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { authReducer } from './authReducer'
+import { appReducer } from './appReducer'
+import { profileReducer } from './profileReducer'
+import { animeListReducer } from './animeListReducer'
 
 export const rootReducer = combineReducers({
-   auth: authReducer,
+   app: appReducer,
+   profile: profileReducer,
+   animeList: animeListReducer,
 })
 
 export const store = configureStore({ reducer: rootReducer })
 export type AppRootStateType = ReturnType<typeof rootReducer>
 
 type AppDispatchType = typeof store.dispatch
-
 export const useAppDispatch = () => useDispatch<AppDispatchType>()
 //export const useAppDispatch: () => AppDispatch = useDispatch
 

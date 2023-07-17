@@ -1,25 +1,36 @@
 import { RootStackScreenProps } from '../types'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Button, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
-import React, { useState } from 'react'
-import { MyAnimeListAPI } from '../api/api'
+import React from 'react'
+import { useAppDispatch, useAppSelector } from '../bll/store'
+import { getAnimeList } from '../bll/animeListReducer'
 
 export const Home = ({ navigation }: RootStackScreenProps<'Home'>) => {
-   const [titles, setTitles] = useState('default')
+   const animeList = useAppSelector(state => state.animeList)
+   const statusApp = useAppSelector(state => state.app.appStatus)
+   const dispatch = useAppDispatch()
    const getAnime = () => {
-      MyAnimeListAPI.getAllAnime().then(res => setTitles(JSON.stringify(res.data)))
+      dispatch(getAnimeList())
+   }
+   if (statusApp === 'loading') {
+      return <ActivityIndicator size="large" />
    }
 
    return (
-      <View style={styles.container}>
+      <ScrollView>
          <Text>list of anime</Text>
          <StatusBar style="auto" />
          <Button title="go to profile" onPress={() => navigation.navigate('Profile')} />
          <View>
-            <Text>{titles}</Text>
+            {animeList.map(a => (
+               <View key={a.id}>
+                  <Image source={{ uri: a.picture }} style={styles.picture} />
+                  <Text>name: {a.title}</Text>
+               </View>
+            ))}
          </View>
          <Button title="get anime" onPress={getAnime} />
-      </View>
+      </ScrollView>
    )
 }
 
@@ -29,5 +40,9 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: 'center',
+   },
+   picture: {
+      width: 100,
+      height: 100,
    },
 })
