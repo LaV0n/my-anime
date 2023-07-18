@@ -1,9 +1,10 @@
-import { RootStackScreenProps } from '../types'
+import { AnimeType, RootStackScreenProps } from '../types'
 import { ActivityIndicator, Button, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getAnimeList } from '../bll/animeListReducer'
+import { addItemToMyList } from '../bll/profileReducer'
 
 export const Home = ({ navigation }: RootStackScreenProps<'Home'>) => {
    const animeList = useAppSelector(state => state.animeList)
@@ -11,6 +12,9 @@ export const Home = ({ navigation }: RootStackScreenProps<'Home'>) => {
    const dispatch = useAppDispatch()
    const getAnime = () => {
       dispatch(getAnimeList())
+   }
+   const addToMyListHandler = (a: AnimeType) => {
+      dispatch(addItemToMyList(a))
    }
    if (statusApp === 'loading') {
       return <ActivityIndicator size="large" />
@@ -26,6 +30,7 @@ export const Home = ({ navigation }: RootStackScreenProps<'Home'>) => {
                <View key={a.id}>
                   <Image source={{ uri: a.picture }} style={styles.picture} />
                   <Text>name: {a.title}</Text>
+                  <Button title="+" onPress={() => addToMyListHandler(a)} />
                </View>
             ))}
          </View>

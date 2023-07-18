@@ -4,6 +4,7 @@ export type RootStackParamList = {
    Home: undefined
    Profile: undefined
    Login: undefined
+   SignUp: undefined
 }
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<
    RootStackParamList,
@@ -12,14 +13,12 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeSta
 
 type AnimeStatusType = 'watched' | 'unwatch' | 'dropped' | 'toWatch'
 export type AnimeListType = {
-   id: string
+   animeId: string
    title: string
    status: AnimeStatusType
    rating: number
 }
 export type ProfileType = {
-   userId: string
-   name: string
    animeList: AnimeListType[]
 }
 export type AnimeType = {
@@ -38,4 +37,9 @@ export type AppStatusType = 'success' | 'loading' | 'error'
 export type AppType = {
    appStatus: AppStatusType
    error: string
+}
+export type AuthType = {
+   uid: string
+   email: string
+   name: string
 }

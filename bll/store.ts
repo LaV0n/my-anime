@@ -3,9 +3,11 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { appReducer } from './appReducer'
 import { profileReducer } from './profileReducer'
 import { animeListReducer } from './animeListReducer'
+import { authReducer } from './authReducer'
 
 export const rootReducer = combineReducers({
    app: appReducer,
+   auth: authReducer,
    profile: profileReducer,
    animeList: animeListReducer,
 })
