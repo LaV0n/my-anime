@@ -3,9 +3,9 @@ import { ActivityIndicator, Button, TextInput, View } from 'react-native'
 import { CheckBox } from '@rneui/base'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { signUp } from '../bll/authReducer'
-import { RootStackScreenProps } from '../types'
+import { RootTabScreenProps } from '../types'
 
-export const SignUp = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
+export const SignUp = ({ navigation }: RootTabScreenProps<'SignUp'>) => {
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
    const [name, setName] = useState('')

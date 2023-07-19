@@ -13,7 +13,7 @@ const anonymousParams = {
 }
 export const MyAnimeListAPI = {
    getAllAnime() {
-      return instance.get('v2/anime/season/2023/spring?limit=4', anonymousParams)
+      return instance.get('v2/anime/ranking?ranking_type=all&limit=4', anonymousParams)
    },
    getMyList(userId: string) {
       const usersColl = collection(db, 'users/' + userId + '/list')

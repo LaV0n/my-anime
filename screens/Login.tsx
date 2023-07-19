@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native'
-import { RootStackScreenProps } from '../types'
+import { RootTabScreenProps } from '../types'
 import { CheckBox } from '@rneui/base'
 import { useAppDispatch, useAppSelector } from '../bll/store'
-import { login, logout } from '../bll/authReducer'
+import { login } from '../bll/authReducer'
 
-export const Login = ({ navigation }: RootStackScreenProps<'Login'>) => {
+export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
    const [isChecked, setIsChecked] = useState(false)
@@ -19,15 +19,16 @@ export const Login = ({ navigation }: RootStackScreenProps<'Login'>) => {
       setEmail('')
       setPassword('')
    }
-   const logoutHandler = () => {
-      dispatch(logout())
-   }
 
    if (statusApp === 'loading') {
       return <ActivityIndicator size="large" />
    }
-   if (uid) {
+   const gotoProfile = () => {
       navigation.navigate('Profile')
+   }
+
+   if (uid) {
+      gotoProfile()
    }
 
    return (
@@ -45,9 +46,6 @@ export const Login = ({ navigation }: RootStackScreenProps<'Login'>) => {
             title="show password"
          />
          <Button title={'login'} onPress={loginHandler} />
-         <Button title={'logout'} onPress={logoutHandler} />
-         <Button title={'sign Up'} onPress={() => navigation.navigate('SignUp')} />
-         <Button title={'to Home'} onPress={() => navigation.navigate('Home')} />
          {error && (
             <View>
                <Text>error: {error}</Text>
