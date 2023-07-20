@@ -13,19 +13,26 @@ export type RootTabScreenProps<T extends keyof RootTabParamList> = BottomTabScre
 >
 
 type AnimeStatusType = 'watched' | 'unwatch' | 'dropped' | 'toWatch'
-export type AnimeListType = {
-   animeId: string
-   title: string
-   status: AnimeStatusType
-   rating: number
-}
+
 export type ProfileType = {
-   animeList: AnimeListType[]
+   animeList: AnimeType[]
 }
 export type AnimeType = {
    id: string
    title: string
-   picture: string
+   main_picture: {
+      medium: string
+      large: string
+   }
+   start_date: string
+   end_date: string
+   mean: number
+   status: string
+   genres: { id: string | number; name: string }[]
+   num_episodes: string | number
+   myStatus: AnimeStatusType
+   myRating: number
+   idDoc: string
 }
 export type AnimeResponseType = {
    node: {

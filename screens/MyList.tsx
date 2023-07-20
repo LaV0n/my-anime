@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
-import { Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getMyAnimeList } from '../bll/profileReducer'
+import { MyAnimeItem } from '../components/MyAnimeItem/MyAnimeItem'
 
 export const MyList = () => {
    const myList = useAppSelector(state => state.profile.animeList)
@@ -10,20 +11,17 @@ export const MyList = () => {
 
    useEffect(() => {
       dispatch(getMyAnimeList())
+      dispatch(getMyAnimeList())
    }, [uid])
 
    return (
-      <View>
+      <ScrollView>
          {myList.length === 0 && <Text>empty list</Text>}
          <View>
-            {myList.map(l => (
-               <View key={l.animeId}>
-                  <Text>name: {l.title}</Text>
-                  <Text>status: {l.status}</Text>
-                  <Text>rating: {l.rating}</Text>
-               </View>
+            {myList.map(a => (
+               <MyAnimeItem anime={a} key={a.id} />
             ))}
          </View>
-      </View>
+      </ScrollView>
    )
 }

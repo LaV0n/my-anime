@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AnimeListType, AnimeType, ProfileType } from '../types'
+import { AnimeType, ProfileType } from '../types'
 import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { AppRootStateType } from './store'
@@ -31,31 +31,57 @@ const slice = createSlice({
 export const profileReducer = slice.reducer
 export const { clearMyList } = slice.actions
 
-export const getMyAnimeList = createAsyncThunk<
-   AnimeListType[],
-   undefined,
-   { rejectValue: { error: string }; state: AppRootStateType }
->('profile/getMyAnimeList', async (_, { rejectWithValue, getState }) => {
-   try {
-      const data = await MyAnimeListAPI.getMyList(getState().auth.uid)
-      return data.docs.map(doc => ({ ...doc.data() })) as AnimeListType[]
-   } catch (err) {
-      const error = errorAsString(err)
-      return rejectWithValue({ error })
+export const getMyAnimeList = createAsyncThunk<AnimeType[], undefined, { state: AppRootStateType }>(
+   'profile/getMyAnimeList',
+   async (_, { getState, dispatch }) => {
+      dispatch(changeStatus('loading'))
+      try {
+         dispatch(changeStatus('success'))
+         dispatch(clearMyList)
+         const data = await MyAnimeListAPI.getMyList(getState().auth.uid)
+         return data.docs.map(doc => ({ ...doc.data(), idDoc: doc.id })) as AnimeType[]
+      } catch (err) {
+         dispatch(changeStatus('error'))
+         const error = errorAsString(err)
+         dispatch(setError(error))
+         return []
+      }
    }
-})
+)
 export const addItemToMyList = createAsyncThunk<unknown, AnimeType, { state: AppRootStateType }>(
    'profile/addItemToMyList',
    async (anime, { dispatch, getState }) => {
       dispatch(changeStatus('loading'))
       try {
-         const animeItem: AnimeListType = {
-            animeId: anime.id,
+         const animeItem: AnimeType = {
+            id: anime.id,
             title: anime.title,
-            status: 'toWatch',
-            rating: 0,
+            main_picture: anime.main_picture,
+            start_date: anime.start_date,
+            end_date: anime.end_date,
+            mean: anime.mean,
+            status: anime.status,
+            genres: anime.genres,
+            num_episodes: anime.num_episodes,
+            myStatus: 'toWatch',
+            myRating: 0,
+            idDoc: anime.idDoc,
          }
          await addDoc(collection(db, 'users/' + getState().auth.uid + '/list'), animeItem)
+         dispatch(changeStatus('success'))
+      } catch (err) {
+         dispatch(changeStatus('error'))
+         const error = errorAsString(err)
+         dispatch(setError(error))
+      }
+   }
+)
+export const delItemFromMyList = createAsyncThunk<unknown, string, { state: AppRootStateType }>(
+   'profile/delItemFromMyList',
+   async (id, { dispatch, getState }) => {
+      dispatch(changeStatus('loading'))
+      try {
+         await MyAnimeListAPI.delMyItem(id, getState().auth.uid)
          dispatch(changeStatus('success'))
       } catch (err) {
          dispatch(changeStatus('error'))

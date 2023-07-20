@@ -1,5 +1,5 @@
-import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getAnimeList } from '../bll/animeListReducer'
 import { AnimeItemShort } from '../components/AnimeItemShort/AnimeItemShort'
@@ -7,38 +7,37 @@ import { AnimeItemShort } from '../components/AnimeItemShort/AnimeItemShort'
 export const Home = () => {
    const animeList = useAppSelector(state => state.animeList)
    const statusApp = useAppSelector(state => state.app.appStatus)
+   const error = useAppSelector(state => state.app.error)
    const dispatch = useAppDispatch()
    const getAnime = () => {
       dispatch(getAnimeList())
    }
 
-   if (statusApp === 'loading') {
-      return <ActivityIndicator size="large" />
-   }
+   useEffect(() => {
+      getAnime()
+   }, [dispatch])
 
    return (
       <ScrollView>
-         <Text>list of anime</Text>
-
+         {statusApp === 'loading' && <ActivityIndicator size="large" />}
          <View>
             {animeList.map(a => (
                <AnimeItemShort anime={a} key={a.id} />
             ))}
          </View>
-         <Button title="get anime" onPress={getAnime} />
+         {error && <Text>{error}</Text>}
       </ScrollView>
    )
 }
 
 const styles = StyleSheet.create({
    container: {
-      flex: 1,
+      flex: 2,
       backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: 'center',
    },
-   picture: {
-      width: 100,
-      height: 100,
+   list: {
+      height: '100%',
    },
 })
