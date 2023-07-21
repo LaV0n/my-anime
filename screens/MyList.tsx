@@ -4,9 +4,8 @@ import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getMyAnimeList } from '../bll/profileReducer'
 import { MyAnimeItem } from '../components/MyAnimeItem'
 import { ErrorMessage } from '../components/ErrorMessage'
-import { RootTabScreenProps } from '../types'
 
-export const MyList = ({ navigation }: RootTabScreenProps<'MyList'>) => {
+export const MyList = () => {
    const myList = useAppSelector(state => state.profile.animeList)
    const dispatch = useAppDispatch()
    const uid = useAppSelector(state => state.auth.uid)

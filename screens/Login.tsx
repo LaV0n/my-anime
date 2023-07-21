@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native'
-import { RootTabScreenProps } from '../types'
+import { ActivityIndicator, Button, TextInput, View } from 'react-native'
 import { CheckBox } from '@rneui/base'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { login } from '../bll/authReducer'
 import { ErrorMessage } from '../components/ErrorMessage'
 
-export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
+export const Login = () => {
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
    const [isChecked, setIsChecked] = useState(false)
