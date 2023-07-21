@@ -1,12 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { AnimeType } from '../types'
 import { Icon } from '@rneui/themed'
 import { useAppDispatch } from '../bll/store'
-import { delItemFromMyList } from '../bll/profileReducer'
+import { changeItemData, delItemFromMyList } from '../bll/profileReducer'
+import { SelectList } from 'react-native-dropdown-select-list/index'
 
 export const MyAnimeItem = ({ anime }: { anime: AnimeType }) => {
    const dispatch = useAppDispatch()
+   const [selected, setSelected] = useState('')
+   const data = [
+      { key: '1', value: 'watched' },
+      { key: '2', value: 'unwatch' },
+      { key: '3', value: 'dropped' },
+   ]
+
+   const onSelectedHandler = () => {
+      dispatch(changeItemData({ id: anime.idDoc, data: selected }))
+   }
 
    const delItemHandler = (id: string) => {
       dispatch(delItemFromMyList(id))
@@ -23,6 +34,15 @@ export const MyAnimeItem = ({ anime }: { anime: AnimeType }) => {
             <Text> episodes: {anime.num_episodes}</Text>
             <View style={styles.actionBlock}>
                <Text>{anime.myStatus}</Text>
+               <SelectList
+                  setSelected={(val: string) => setSelected(val)}
+                  data={data}
+                  save="value"
+                  search={false}
+                  boxStyles={styles.selectBlock}
+                  onSelect={onSelectedHandler}
+                  /*defaultOption={data.filter(d => d.value === anime.myStatus)[0]}*/
+               />
                <Icon
                   name={'delete'}
                   color={'#06bf48'}
@@ -66,6 +86,11 @@ const styles = StyleSheet.create({
    },
    actionBlock: {
       flexDirection: 'row',
+      alignItems: 'center',
       justifyContent: 'space-between',
+   },
+   selectBlock: {
+      borderRadius: 15,
+      width: 120,
    },
 })

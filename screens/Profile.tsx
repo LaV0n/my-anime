@@ -1,5 +1,5 @@
 import { Button, ScrollView, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { logout } from '../bll/authReducer'
 import { RootTabScreenProps } from '../types'
@@ -14,6 +14,19 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    const logoutHandler = () => {
       dispatch(logout())
    }
+
+   useEffect(() => {
+      const unsubscribe = navigation.addListener('tabPress', e => {
+         e.preventDefault()
+         if (!uid) {
+            navigation.navigate('Login')
+         } else {
+            navigation.navigate('Profile')
+         }
+      })
+
+      return unsubscribe
+   }, [navigation, uid])
 
    return (
       <ScrollView>

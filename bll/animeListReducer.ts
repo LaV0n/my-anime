@@ -4,7 +4,6 @@ import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { changeStatus, setError } from './appReducer'
 import { AppRootStateType } from './store'
-import { getMyAnimeList } from './profileReducer'
 
 const initialState: AnimeType[] = []
 
@@ -36,14 +35,19 @@ export const getAnimeList = createAsyncThunk<AnimeType[], undefined, { state: Ap
          const result: AnimeType[] = []
          const allItems: AnimeResponseType[] = res.data.data
          for (let i = 0; i < allItems.length; i++) {
-            const response = await MyAnimeListAPI.getTitleShortInfo(allItems[i].node.id)
+            const responseItem = await MyAnimeListAPI.getTitleShortInfo(allItems[i].node.id)
             if (getState().auth.uid) {
-               dispatch(getMyAnimeList())
-               if (getState().profile.animeList.indexOf(response.data.id) !== -1) {
-                  result.push(response.data[getState().profile.animeList.indexOf(response.data.id)])
+               const index = getState().profile.animeList.findIndex(
+                  a => a.id === allItems[i].node.id
+               )
+               if (index !== -1) {
+                  result.push(getState().profile.animeList[index])
+               } else {
+                  result.push({ ...responseItem.data, myStatus: 'unwatch', myRating: 0, idDoc: '' })
                }
+            } else {
+               result.push({ ...responseItem.data, myStatus: 'unwatch', myRating: 0, idDoc: '' })
             }
-            result.push({ ...response.data, myStatus: 'unwatch', myRating: 0, idDoc: '' })
          }
          dispatch(changeStatus('success'))
          return result

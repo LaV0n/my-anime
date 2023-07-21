@@ -4,7 +4,7 @@ import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { AppRootStateType } from './store'
 import { changeStatus, setError } from './appReducer'
-import { addDoc, collection } from 'firebase/firestore'
+import { addDoc, collection, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../config/firebase'
 
 const initialState: ProfileType = {
@@ -63,7 +63,7 @@ export const addItemToMyList = createAsyncThunk<unknown, AnimeType, { state: App
             status: anime.status,
             genres: anime.genres,
             num_episodes: anime.num_episodes,
-            myStatus: 'toWatch',
+            myStatus: 'unwatch',
             myRating: 0,
             idDoc: anime.idDoc,
          }
@@ -90,3 +90,20 @@ export const delItemFromMyList = createAsyncThunk<unknown, string, { state: AppR
       }
    }
 )
+export const changeItemData = createAsyncThunk<
+   unknown,
+   { id: string; data: string },
+   { state: AppRootStateType }
+>('profile/changeItemData', async ({ id, data }, { dispatch, getState }) => {
+   dispatch(changeStatus('loading'))
+   try {
+      const animeItem = doc(db, 'users/' + getState().auth.uid + '/list', id)
+      await updateDoc(animeItem, { myStatus: data })
+      dispatch(getMyAnimeList())
+      dispatch(changeStatus('success'))
+   } catch (err) {
+      dispatch(changeStatus('error'))
+      const error = errorAsString(err)
+      dispatch(setError(error))
+   }
+})

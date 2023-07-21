@@ -5,11 +5,12 @@ import { MyList } from '../screens/MyList'
 import { Profile } from '../screens/Profile'
 import { Login } from '../screens/Login'
 import { SignUp } from '../screens/SignUp'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+
 import { RootTabParamList } from '../types'
 import { NavigationContainer } from '@react-navigation/native'
 import { useAppSelector } from '../bll/store'
 import { TouchableOpacity } from 'react-native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 export const Navigation = () => {
    const Tab = createBottomTabNavigator<RootTabParamList>()
@@ -43,6 +44,7 @@ export const Navigation = () => {
             <Tab.Screen
                name="Profile"
                component={Profile}
+               /*  listeners={{ tabPress: e => console.log('Tab press', e.target) }}*/
                options={{
                   tabBarIcon: ({ focused }) => (
                      <Icon name="person-outline" color={focused ? '#06bf48' : 'grey'} />
@@ -54,6 +56,7 @@ export const Navigation = () => {
                name="Login"
                component={Login}
                options={{
+                  headerShown: false,
                   tabBarButton: () => null,
                }}
             />
