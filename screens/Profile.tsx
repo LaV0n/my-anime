@@ -3,6 +3,7 @@ import React from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { logout } from '../bll/authReducer'
 import { RootTabScreenProps } from '../types'
+import { ErrorMessage } from '../components/ErrorMessage'
 
 export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    const emailUser = useAppSelector(state => state.auth.email)
@@ -16,6 +17,7 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
 
    return (
       <ScrollView>
+         <ErrorMessage />
          <Text>email:{emailUser}</Text>
          <Text>name:{userName}</Text>
          <Text>uid:{uid}</Text>

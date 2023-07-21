@@ -69,9 +69,9 @@ export const logout = createAsyncThunk<unknown, undefined>(
    'auth/logout',
    async (_, { dispatch }) => {
       dispatch(changeStatus('loading'))
+      dispatch(clearMyList)
       try {
          await signOut(auth)
-         dispatch(clearMyList())
          dispatch(changeStatus('success'))
       } catch (err: any) {
          dispatch(changeStatus('error'))

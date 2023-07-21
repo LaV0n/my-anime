@@ -1,9 +1,9 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import { AnimeType } from '../../types'
+import { AnimeType } from '../types'
 import { Icon } from '@rneui/themed'
-import { useAppDispatch } from '../../bll/store'
-import { delItemFromMyList } from '../../bll/profileReducer'
+import { useAppDispatch } from '../bll/store'
+import { delItemFromMyList } from '../bll/profileReducer'
 
 export const MyAnimeItem = ({ anime }: { anime: AnimeType }) => {
    const dispatch = useAppDispatch()

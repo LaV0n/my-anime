@@ -4,6 +4,7 @@ import { CheckBox } from '@rneui/base'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { signUp } from '../bll/authReducer'
 import { RootTabScreenProps } from '../types'
+import { ErrorMessage } from '../components/ErrorMessage'
 
 export const SignUp = ({ navigation }: RootTabScreenProps<'SignUp'>) => {
    const [email, setEmail] = useState('')
@@ -14,7 +15,7 @@ export const SignUp = ({ navigation }: RootTabScreenProps<'SignUp'>) => {
    const statusApp = useAppSelector(state => state.app.appStatus)
    const dispatch = useAppDispatch()
 
-   const singupHandler = () => {
+   const signUpHandler = () => {
       dispatch(signUp({ email, password, userName: name }))
       setEmail('')
       setPassword('')
@@ -28,6 +29,7 @@ export const SignUp = ({ navigation }: RootTabScreenProps<'SignUp'>) => {
 
    return (
       <View>
+         <ErrorMessage />
          <TextInput placeholder="email" value={email} onChangeText={setEmail} />
          <TextInput
             placeholder="password"
@@ -41,7 +43,7 @@ export const SignUp = ({ navigation }: RootTabScreenProps<'SignUp'>) => {
             title="show password"
          />
          <TextInput placeholder="name" value={name} onChangeText={setName} />
-         <Button title="create account" onPress={singupHandler} />
+         <Button title="create account" onPress={signUpHandler} />
       </View>
    )
 }

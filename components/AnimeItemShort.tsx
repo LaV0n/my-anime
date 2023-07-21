@@ -1,8 +1,8 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import { AnimeType } from '../../types'
-import { addItemToMyList, getMyAnimeList } from '../../bll/profileReducer'
-import { useAppDispatch, useAppSelector } from '../../bll/store'
+import { AnimeType } from '../types'
+import { addItemToMyList, getMyAnimeList } from '../bll/profileReducer'
+import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button } from '@rneui/themed'
 
 export const AnimeItemShort = ({ anime }: { anime: AnimeType }) => {

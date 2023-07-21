@@ -4,6 +4,7 @@ import { RootTabScreenProps } from '../types'
 import { CheckBox } from '@rneui/base'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { login } from '../bll/authReducer'
+import { ErrorMessage } from '../components/ErrorMessage'
 
 export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
    const [email, setEmail] = useState('')
@@ -11,8 +12,6 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
    const [isChecked, setIsChecked] = useState(false)
    const dispatch = useAppDispatch()
    const statusApp = useAppSelector(state => state.app.appStatus)
-   const error = useAppSelector(state => state.app.error)
-   const uid = useAppSelector(state => state.auth.uid)
 
    const loginHandler = () => {
       dispatch(login({ email, password }))
@@ -23,16 +22,10 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
    if (statusApp === 'loading') {
       return <ActivityIndicator size="large" />
    }
-   const gotoProfile = () => {
-      navigation.navigate('Profile')
-   }
-
-   if (uid) {
-      gotoProfile()
-   }
 
    return (
       <View>
+         <ErrorMessage />
          <TextInput placeholder="email" value={email} onChangeText={setEmail} />
          <TextInput
             placeholder="password"
@@ -46,11 +39,6 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
             title="show password"
          />
          <Button title={'login'} onPress={loginHandler} />
-         {error && (
-            <View>
-               <Text>error: {error}</Text>
-            </View>
-         )}
       </View>
    )
 }
