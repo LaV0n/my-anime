@@ -13,8 +13,11 @@ export type RootTabScreenProps<T extends keyof RootTabParamList> = BottomTabScre
 >
 
 type AnimeStatusType = 'watched' | 'unwatch' | 'dropped'
+export type CommonListType = {
+   homeAnimeList: AnimeType[]
+}
 
-export type ProfileType = {
+export type MyDataType = {
    animeList: AnimeType[]
 }
 export type AnimeType = {

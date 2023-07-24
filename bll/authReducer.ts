@@ -4,7 +4,7 @@ import { changeStatus, setError } from './appReducer'
 import { signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth'
 import { setDoc, doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../config/firebase'
-import { clearMyList } from './profileReducer'
+import { clearMyList } from './myDataReducer'
 
 const initialState: AuthType = {
    uid: '',

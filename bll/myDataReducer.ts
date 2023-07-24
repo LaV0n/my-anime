@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AnimeType, ProfileType } from '../types'
+import { AnimeType, MyDataType } from '../types'
 import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { AppRootStateType } from './store'
@@ -7,12 +7,12 @@ import { changeStatus, setError } from './appReducer'
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../config/firebase'
 
-const initialState: ProfileType = {
+const initialState: MyDataType = {
    animeList: [],
 }
 
 const slice = createSlice({
-   name: 'profile',
+   name: 'myData',
    initialState,
    reducers: {
       clearMyList(state) {
@@ -28,11 +28,11 @@ const slice = createSlice({
    },
 })
 
-export const profileReducer = slice.reducer
+export const myDataReducer = slice.reducer
 export const { clearMyList } = slice.actions
 
 export const getMyAnimeList = createAsyncThunk<AnimeType[], undefined, { state: AppRootStateType }>(
-   'profile/getMyAnimeList',
+   'myData/getMyAnimeList',
    async (_, { getState, dispatch }) => {
       dispatch(changeStatus('loading'))
       try {
@@ -49,7 +49,7 @@ export const getMyAnimeList = createAsyncThunk<AnimeType[], undefined, { state: 
    }
 )
 export const addItemToMyList = createAsyncThunk<unknown, AnimeType, { state: AppRootStateType }>(
-   'profile/addItemToMyList',
+   'myData/addItemToMyList',
    async (anime, { dispatch, getState }) => {
       dispatch(changeStatus('loading'))
       try {
@@ -68,6 +68,7 @@ export const addItemToMyList = createAsyncThunk<unknown, AnimeType, { state: App
             idDoc: anime.idDoc,
          }
          await addDoc(collection(db, 'users/' + getState().auth.uid + '/list'), animeItem)
+         dispatch(getMyAnimeList())
          dispatch(changeStatus('success'))
       } catch (err) {
          dispatch(changeStatus('error'))
@@ -77,11 +78,12 @@ export const addItemToMyList = createAsyncThunk<unknown, AnimeType, { state: App
    }
 )
 export const delItemFromMyList = createAsyncThunk<unknown, string, { state: AppRootStateType }>(
-   'profile/delItemFromMyList',
+   'myData/delItemFromMyList',
    async (id, { dispatch, getState }) => {
       dispatch(changeStatus('loading'))
       try {
          await MyAnimeListAPI.delMyItem(id, getState().auth.uid)
+         dispatch(getMyAnimeList())
          dispatch(changeStatus('success'))
       } catch (err) {
          dispatch(changeStatus('error'))
@@ -92,13 +94,14 @@ export const delItemFromMyList = createAsyncThunk<unknown, string, { state: AppR
 )
 export const changeItemData = createAsyncThunk<
    unknown,
-   { id: string; data: string },
+   { id: string; data: string | number },
    { state: AppRootStateType }
->('profile/changeItemData', async ({ id, data }, { dispatch, getState }) => {
+>('myData/changeItemData', async ({ id, data }, { dispatch, getState }) => {
    dispatch(changeStatus('loading'))
    try {
       const animeItem = doc(db, 'users/' + getState().auth.uid + '/list', id)
-      await updateDoc(animeItem, { myStatus: data })
+      const requestData = typeof data === 'number' ? { myRating: data } : { myStatus: data }
+      await updateDoc(animeItem, requestData)
       dispatch(getMyAnimeList())
       dispatch(changeStatus('success'))
    } catch (err) {

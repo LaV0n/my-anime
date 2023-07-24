@@ -1,14 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { appReducer } from './appReducer'
-import { profileReducer } from './profileReducer'
+import { myDataReducer } from './myDataReducer'
 import { animeListReducer } from './animeListReducer'
 import { authReducer } from './authReducer'
 
 export const rootReducer = combineReducers({
    app: appReducer,
    auth: authReducer,
-   profile: profileReducer,
+   myData: myDataReducer,
    animeList: animeListReducer,
 })
 

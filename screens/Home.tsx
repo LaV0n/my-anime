@@ -6,16 +6,16 @@ import { AnimeItemShort } from '../components/AnimeItemShort'
 import { ErrorMessage } from '../components/ErrorMessage'
 
 export const Home = () => {
-   const animeList = useAppSelector(state => state.animeList)
+   const animeList = useAppSelector(state => state.animeList.homeAnimeList)
+   const myAnimeList = useAppSelector(state => state.myData.animeList)
    const statusApp = useAppSelector(state => state.app.appStatus)
    const dispatch = useAppDispatch()
    const getAnime = () => {
       dispatch(getAnimeList())
    }
-
    useEffect(() => {
       getAnime()
-   }, [dispatch])
+   }, [myAnimeList])
 
    return (
       <ScrollView>

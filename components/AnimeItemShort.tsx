@@ -1,14 +1,14 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { AnimeType } from '../types'
-import { addItemToMyList, getMyAnimeList } from '../bll/profileReducer'
+import { addItemToMyList, getMyAnimeList } from '../bll/myDataReducer'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button } from '@rneui/themed'
 
 export const AnimeItemShort = ({ anime }: { anime: AnimeType }) => {
    const dispatch = useAppDispatch()
    const uid = useAppSelector(state => state.auth.uid)
-   const myList = useAppSelector(state => state.profile.animeList)
+   const myList = useAppSelector(state => state.myData.animeList)
    const addToMyListHandler = (a: AnimeType) => {
       dispatch(addItemToMyList(a))
       dispatch(getMyAnimeList())

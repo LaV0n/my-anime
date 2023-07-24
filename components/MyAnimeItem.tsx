@@ -1,19 +1,20 @@
 import React, { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { AnimeType } from '../types'
-import { Icon } from '@rneui/themed'
+import { AirbnbRating, Icon } from '@rneui/themed'
 import { useAppDispatch } from '../bll/store'
-import { changeItemData, delItemFromMyList } from '../bll/profileReducer'
+import { changeItemData, delItemFromMyList } from '../bll/myDataReducer'
 import { SelectList } from 'react-native-dropdown-select-list/index'
 
 export const MyAnimeItem = ({ anime }: { anime: AnimeType }) => {
    const dispatch = useAppDispatch()
    const [selected, setSelected] = useState('')
    const data = [
-      { key: '1', value: 'watched' },
-      { key: '2', value: 'unwatch' },
-      { key: '3', value: 'dropped' },
+      { key: 'watched', value: 'watched' },
+      { key: 'unwatch', value: 'unwatch' },
+      { key: 'dropped', value: 'dropped' },
    ]
+   const [rating, setRating] = useState(anime.myRating)
 
    const onSelectedHandler = () => {
       dispatch(changeItemData({ id: anime.idDoc, data: selected }))
@@ -21,6 +22,10 @@ export const MyAnimeItem = ({ anime }: { anime: AnimeType }) => {
 
    const delItemHandler = (id: string) => {
       dispatch(delItemFromMyList(id))
+   }
+   const setRatingHandler = (number: number) => {
+      setRating(rating)
+      dispatch(changeItemData({ id: anime.idDoc, data: number }))
    }
 
    return (
@@ -30,10 +35,17 @@ export const MyAnimeItem = ({ anime }: { anime: AnimeType }) => {
             <Text style={styles.rating}>{anime.mean}</Text>
          </View>
          <View style={styles.description}>
-            <Text> {anime.title}</Text>
+            <View style={styles.titleBlock}>
+               <Text> {anime.title}</Text>
+               <AirbnbRating
+                  size={15}
+                  showRating={false}
+                  onFinishRating={(number: number) => setRatingHandler(number)}
+                  defaultRating={rating}
+               />
+            </View>
             <Text> episodes: {anime.num_episodes}</Text>
             <View style={styles.actionBlock}>
-               <Text>{anime.myStatus}</Text>
                <SelectList
                   setSelected={(val: string) => setSelected(val)}
                   data={data}
@@ -41,7 +53,7 @@ export const MyAnimeItem = ({ anime }: { anime: AnimeType }) => {
                   search={false}
                   boxStyles={styles.selectBlock}
                   onSelect={onSelectedHandler}
-                  /*defaultOption={data.filter(d => d.value === anime.myStatus)[0]}*/
+                  defaultOption={data.filter(d => d.value === anime.myStatus)[0]}
                />
                <Icon
                   name={'delete'}
@@ -92,5 +104,10 @@ const styles = StyleSheet.create({
    selectBlock: {
       borderRadius: 15,
       width: 120,
+   },
+   titleBlock: {
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
    },
 })

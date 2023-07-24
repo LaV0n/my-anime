@@ -11,7 +11,7 @@ import { CheckBox } from '@rneui/base'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { login } from '../bll/authReducer'
 import { ErrorMessage } from '../components/ErrorMessage'
-import { getMyAnimeList } from '../bll/profileReducer'
+import { getMyAnimeList } from '../bll/myDataReducer'
 import { RootTabScreenProps } from '../types'
 import { Icon } from '@rneui/themed'
 
