@@ -1,11 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AnimeType, MyDataType } from '../types'
+import { AnimeType, MyDataType } from '../common/types'
 import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { AppRootStateType } from './store'
 import { changeStatus, setError } from './appReducer'
-import { addDoc, collection, doc, updateDoc } from 'firebase/firestore'
-import { db } from '../config/firebase'
 
 const initialState: MyDataType = {
    animeList: [],
@@ -67,7 +65,7 @@ export const addItemToMyList = createAsyncThunk<unknown, AnimeType, { state: App
             myRating: 0,
             idDoc: anime.idDoc,
          }
-         await addDoc(collection(db, 'users/' + getState().auth.uid + '/list'), animeItem)
+         await MyAnimeListAPI.addItemToMyList(getState().auth.uid, animeItem)
          dispatch(getMyAnimeList())
          dispatch(changeStatus('success'))
       } catch (err) {
@@ -99,9 +97,7 @@ export const changeItemData = createAsyncThunk<
 >('myData/changeItemData', async ({ id, data }, { dispatch, getState }) => {
    dispatch(changeStatus('loading'))
    try {
-      const animeItem = doc(db, 'users/' + getState().auth.uid + '/list', id)
-      const requestData = typeof data === 'number' ? { myRating: data } : { myStatus: data }
-      await updateDoc(animeItem, requestData)
+      await MyAnimeListAPI.changeItemData(getState().auth.uid, id, data)
       dispatch(getMyAnimeList())
       dispatch(changeStatus('success'))
    } catch (err) {

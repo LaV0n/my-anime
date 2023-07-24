@@ -6,7 +6,7 @@ import { Profile } from '../screens/Profile'
 import { Login } from '../screens/Login'
 import { SignUp } from '../screens/SignUp'
 
-import { RootTabParamList } from '../types'
+import { RootTabParamList } from '../common/types'
 import { NavigationContainer } from '@react-navigation/native'
 import { useAppSelector } from '../bll/store'
 import { TouchableOpacity } from 'react-native'
@@ -23,6 +23,7 @@ export const Navigation = () => {
                name="Home"
                component={Home}
                options={{
+                  headerShown: false,
                   tabBarIcon: ({ focused }) => (
                      <Icon name="home" color={focused ? '#06bf48' : 'grey'} type="antdesign" />
                   ),
@@ -44,7 +45,6 @@ export const Navigation = () => {
             <Tab.Screen
                name="Profile"
                component={Profile}
-               /*  listeners={{ tabPress: e => console.log('Tab press', e.target) }}*/
                options={{
                   tabBarIcon: ({ focused }) => (
                      <Icon name="person-outline" color={focused ? '#06bf48' : 'grey'} />

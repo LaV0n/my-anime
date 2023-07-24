@@ -2,7 +2,7 @@ import { Button, ScrollView, Text } from 'react-native'
 import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { logout } from '../bll/authReducer'
-import { RootTabScreenProps } from '../types'
+import { RootTabScreenProps } from '../common/types'
 import { ErrorMessage } from '../components/ErrorMessage'
 
 export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {

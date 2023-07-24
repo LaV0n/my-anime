@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppStatusType, AppType } from '../types'
+import { AppStatusType, AppType } from '../common/types'
 
 const initialState: AppType = {
    appStatus: 'success',

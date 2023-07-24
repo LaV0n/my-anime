@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AuthType } from '../types'
+import { AuthType } from '../common/types'
 import { changeStatus, setError } from './appReducer'
 import { signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth'
 import { setDoc, doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../config/firebase'
 import { clearMyList } from './myDataReducer'
+import { errorAsString } from '../utils/errorAsString'
 
 const initialState: AuthType = {
    uid: '',
@@ -73,9 +74,10 @@ export const logout = createAsyncThunk<unknown, undefined>(
       try {
          await signOut(auth)
          dispatch(changeStatus('success'))
-      } catch (err: any) {
+      } catch (err) {
+         const error = errorAsString(err)
          dispatch(changeStatus('error'))
-         dispatch(setError(err))
+         dispatch(setError(error))
       }
    }
 )
@@ -94,9 +96,10 @@ export const signUp = createAsyncThunk<
       const docRef = doc(db, 'users', userId)
       await setDoc(docRef, newUser)
       return userName
-   } catch (err: any) {
+   } catch (err) {
+      const error = errorAsString(err)
       dispatch(changeStatus('error'))
-      dispatch(setError(err))
+      dispatch(setError(error))
       return ''
    }
 })

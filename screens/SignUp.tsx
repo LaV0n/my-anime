@@ -3,7 +3,7 @@ import { ActivityIndicator, Button, TextInput, View } from 'react-native'
 import { CheckBox } from '@rneui/base'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { signUp } from '../bll/authReducer'
-import { RootTabScreenProps } from '../types'
+import { RootTabScreenProps } from '../common/types'
 import { ErrorMessage } from '../components/ErrorMessage'
 
 export const SignUp = ({ navigation }: RootTabScreenProps<'SignUp'>) => {

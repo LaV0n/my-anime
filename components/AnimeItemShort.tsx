@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import { AnimeType } from '../types'
-import { addItemToMyList, getMyAnimeList } from '../bll/myDataReducer'
+import { AnimeType } from '../common/types'
+import { addItemToMyList } from '../bll/myDataReducer'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button } from '@rneui/themed'
 
@@ -11,7 +11,6 @@ export const AnimeItemShort = ({ anime }: { anime: AnimeType }) => {
    const myList = useAppSelector(state => state.myData.animeList)
    const addToMyListHandler = (a: AnimeType) => {
       dispatch(addItemToMyList(a))
-      dispatch(getMyAnimeList())
    }
 
    return (
@@ -22,7 +21,7 @@ export const AnimeItemShort = ({ anime }: { anime: AnimeType }) => {
          </View>
          <View style={styles.description}>
             <Text> {anime.title}</Text>
-            <Text> status: {anime.status}</Text>
+            <Text> {anime.status === 'finished_airing' ? 'finished' : 'currently'}</Text>
             <Text>{anime.start_date.slice(0, 4)}</Text>
             <Text> episodes: {anime.num_episodes}</Text>
             <View style={styles.genresBlock}>
@@ -37,7 +36,7 @@ export const AnimeItemShort = ({ anime }: { anime: AnimeType }) => {
                   {myList.some(a => a.id === anime.id) ? (
                      <View style={styles.buttonBlock}>
                         <Button
-                           title="✔ My List"
+                           title={anime.myStatus}
                            type="outline"
                            buttonStyle={{
                               borderRadius: 30,
@@ -48,7 +47,6 @@ export const AnimeItemShort = ({ anime }: { anime: AnimeType }) => {
                            titleStyle={{ color: '#06bf48' }}
                            onPress={() => {}}
                         />
-                        <Text>{anime.myStatus}</Text>
                      </View>
                   ) : (
                      <Button

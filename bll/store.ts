@@ -15,7 +15,7 @@ export const rootReducer = combineReducers({
 export const store = configureStore({ reducer: rootReducer })
 export type AppRootStateType = ReturnType<typeof rootReducer>
 
-type AppDispatchType = typeof store.dispatch
+export type AppDispatchType = typeof store.dispatch
 export const useAppDispatch = () => useDispatch<AppDispatchType>()
 //export const useAppDispatch: () => AppDispatch = useDispatch
 

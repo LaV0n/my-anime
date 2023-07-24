@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from '../bll/store'
 import { login } from '../bll/authReducer'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { getMyAnimeList } from '../bll/myDataReducer'
-import { RootTabScreenProps } from '../types'
+import { RootTabScreenProps } from '../common/types'
 import { Icon } from '@rneui/themed'
 
 export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {

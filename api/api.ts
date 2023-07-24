@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { MY_API_KEY } from '@env'
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore'
+import { collection, getDocs, deleteDoc, doc, addDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../config/firebase'
+import { AnimeType } from '../common/types'
 
 const instance = axios.create({
    baseURL: 'https://api.myanimelist.net',
@@ -21,6 +22,9 @@ export const MyAnimeListAPI = {
          anonymousParams
       )
    },
+   getSearchAnime(anime: string) {
+      return instance.get(`v2/anime?q=${anime}&limit=4`, anonymousParams)
+   },
    getMyList(userId: string) {
       const usersColl = collection(db, 'users/' + userId + '/list')
       return getDocs(usersColl)
@@ -28,5 +32,13 @@ export const MyAnimeListAPI = {
    delMyItem(id: string, userId: string) {
       const item = doc(db, 'users/' + userId + '/list', id)
       return deleteDoc(item)
+   },
+   addItemToMyList(userId: string, animeItem: AnimeType) {
+      return addDoc(collection(db, 'users/' + userId + '/list'), animeItem)
+   },
+   changeItemData(userId: string, dataId: string, data: string | number) {
+      const animeItem = doc(db, 'users/' + userId + '/list', dataId)
+      const requestData = typeof data === 'number' ? { myRating: data } : { myStatus: data }
+      return updateDoc(animeItem, requestData)
    },
 }
