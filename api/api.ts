@@ -14,7 +14,7 @@ const anonymousParams = {
 }
 export const MyAnimeListAPI = {
    getAllAnime() {
-      return instance.get('v2/anime/ranking?ranking_type=all&limit=4', anonymousParams)
+      return instance.get('v2/anime/ranking?ranking_type=all', anonymousParams)
    },
    getTitleShortInfo(id: string) {
       return instance.get(
@@ -23,7 +23,7 @@ export const MyAnimeListAPI = {
       )
    },
    getSearchAnime(anime: string) {
-      return instance.get(`v2/anime?q=${anime}&limit=4`, anonymousParams)
+      return instance.get(`v2/anime?q=${anime}`, anonymousParams)
    },
    getMyList(userId: string) {
       const usersColl = collection(db, 'users/' + userId + '/list')

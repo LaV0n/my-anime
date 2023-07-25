@@ -1,16 +1,16 @@
 import React from 'react'
-import { Home } from '../screens/Home'
 import { Icon } from '@rneui/themed'
 import { MyList } from '../screens/MyList'
 import { Profile } from '../screens/Profile'
 import { Login } from '../screens/Login'
 import { SignUp } from '../screens/SignUp'
-
 import { RootTabParamList } from '../common/types'
 import { NavigationContainer } from '@react-navigation/native'
 import { useAppSelector } from '../bll/store'
 import { TouchableOpacity } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { Search } from '../screens/Search'
+import { Home } from '../screens/Home'
 
 export const Navigation = () => {
    const Tab = createBottomTabNavigator<RootTabParamList>()
@@ -28,6 +28,13 @@ export const Navigation = () => {
                      <Icon name="home" color={focused ? '#06bf48' : 'grey'} type="antdesign" />
                   ),
                   tabBarActiveTintColor: '#06bf48',
+               }}
+            />
+            <Tab.Screen
+               name="Search"
+               component={Search}
+               options={{
+                  headerShown: false,
                }}
             />
             <Tab.Screen

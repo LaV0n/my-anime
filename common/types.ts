@@ -2,6 +2,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 
 export type RootTabParamList = {
    Home: undefined
+   Search: undefined
    Profile: undefined
    Login: undefined
    SignUp: undefined
@@ -53,4 +54,8 @@ export type AuthType = {
    uid: string
    email: string
    name: string
+}
+export type SearchBlockType = {
+   setLastRequest: (value: string) => void
+   goHomeLink: () => void
 }
