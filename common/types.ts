@@ -7,6 +7,7 @@ export type RootTabParamList = {
    Login: undefined
    SignUp: undefined
    MyList: undefined
+   Filter: undefined
 }
 export type RootTabScreenProps<T extends keyof RootTabParamList> = BottomTabScreenProps<
    RootTabParamList,
@@ -58,4 +59,5 @@ export type AuthType = {
 export type SearchBlockType = {
    setLastRequest: (value: string) => void
    goHomeLink: () => void
+   goFilterLink: () => void
 }

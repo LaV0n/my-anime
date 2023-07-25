@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getMyAnimeList } from '../bll/myDataReducer'
 import { MyAnimeItem } from '../components/MyAnimeItem'
 import { ErrorMessage } from '../components/ErrorMessage'
+import { Colors, Theme, useTheme } from '@rneui/themed'
 
 export const MyList = () => {
    const myList = useAppSelector(state => state.myData.animeList)
    const dispatch = useAppDispatch()
    const uid = useAppSelector(state => state.auth.uid)
+   const { theme } = useTheme()
+   const styles = makeStyles(theme)
 
    useEffect(() => {
       if (!uid) return
@@ -16,14 +19,22 @@ export const MyList = () => {
    }, [uid])
 
    return (
-      <ScrollView>
+      <View style={styles.container}>
          <ErrorMessage />
          {myList.length === 0 && <Text>empty list</Text>}
-         <View>
+         <ScrollView>
             {myList.map(a => (
                <MyAnimeItem anime={a} key={a.id} />
             ))}
-         </View>
-      </ScrollView>
+         </ScrollView>
+      </View>
    )
 }
+
+const makeStyles = (colors: { colors: Colors } & Theme) =>
+   StyleSheet.create({
+      container: {
+         paddingTop: 20,
+         backgroundColor: colors.colors.background,
+      },
+   })

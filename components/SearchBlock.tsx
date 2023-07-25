@@ -5,7 +5,7 @@ import { useAppDispatch } from '../bll/store'
 import { getSearchAnimeList } from '../bll/animeListReducer'
 import { SearchBlockType } from '../common/types'
 
-export const SearchBlock = ({ setLastRequest, goHomeLink }: SearchBlockType) => {
+export const SearchBlock = ({ setLastRequest, goHomeLink, goFilterLink }: SearchBlockType) => {
    const [open, setOpen] = useState(false)
    const [search, setSearch] = useState('')
    const dispatch = useAppDispatch()
@@ -30,7 +30,7 @@ export const SearchBlock = ({ setLastRequest, goHomeLink }: SearchBlockType) => 
                   style={styles.searchBlock}
                   onEndEditing={searchAnimeHandler}
                />
-               <TouchableOpacity onPress={() => {}}>
+               <TouchableOpacity onPress={goFilterLink}>
                   <Icon name={'tune'} color={'black'} />
                </TouchableOpacity>
             </View>

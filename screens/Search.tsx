@@ -1,4 +1,4 @@
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getAnimeList, getSearchAnimeList } from '../bll/animeListReducer'
@@ -17,6 +17,9 @@ export const Search = ({ navigation }: RootTabScreenProps<'Search'>) => {
    const goHomeLink = () => {
       navigation.navigate('Home')
    }
+   const goFilterLink = () => {
+      navigation.navigate('Filter')
+   }
    const getAnime = () => {
       lastRequest ? dispatch(getSearchAnimeList(lastRequest)) : dispatch(getAnimeList())
    }
@@ -27,7 +30,11 @@ export const Search = ({ navigation }: RootTabScreenProps<'Search'>) => {
    return (
       <ScrollView>
          <ErrorMessage />
-         <SearchBlock setLastRequest={setLastRequest} goHomeLink={goHomeLink} />
+         <SearchBlock
+            setLastRequest={setLastRequest}
+            goHomeLink={goHomeLink}
+            goFilterLink={goFilterLink}
+         />
          {statusApp === 'loading' && <ActivityIndicator size="large" />}
          <View>
             {animeList.map(a => (
@@ -37,12 +44,3 @@ export const Search = ({ navigation }: RootTabScreenProps<'Search'>) => {
       </ScrollView>
    )
 }
-
-const styles = StyleSheet.create({
-   container: {
-      flex: 2,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-   },
-})

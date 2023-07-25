@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon } from '@rneui/themed'
+import { Icon, useTheme } from '@rneui/themed'
 import { MyList } from '../screens/MyList'
 import { Profile } from '../screens/Profile'
 import { Login } from '../screens/Login'
@@ -11,23 +11,31 @@ import { TouchableOpacity } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Search } from '../screens/Search'
 import { Home } from '../screens/Home'
+import { Filter } from '../screens/Filter'
 
 export const Navigation = () => {
    const Tab = createBottomTabNavigator<RootTabParamList>()
    const uid = useAppSelector(state => state.auth.uid)
+   const { theme } = useTheme()
 
    return (
       <NavigationContainer>
-         <Tab.Navigator>
+         <Tab.Navigator
+            screenOptions={{ tabBarStyle: { backgroundColor: theme.colors.background } }}
+         >
             <Tab.Screen
                name="Home"
                component={Home}
                options={{
                   headerShown: false,
                   tabBarIcon: ({ focused }) => (
-                     <Icon name="home" color={focused ? '#06bf48' : 'grey'} type="antdesign" />
+                     <Icon
+                        name="home"
+                        color={focused ? theme.colors.secondary : theme.colors.grey0}
+                        type="antdesign"
+                     />
                   ),
-                  tabBarActiveTintColor: '#06bf48',
+                  tabBarActiveTintColor: theme.colors.secondary,
                }}
             />
             <Tab.Screen
@@ -35,6 +43,17 @@ export const Navigation = () => {
                component={Search}
                options={{
                   headerShown: false,
+                  tabBarButton: () => null,
+                  tabBarStyle: { display: 'none' },
+               }}
+            />
+            <Tab.Screen
+               name="Filter"
+               component={Filter}
+               options={{
+                  headerShown: false,
+                  tabBarButton: () => null,
+                  tabBarStyle: { display: 'none' },
                }}
             />
             <Tab.Screen
@@ -42,10 +61,14 @@ export const Navigation = () => {
                component={MyList}
                options={{
                   tabBarIcon: ({ focused }) => (
-                     <Icon name="list" color={focused ? '#06bf48' : 'grey'} />
+                     <Icon
+                        name="list"
+                        color={focused ? theme.colors.secondary : theme.colors.grey0}
+                     />
                   ),
+                  headerShown: false,
                   title: 'My List',
-                  tabBarActiveTintColor: '#06bf48',
+                  tabBarActiveTintColor: theme.colors.secondary,
                   tabBarButton: props => (uid ? <TouchableOpacity {...props} /> : null),
                }}
             />
@@ -54,9 +77,12 @@ export const Navigation = () => {
                component={Profile}
                options={{
                   tabBarIcon: ({ focused }) => (
-                     <Icon name="person-outline" color={focused ? '#06bf48' : 'grey'} />
+                     <Icon
+                        name="person-outline"
+                        color={focused ? theme.colors.secondary : theme.colors.grey0}
+                     />
                   ),
-                  tabBarActiveTintColor: '#06bf48',
+                  tabBarActiveTintColor: theme.colors.secondary,
                }}
             />
             <Tab.Screen
