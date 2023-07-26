@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
    ActivityIndicator,
-   Dimensions,
    FlatList,
    Image,
    ScrollView,
@@ -11,13 +10,15 @@ import {
    View,
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
-import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
+import { AirbnbRating, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
+import { addItemToMyList } from '../bll/myDataReducer'
 
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
    const statusApp = useAppSelector(state => state.app.appStatus)
+   const [viewMore, setViewMore] = useState(false)
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
@@ -25,11 +26,16 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const openItem = (id: string) => {
       dispatch(getCurrentAnimeItem(id))
    }
+   const addToMyListHandler = () => {
+      if (currentAnime) {
+         dispatch(addItemToMyList(currentAnime))
+         dispatch(getCurrentAnimeItem(currentAnime.id))
+      }
+   }
 
-   if (statusApp === 'loading') {
+   if (statusApp === 'loading' || !currentAnime) {
       return <ActivityIndicator size="large" />
    }
-   if (!currentAnime) return
 
    return (
       <ScrollView style={styles.container}>
@@ -38,6 +44,22 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                <Icon name={'arrow-back'} color={theme.colors.white} />
             </TouchableOpacity>
             <Image source={{ uri: currentAnime.main_picture.large }} style={styles.coverImg} />
+            {currentAnime.idDoc ? (
+               <View style={styles.myRatingBlock}>
+                  <AirbnbRating
+                     isDisabled={true}
+                     size={15}
+                     selectedColor={theme.colors.secondary}
+                     showRating={false}
+                     defaultRating={currentAnime.myRating}
+                  />
+                  <Text style={{ color: theme.colors.secondary }}>{currentAnime.myStatus}</Text>
+               </View>
+            ) : (
+               <TouchableOpacity style={styles.myRatingBlock} onPress={addToMyListHandler}>
+                  <Icon name={'add'} color={theme.colors.secondary} />
+               </TouchableOpacity>
+            )}
          </View>
          <Text style={styles.nameTitle}>{currentAnime.title}</Text>
          <View>
@@ -88,17 +110,21 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
             ))}
          </View>
          <View>
-            <Text style={{ color: theme.colors.white }}>Synopsis: {currentAnime.synopsis}</Text>
+            <Text numberOfLines={viewMore ? 3 : undefined} style={{ color: theme.colors.white }}>
+               {currentAnime.synopsis}
+            </Text>
+            <Text style={{ color: theme.colors.secondary }} onPress={() => setViewMore(!viewMore)}>
+               {viewMore ? 'read more...' : 'read less...'}
+            </Text>
          </View>
-         <View>
-            <FlatList
-               data={currentAnime.pictures}
-               horizontal
-               renderItem={({ item }) => (
-                  <Image source={{ uri: item.medium }} style={styles.picture} key={item.medium} />
-               )}
-            />
-         </View>
+         <FlatList
+            data={currentAnime.pictures}
+            style={{ marginTop: 10 }}
+            horizontal
+            renderItem={({ item }) => (
+               <Image source={{ uri: item.medium }} style={styles.picture} key={item.medium} />
+            )}
+         />
          <View>
             <Text style={{ color: theme.colors.white }}> related:</Text>
             <FlatList
@@ -231,5 +257,17 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          fontSize: 16,
          marginLeft: 5,
          backgroundColor: 'rgba(0,0,0,0.7)',
+      },
+      myRatingBlock: {
+         alignItems: 'center',
+         opacity: 0.9,
+         gap: 5,
+         zIndex: 15,
+         position: 'absolute',
+         right: 10,
+         top: 10,
+         padding: 10,
+         borderRadius: 25,
+         backgroundColor: colors.colors.white,
       },
    })

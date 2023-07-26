@@ -5,9 +5,8 @@ import { errorAsString } from '../utils/errorAsString'
 import { changeStatus, setError } from './appReducer'
 import { AppRootStateType } from './store'
 
-const filteredData = async (res: any, uid: string, animeList: AnimeType[]) => {
+const filteredData = async (allItems: AnimeResponseType[], uid: string, animeList: AnimeType[]) => {
    const result: AnimeType[] = []
-   const allItems: AnimeResponseType[] = res.data.data
    for (let i = 0; i < allItems.length; i++) {
       const responseItem = await MyAnimeListAPI.getTitleShortInfo(allItems[i].node.id)
       if (uid) {
@@ -60,7 +59,7 @@ export const getAnimeList = createAsyncThunk<AnimeType[], undefined, { state: Ap
       try {
          const res = await MyAnimeListAPI.getAllAnime()
          dispatch(changeStatus('success'))
-         return await filteredData(res, getState().auth.uid, getState().myData.animeList)
+         return await filteredData(res.data.data, getState().auth.uid, getState().myData.animeList)
       } catch (err) {
          const error = errorAsString(err)
          dispatch(changeStatus('error'))
@@ -78,7 +77,7 @@ export const getSearchAnimeList = createAsyncThunk<
    try {
       const res = await MyAnimeListAPI.getSearchAnime(searchAnime)
       dispatch(changeStatus('success'))
-      return await filteredData(res, getState().auth.uid, getState().myData.animeList)
+      return await filteredData(res.data.data, getState().auth.uid, getState().myData.animeList)
    } catch (err) {
       const error = errorAsString(err)
       dispatch(changeStatus('error'))
@@ -90,17 +89,26 @@ export const getSearchAnimeList = createAsyncThunk<
 export const getCurrentAnimeItem = createAsyncThunk<
    CurrentAnimeType,
    string,
-   { state: AppRootStateType }
->('animeList/getCurrentAnimeItem', async (idAnime, { dispatch, getState }) => {
+   { state: AppRootStateType; rejectValue: { error: string } }
+>('animeList/getCurrentAnimeItem', async (idAnime, { dispatch, rejectWithValue, getState }) => {
    dispatch(changeStatus('loading'))
    try {
       const res = await MyAnimeListAPI.getCurrentAnimeItem(idAnime)
       dispatch(changeStatus('success'))
-      return res.data
+      const resData = res.data as CurrentAnimeType
+      const myList = getState().myData.animeList
+      for (let i = 0; i < myList.length; i++) {
+         if (myList[i].id === resData.id) {
+            resData.myStatus = myList[i].myStatus
+            resData.myRating = myList[i].myRating
+            resData.idDoc = myList[i].idDoc
+         }
+      }
+      return resData
    } catch (err) {
       const error = errorAsString(err)
       dispatch(changeStatus('error'))
       dispatch(setError(error))
-      return
+      return rejectWithValue({ error })
    }
 })
