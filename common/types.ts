@@ -8,6 +8,7 @@ export type RootTabParamList = {
    SignUp: undefined
    MyList: undefined
    Filter: undefined
+   AnimeItem: undefined
 }
 export type RootTabScreenProps<T extends keyof RootTabParamList> = BottomTabScreenProps<
    RootTabParamList,
@@ -17,33 +18,66 @@ export type RootTabScreenProps<T extends keyof RootTabParamList> = BottomTabScre
 type AnimeStatusType = 'watched' | 'unwatch' | 'dropped'
 export type CommonListType = {
    homeAnimeList: AnimeType[]
+   currentAnimeItem: CurrentAnimeType | null
 }
 
 export type MyDataType = {
    animeList: AnimeType[]
 }
+type NameType = {
+   id: string | number
+   name: string
+}
+type PictureSourceType = {
+   medium: string
+   large: string
+}
 export type AnimeType = {
    id: string
    title: string
-   main_picture: {
-      medium: string
-      large: string
-   }
+   main_picture: PictureSourceType
    start_date: string
    end_date: string
    mean: number
    status: string
-   genres: { id: string | number; name: string }[]
+   genres: NameType[]
    num_episodes: string | number
    myStatus: AnimeStatusType
    myRating: number
    idDoc: string
 }
+export interface CurrentAnimeType extends AnimeType {
+   alternative_titles: {
+      synonyms: string[]
+      en: string
+      ja: string
+   }
+   synopsis: string
+   rank: number
+   popularity: number
+   media_type: string
+   source: string
+   rating: string
+   pictures: PictureSourceType[]
+   related_anime: AnimeResponseType[]
+   recommendations: AnimeResponseType[]
+   studios: NameType[]
+   statistics: {
+      status: {
+         watching: string
+         completed: string
+         on_hold: string
+         dropped: string
+         plan_to_watch: string
+      }
+      num_list_users: number
+   }
+}
 export type AnimeResponseType = {
    node: {
       id: string
       title: string
-      main_picture: { large: string }
+      main_picture: PictureSourceType
    }
 }
 export type AppStatusType = 'success' | 'loading' | 'error'

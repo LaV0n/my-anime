@@ -5,8 +5,9 @@ import { getMyAnimeList } from '../bll/myDataReducer'
 import { MyAnimeItem } from '../components/MyAnimeItem'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Colors, Theme, useTheme } from '@rneui/themed'
+import { RootTabScreenProps } from '../common/types'
 
-export const MyList = () => {
+export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const myList = useAppSelector(state => state.myData.animeList)
    const dispatch = useAppDispatch()
    const uid = useAppSelector(state => state.auth.uid)
@@ -24,7 +25,7 @@ export const MyList = () => {
          {myList.length === 0 && <Text>empty list</Text>}
          <ScrollView>
             {myList.map(a => (
-               <MyAnimeItem anime={a} key={a.id} />
+               <MyAnimeItem anime={a} key={a.id} navigator={navigator} />
             ))}
          </ScrollView>
       </View>

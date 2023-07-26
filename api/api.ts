@@ -25,6 +25,12 @@ export const MyAnimeListAPI = {
    getSearchAnime(anime: string) {
       return instance.get(`v2/anime?q=${anime}`, anonymousParams)
    },
+   getCurrentAnimeItem(idAnime: string) {
+      return instance.get(
+         `v2/anime/${idAnime}?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,,media_type,status,genres,num_episodes,source,rating,pictures,related_anime,recommendations,studios,statistics`,
+         anonymousParams
+      )
+   },
    getMyList(userId: string) {
       const usersColl = collection(db, 'users/' + userId + '/list')
       return getDocs(usersColl)

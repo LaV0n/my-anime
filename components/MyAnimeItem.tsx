@@ -1,12 +1,19 @@
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
-import { AnimeType } from '../common/types'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { AnimeType, RootTabScreenProps } from '../common/types'
 import { AirbnbRating, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { useAppDispatch } from '../bll/store'
 import { changeItemData, delItemFromMyList } from '../bll/myDataReducer'
 import { SelectList } from 'react-native-dropdown-select-list/index'
+import { getCurrentAnimeItem } from '../bll/animeListReducer'
 
-export const MyAnimeItem = ({ anime }: { anime: AnimeType }) => {
+export const MyAnimeItem = ({
+   anime,
+   navigator,
+}: {
+   anime: AnimeType
+   navigator: RootTabScreenProps<'MyList'>
+}) => {
    const dispatch = useAppDispatch()
    const [selected, setSelected] = useState('')
    const data = [
@@ -28,13 +35,17 @@ export const MyAnimeItem = ({ anime }: { anime: AnimeType }) => {
       setRating(rating)
       dispatch(changeItemData({ id: anime.idDoc, data: number }))
    }
+   const getCurrentAnimeItemHandler = () => {
+      dispatch(getCurrentAnimeItem(anime.id))
+      navigator.navigation.navigate('AnimeItem')
+   }
 
    return (
       <View style={styles.container}>
-         <View style={styles.pictureBlock}>
+         <TouchableOpacity style={styles.pictureBlock} onPress={getCurrentAnimeItemHandler}>
             <Image source={{ uri: anime.main_picture.medium }} style={styles.picture} />
             <Text style={styles.rating}>{anime.mean}</Text>
-         </View>
+         </TouchableOpacity>
          <View style={styles.description}>
             <View style={styles.titleBlock}>
                <Text style={styles.titleName}> {anime.title}</Text>

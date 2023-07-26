@@ -12,6 +12,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Search } from '../screens/Search'
 import { Home } from '../screens/Home'
 import { Filter } from '../screens/Filter'
+import { AnimeItem } from '../screens/AnimeItem'
 
 export const Navigation = () => {
    const Tab = createBottomTabNavigator<RootTabParamList>()
@@ -97,6 +98,14 @@ export const Navigation = () => {
                name="SignUp"
                component={SignUp}
                options={{
+                  tabBarButton: () => null,
+               }}
+            />
+            <Tab.Screen
+               name="AnimeItem"
+               component={AnimeItem}
+               options={{
+                  headerShown: false,
                   tabBarButton: () => null,
                }}
             />

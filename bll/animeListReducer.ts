@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AnimeResponseType, AnimeType, CommonListType } from '../common/types'
+import { AnimeResponseType, AnimeType, CommonListType, CurrentAnimeType } from '../common/types'
 import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { changeStatus, setError } from './appReducer'
@@ -26,6 +26,7 @@ const filteredData = async (res: any, uid: string, animeList: AnimeType[]) => {
 
 const initialState: CommonListType = {
    homeAnimeList: [],
+   currentAnimeItem: null,
 }
 
 const slice = createSlice({
@@ -42,6 +43,9 @@ const slice = createSlice({
       })
       builder.addCase(getSearchAnimeList.fulfilled, (state, action) => {
          state.homeAnimeList = action.payload
+      })
+      builder.addCase(getCurrentAnimeItem.fulfilled, (state, action) => {
+         state.currentAnimeItem = action.payload
       })
    },
 })
@@ -80,5 +84,23 @@ export const getSearchAnimeList = createAsyncThunk<
       dispatch(changeStatus('error'))
       dispatch(setError(error))
       return []
+   }
+})
+
+export const getCurrentAnimeItem = createAsyncThunk<
+   CurrentAnimeType,
+   string,
+   { state: AppRootStateType }
+>('animeList/getCurrentAnimeItem', async (idAnime, { dispatch, getState }) => {
+   dispatch(changeStatus('loading'))
+   try {
+      const res = await MyAnimeListAPI.getCurrentAnimeItem(idAnime)
+      dispatch(changeStatus('success'))
+      return res.data
+   } catch (err) {
+      const error = errorAsString(err)
+      dispatch(changeStatus('error'))
+      dispatch(setError(error))
+      return
    }
 })
