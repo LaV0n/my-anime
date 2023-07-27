@@ -58,8 +58,13 @@ export const getAnimeList = createAsyncThunk<AnimeType[], undefined, { state: Ap
       dispatch(changeStatus('loading'))
       try {
          const res = await MyAnimeListAPI.getAllAnime()
+         const data = await filteredData(
+            res.data.data,
+            getState().auth.uid,
+            getState().myData.animeList
+         )
          dispatch(changeStatus('success'))
-         return await filteredData(res.data.data, getState().auth.uid, getState().myData.animeList)
+         return data
       } catch (err) {
          const error = errorAsString(err)
          dispatch(changeStatus('error'))
@@ -76,8 +81,13 @@ export const getSearchAnimeList = createAsyncThunk<
    dispatch(changeStatus('loading'))
    try {
       const res = await MyAnimeListAPI.getSearchAnime(searchAnime)
+      const data = await filteredData(
+         res.data.data,
+         getState().auth.uid,
+         getState().myData.animeList
+      )
       dispatch(changeStatus('success'))
-      return await filteredData(res.data.data, getState().auth.uid, getState().myData.animeList)
+      return data
    } catch (err) {
       const error = errorAsString(err)
       dispatch(changeStatus('error'))

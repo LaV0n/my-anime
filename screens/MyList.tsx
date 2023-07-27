@@ -36,6 +36,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       container: {
          paddingTop: 20,
+         height: '100%',
          backgroundColor: colors.colors.background,
       },
    })

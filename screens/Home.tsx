@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { RootTabScreenProps } from '../common/types'
 import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
+import { getUserData } from '../bll/authReducer'
+import { useAppDispatch } from '../bll/store'
 
 export const Home = ({ navigation }: RootTabScreenProps<'Home'>) => {
    const { theme } = useTheme()
+   const dispatch = useAppDispatch()
    const styles = makeStyles(theme)
+
+   useState(() => {
+      dispatch(getUserData())
+   }, [])
 
    return (
       <ScrollView style={styles.container}>

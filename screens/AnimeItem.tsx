@@ -1,24 +1,17 @@
 import React, { useState } from 'react'
-import {
-   ActivityIndicator,
-   FlatList,
-   Image,
-   ScrollView,
-   StyleSheet,
-   Text,
-   TouchableOpacity,
-   View,
-} from 'react-native'
+import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { AirbnbRating, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { addItemToMyList } from '../bll/myDataReducer'
+import { LoadingIndicator } from '../components/LoadingIndicator'
 
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
    const statusApp = useAppSelector(state => state.app.appStatus)
    const [viewMore, setViewMore] = useState(false)
+   const uid = useAppSelector(state => state.auth.uid)
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
@@ -34,7 +27,7 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    }
 
    if (statusApp === 'loading' || !currentAnime) {
-      return <ActivityIndicator size="large" />
+      return <LoadingIndicator />
    }
 
    return (
@@ -56,9 +49,11 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                   <Text style={{ color: theme.colors.secondary }}>{currentAnime.myStatus}</Text>
                </View>
             ) : (
-               <TouchableOpacity style={styles.myRatingBlock} onPress={addToMyListHandler}>
-                  <Icon name={'add'} color={theme.colors.secondary} />
-               </TouchableOpacity>
+               uid && (
+                  <TouchableOpacity style={styles.myRatingBlock} onPress={addToMyListHandler}>
+                     <Icon name={'add'} color={theme.colors.secondary} />
+                  </TouchableOpacity>
+               )
             )}
          </View>
          <Text style={styles.nameTitle}>{currentAnime.title}</Text>

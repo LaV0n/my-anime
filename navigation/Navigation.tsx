@@ -83,6 +83,7 @@ export const Navigation = () => {
                         color={focused ? theme.colors.secondary : theme.colors.grey0}
                      />
                   ),
+                  headerShown: false,
                   tabBarActiveTintColor: theme.colors.secondary,
                }}
             />
@@ -92,13 +93,16 @@ export const Navigation = () => {
                options={{
                   headerShown: false,
                   tabBarButton: () => null,
+                  tabBarStyle: { display: 'none' },
                }}
             />
             <Tab.Screen
                name="SignUp"
                component={SignUp}
                options={{
+                  headerShown: false,
                   tabBarButton: () => null,
+                  tabBarStyle: { display: 'none' },
                }}
             />
             <Tab.Screen
