@@ -4,6 +4,7 @@ import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { changeStatus, setError } from './appReducer'
 import { AppRootStateType } from './store'
+import { Ranking } from '../common/variables'
 
 const filteredData = async (allItems: AnimeResponseType[], uid: string, animeList: AnimeType[]) => {
    const result: AnimeType[] = []
@@ -26,6 +27,9 @@ const filteredData = async (allItems: AnimeResponseType[], uid: string, animeLis
 const initialState: CommonListType = {
    homeAnimeList: [],
    currentAnimeItem: null,
+   topAnimeList: [],
+   newAnimeList: [],
+   randomAnimeItem: null,
 }
 
 const slice = createSlice({
@@ -46,18 +50,28 @@ const slice = createSlice({
       builder.addCase(getCurrentAnimeItem.fulfilled, (state, action) => {
          state.currentAnimeItem = action.payload
       })
+      builder.addCase(getShortAnimeList.fulfilled, (state, action) => {
+         if (action.payload.type === Ranking.AIRING) {
+            state.newAnimeList = action.payload.animeList
+         } else {
+            state.topAnimeList = action.payload.animeList
+         }
+      })
+      builder.addCase(getRandomAnimeItem.fulfilled, (state, action) => {
+         state.randomAnimeItem = action.payload
+      })
    },
 })
 
 export const animeListReducer = slice.reducer
 export const { clearList } = slice.actions
 
-export const getAnimeList = createAsyncThunk<AnimeType[], undefined, { state: AppRootStateType }>(
+export const getAnimeList = createAsyncThunk<AnimeType[], string, { state: AppRootStateType }>(
    'animeList/getAnimeList',
-   async (_, { dispatch, getState }) => {
+   async (type, { dispatch, getState }) => {
       dispatch(changeStatus('loading'))
       try {
-         const res = await MyAnimeListAPI.getAllAnime()
+         const res = await MyAnimeListAPI.getAnimeByType(type)
          const data = await filteredData(
             res.data.data,
             getState().auth.uid,
@@ -73,6 +87,24 @@ export const getAnimeList = createAsyncThunk<AnimeType[], undefined, { state: Ap
       }
    }
 )
+
+export const getShortAnimeList = createAsyncThunk<
+   { animeList: AnimeResponseType[]; type: string },
+   string,
+   { rejectValue: { error: string } }
+>('animeList/getShortAnimeList', async (type, { dispatch, rejectWithValue }) => {
+   dispatch(changeStatus('loading'))
+   try {
+      const res = await MyAnimeListAPI.getAnimeByType(type)
+      dispatch(changeStatus('success'))
+      return { animeList: res.data.data, type: type }
+   } catch (err) {
+      const error = errorAsString(err)
+      dispatch(changeStatus('error'))
+      dispatch(setError(error))
+      return rejectWithValue({ error })
+   }
+})
 export const getSearchAnimeList = createAsyncThunk<
    AnimeType[],
    string,
@@ -115,6 +147,24 @@ export const getCurrentAnimeItem = createAsyncThunk<
          }
       }
       return resData
+   } catch (err) {
+      const error = errorAsString(err)
+      dispatch(changeStatus('error'))
+      dispatch(setError(error))
+      return rejectWithValue({ error })
+   }
+})
+export const getRandomAnimeItem = createAsyncThunk<
+   AnimeType,
+   undefined,
+   { state: AppRootStateType; rejectValue: { error: string } }
+>('animeList/getRandomAnimeItem', async (_, { dispatch, rejectWithValue }) => {
+   dispatch(changeStatus('loading'))
+   try {
+      const random = Math.floor(Math.random() * 1000).toString()
+      const res = await MyAnimeListAPI.getTitleShortInfo(random)
+      dispatch(changeStatus('success'))
+      return res.data
    } catch (err) {
       const error = errorAsString(err)
       dispatch(changeStatus('error'))

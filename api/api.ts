@@ -13,8 +13,8 @@ const anonymousParams = {
    },
 }
 export const MyAnimeListAPI = {
-   getAllAnime() {
-      return instance.get('v2/anime/ranking?ranking_type=all', anonymousParams)
+   getAnimeByType(type: string) {
+      return instance.get(`v2/anime/ranking?ranking_type=${type}`, anonymousParams)
    },
    getTitleShortInfo(id: string) {
       return instance.get(

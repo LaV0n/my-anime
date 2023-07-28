@@ -8,6 +8,7 @@ import { SearchBlock } from '../components/SearchBlock'
 import { RootTabScreenProps } from '../common/types'
 import { useTheme } from '@rneui/themed'
 import { LoadingIndicator } from '../components/LoadingIndicator'
+import { Ranking } from '../common/variables'
 
 export const Search = (navigator: RootTabScreenProps<'Search'>) => {
    const animeList = useAppSelector(state => state.animeList.homeAnimeList)
@@ -24,7 +25,7 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
       navigator.navigation.navigate('Filter')
    }
    const getAnime = () => {
-      lastRequest ? dispatch(getSearchAnimeList(lastRequest)) : dispatch(getAnimeList())
+      lastRequest ? dispatch(getSearchAnimeList(lastRequest)) : dispatch(getAnimeList(Ranking.ALL))
    }
    useEffect(() => {
       getAnime()

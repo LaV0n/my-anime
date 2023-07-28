@@ -5,6 +5,7 @@ import { addItemToMyList } from '../bll/myDataReducer'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button, Colors, Theme, useTheme } from '@rneui/themed'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
+import { statusAnimeItem } from '../utils/utils'
 
 export const AnimeItemShort = ({
    anime,
@@ -35,10 +36,7 @@ export const AnimeItemShort = ({
          </TouchableOpacity>
          <View style={styles.description}>
             <Text style={styles.titleName}> {anime.title}</Text>
-            <Text style={styles.descriptionTitle}>
-               {' '}
-               {anime.status === 'finished_airing' ? 'finished' : 'currently'}
-            </Text>
+            <Text style={styles.descriptionTitle}> {statusAnimeItem(anime.status)}</Text>
             <Text style={styles.descriptionTitle}>{anime.start_date.slice(0, 4)}</Text>
             <Text style={styles.descriptionTitle}>episodes: {anime.num_episodes}</Text>
             <View style={styles.genresBlock}>

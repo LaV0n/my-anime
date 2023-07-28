@@ -19,6 +19,9 @@ type AnimeStatusType = 'watched' | 'unwatch' | 'dropped'
 export type CommonListType = {
    homeAnimeList: AnimeType[]
    currentAnimeItem: CurrentAnimeType | null
+   topAnimeList: AnimeResponseType[]
+   newAnimeList: AnimeResponseType[]
+   randomAnimeItem: AnimeType | null
 }
 
 export type MyDataType = {
