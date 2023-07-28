@@ -34,9 +34,9 @@ export const getMyAnimeList = createAsyncThunk<AnimeType[], undefined, { state: 
    async (_, { getState, dispatch }) => {
       dispatch(changeStatus('loading'))
       try {
-         dispatch(changeStatus('success'))
          dispatch(clearMyList)
          const data = await MyAnimeListAPI.getMyList(getState().auth.uid)
+         dispatch(changeStatus('success'))
          return data.docs.map(doc => ({ ...doc.data(), idDoc: doc.id })) as AnimeType[]
       } catch (err) {
          dispatch(changeStatus('error'))
@@ -51,7 +51,6 @@ export const addItemToMyList = createAsyncThunk<
    AnimeType | CurrentAnimeType,
    { state: AppRootStateType }
 >('myData/addItemToMyList', async (anime, { dispatch, getState }) => {
-   dispatch(changeStatus('loading'))
    try {
       const animeItem: AnimeType = {
          id: anime.id,
@@ -69,9 +68,7 @@ export const addItemToMyList = createAsyncThunk<
       }
       await MyAnimeListAPI.addItemToMyList(getState().auth.uid, animeItem)
       dispatch(getMyAnimeList())
-      dispatch(changeStatus('success'))
    } catch (err) {
-      dispatch(changeStatus('error'))
       const error = errorAsString(err)
       dispatch(setError(error))
    }
@@ -79,13 +76,10 @@ export const addItemToMyList = createAsyncThunk<
 export const delItemFromMyList = createAsyncThunk<unknown, string, { state: AppRootStateType }>(
    'myData/delItemFromMyList',
    async (id, { dispatch, getState }) => {
-      dispatch(changeStatus('loading'))
       try {
          await MyAnimeListAPI.delMyItem(id, getState().auth.uid)
          dispatch(getMyAnimeList())
-         dispatch(changeStatus('success'))
       } catch (err) {
-         dispatch(changeStatus('error'))
          const error = errorAsString(err)
          dispatch(setError(error))
       }
@@ -96,13 +90,10 @@ export const changeItemData = createAsyncThunk<
    { id: string; data: string | number },
    { state: AppRootStateType }
 >('myData/changeItemData', async ({ id, data }, { dispatch, getState }) => {
-   dispatch(changeStatus('loading'))
    try {
       await MyAnimeListAPI.changeItemData(getState().auth.uid, id, data)
       dispatch(getMyAnimeList())
-      dispatch(changeStatus('success'))
    } catch (err) {
-      dispatch(changeStatus('error'))
       const error = errorAsString(err)
       dispatch(setError(error))
    }

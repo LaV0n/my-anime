@@ -24,6 +24,7 @@ export const MyAnimeItem = ({
    const [rating, setRating] = useState(anime.myRating)
    const { theme } = useTheme()
    const styles = makeStyles(theme)
+
    const onSelectedHandler = () => {
       dispatch(changeItemData({ id: anime.idDoc, data: selected }))
    }

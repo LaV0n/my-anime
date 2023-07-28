@@ -15,15 +15,16 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const styles = makeStyles(theme)
 
    useEffect(() => {
-      if (!uid) return
-      dispatch(getMyAnimeList())
-   }, [uid])
+      if (uid) {
+         dispatch(getMyAnimeList())
+      }
+   }, [])
 
    return (
       <View style={styles.container}>
          <ErrorMessage />
-         {myList.length === 0 && <Text>empty list</Text>}
          <ScrollView>
+            {myList.length === 0 && <Text>empty list</Text>}
             {myList.map(a => (
                <MyAnimeItem anime={a} key={a.id} navigator={navigator} />
             ))}
