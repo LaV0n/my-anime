@@ -31,7 +31,7 @@ type NameType = {
    id: string | number
    name: string
 }
-type PictureSourceType = {
+export type PictureSourceType = {
    medium: string
    large: string
 }
@@ -97,4 +97,9 @@ export type SearchBlockType = {
    setLastRequest: (value: string) => void
    goHomeLink: () => void
    goFilterLink: () => void
+}
+export type CustomFlatListType = {
+   name: string
+   data: AnimeResponseType[] | PictureSourceType[]
+   isLinked: boolean
 }

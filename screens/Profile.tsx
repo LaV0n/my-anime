@@ -6,6 +6,7 @@ import { RootTabScreenProps } from '../common/types'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Avatar, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { LoadingIndicator } from '../components/LoadingIndicator'
+import { defaultImg } from '../common/variables'
 
 export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    const emailUser = useAppSelector(state => state.auth.email)
@@ -50,7 +51,7 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
                size={100}
                rounded
                source={{
-                  uri: 'https://assets.puzzlefactory.pl/puzzle/302/116/original.jpg',
+                  uri: defaultImg,
                }}
             />
             <View>

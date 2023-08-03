@@ -10,6 +10,7 @@ export const theme = createTheme({
       secondary: '#06bf48',
       white: 'black',
       grey2: 'rgba(0,0,0,0.6)',
+      grey3: 'rgba(0,0,0,0.4)',
    },
    darkColors: {
       primary: 'white',
@@ -19,5 +20,6 @@ export const theme = createTheme({
       secondary: '#06bf48',
       white: 'white',
       grey2: 'rgba(0,0,0,0.6)',
+      grey3: 'rgba(0,0,0,0.4)',
    },
 })

@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { AirbnbRating, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { addItemToMyList } from '../bll/myDataReducer'
 import { LoadingIndicator } from '../components/LoadingIndicator'
+import { LinearGradient } from 'expo-linear-gradient'
+import { statusAnimeItem } from '../utils/utils'
+import { CustomFlatLIst } from '../components/CustomFlatLIst'
 
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
@@ -16,14 +19,15 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
-   const openItem = (id: string) => {
-      dispatch(getCurrentAnimeItem(id))
-   }
    const addToMyListHandler = () => {
       if (currentAnime) {
          dispatch(addItemToMyList(currentAnime))
          dispatch(getCurrentAnimeItem(currentAnime.id))
       }
+   }
+
+   const toggleViewMode = () => {
+      setViewMore(!viewMore)
    }
 
    if (statusApp === 'loading' || !currentAnime) {
@@ -33,9 +37,11 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    return (
       <ScrollView style={styles.container}>
          <View>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackLink}>
-               <Icon name={'arrow-back'} color={theme.colors.white} />
-            </TouchableOpacity>
+            <LinearGradient colors={[theme.colors.grey2, 'transparent']} style={styles.upperBlock}>
+               <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackLink}>
+                  <Icon name={'arrow-back'} color={theme.colors.white} />
+               </TouchableOpacity>
+            </LinearGradient>
             <Image source={{ uri: currentAnime.main_picture.large }} style={styles.coverImg} />
             {currentAnime.idDoc ? (
                <View style={styles.myRatingBlock}>
@@ -59,43 +65,35 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
          <Text style={styles.nameTitle}>{currentAnime.title}</Text>
          <View>
             {currentAnime.alternative_titles.synonyms.length !== 0 && (
-               <Text style={{ color: theme.colors.grey0 }}>
+               <Text style={styles.smallTitleGrey}>
                   synonyms: {currentAnime.alternative_titles.synonyms}
                </Text>
             )}
-            <Text style={{ color: theme.colors.grey0 }}>
-               eng: {currentAnime.alternative_titles.en}
-            </Text>
-            <Text style={{ color: theme.colors.grey0 }}>
-               {' '}
-               jp: {currentAnime.alternative_titles.ja}
-            </Text>
+            <Text style={styles.smallTitleGrey}>eng: {currentAnime.alternative_titles.en}</Text>
+            <Text style={styles.smallTitleGrey}> jp: {currentAnime.alternative_titles.ja}</Text>
          </View>
          <View style={styles.shortStatBlock}>
             <Icon name={'star'} color={theme.colors.secondary} size={20} />
             <Text style={styles.meanTitle}>{currentAnime.mean}</Text>
-            <Text style={{ color: theme.colors.white }}>Ranked #{currentAnime.rank}</Text>
-            <Text style={{ color: theme.colors.white }}>Popularity #{currentAnime.popularity}</Text>
+            <Text style={styles.smallTitle}>Ranked #{currentAnime.rank}</Text>
+            <Text style={styles.smallTitle}>Popularity #{currentAnime.popularity}</Text>
             <Text style={styles.ratingTitle}>
                {currentAnime.rating.replace('_', ' ').toUpperCase()}
             </Text>
          </View>
          <View style={styles.shortStatBlock}>
-            <Text style={{ color: theme.colors.white }}>{currentAnime.start_date.slice(0, 4)}</Text>
+            <Text style={styles.smallTitle}>{currentAnime.start_date.slice(0, 4)}</Text>
             {currentAnime.studios.map(s => (
-               <Text style={{ color: theme.colors.white }} key={s.id}>
+               <Text style={styles.smallTitle} key={s.id}>
                   {s.name}
                </Text>
             ))}
-            <Text style={{ color: theme.colors.white }}>{currentAnime.status}</Text>
-            <Text style={{ color: theme.colors.white }}>
-               {' '}
-               episodes: {currentAnime.num_episodes}
-            </Text>
+            <Text style={styles.smallTitle}>{statusAnimeItem(currentAnime.status)}</Text>
+            <Text style={styles.smallTitle}> episodes: {currentAnime.num_episodes}</Text>
          </View>
          <View style={styles.shortStatBlock}>
-            <Text style={{ color: theme.colors.white }}>type: {currentAnime.media_type}</Text>
-            <Text style={{ color: theme.colors.white }}>source: {currentAnime.source}</Text>
+            <Text style={styles.smallTitle}>type: {currentAnime.media_type}</Text>
+            <Text style={styles.smallTitle}>source: {currentAnime.source.replace('_', ' ')}</Text>
          </View>
          <View style={styles.shortStatBlock}>
             {currentAnime.genres.map(g => (
@@ -105,86 +103,45 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
             ))}
          </View>
          <View>
-            <Text numberOfLines={viewMore ? 3 : undefined} style={{ color: theme.colors.white }}>
+            <Text numberOfLines={viewMore ? 3 : undefined} style={styles.smallTitle}>
                {currentAnime.synopsis}
             </Text>
-            <Text style={{ color: theme.colors.secondary }} onPress={() => setViewMore(!viewMore)}>
+            <Text style={{ color: theme.colors.secondary }} onPress={toggleViewMode}>
                {viewMore ? 'read more...' : 'read less...'}
             </Text>
          </View>
-         <FlatList
-            data={currentAnime.pictures}
-            style={{ marginTop: 10 }}
-            horizontal
-            renderItem={({ item }) => (
-               <Image source={{ uri: item.medium }} style={styles.picture} key={item.medium} />
-            )}
+         <CustomFlatLIst name={'Covers images'} data={currentAnime.pictures} isLinked={false} />
+         <CustomFlatLIst name={'Related'} data={currentAnime.related_anime} isLinked={true} />
+         <CustomFlatLIst
+            name={'Recommendations'}
+            data={currentAnime.recommendations}
+            isLinked={true}
          />
          <View>
-            <Text style={{ color: theme.colors.white }}> related:</Text>
-            <FlatList
-               data={currentAnime.related_anime}
-               horizontal
-               renderItem={({ item }) => (
-                  <TouchableOpacity
-                     key={item.node.id}
-                     style={styles.relatedBlock}
-                     onPress={() => openItem(item.node.id)}
-                  >
-                     <Image
-                        source={{ uri: item.node.main_picture.medium }}
-                        style={styles.picture}
-                     />
-                     <Text style={styles.relatedTitle}>{item.node.title}</Text>
-                  </TouchableOpacity>
-               )}
-            />
-         </View>
-         <View>
-            <Text style={{ color: theme.colors.white }}> recommendations:</Text>
-            <FlatList
-               data={currentAnime.recommendations}
-               horizontal
-               renderItem={({ item }) => (
-                  <TouchableOpacity
-                     key={item.node.id}
-                     style={styles.relatedBlock}
-                     onPress={() => openItem(item.node.id)}
-                  >
-                     <Image
-                        source={{ uri: item.node.main_picture.medium }}
-                        style={styles.picture}
-                     />
-                     <Text style={styles.relatedTitle}>{item.node.title}</Text>
-                  </TouchableOpacity>
-               )}
-            />
-         </View>
-         <View>
-            <Text style={{ color: theme.colors.white }}> statistics:</Text>
-            <Text style={{ color: theme.colors.white }}>
-               {' '}
-               watching: {currentAnime.statistics.status.watching}
+            <Text style={styles.secondTitle}> Statistics of viewers</Text>
+            <Text style={styles.smallTitle}>
+               <Text style={styles.smallTitleGrey}>watching: </Text>
+               {currentAnime.statistics.status.watching}
             </Text>
-            <Text style={{ color: theme.colors.white }}>
-               {' '}
-               completed: {currentAnime.statistics.status.completed}
+            <Text style={styles.smallTitle}>
+               <Text style={styles.smallTitleGrey}>completed: </Text>
+               {currentAnime.statistics.status.completed}
             </Text>
-            <Text style={{ color: theme.colors.white }}>
-               {' '}
-               plan to watch: {currentAnime.statistics.status.plan_to_watch}
+            <Text style={styles.smallTitle}>
+               <Text style={styles.smallTitleGrey}>plan to watch: </Text>
+               {currentAnime.statistics.status.plan_to_watch}
             </Text>
-            <Text style={{ color: theme.colors.white }}>
-               {' '}
-               dropped: {currentAnime.statistics.status.dropped}
+            <Text style={styles.smallTitle}>
+               <Text style={styles.smallTitleGrey}>dropped: </Text>
+               {currentAnime.statistics.status.dropped}
             </Text>
-            <Text style={{ color: theme.colors.white }}>
-               {' '}
-               on hold: {currentAnime.statistics.status.on_hold}
+            <Text style={styles.smallTitle}>
+               <Text style={styles.smallTitleGrey}>on hold: </Text>
+               {currentAnime.statistics.status.on_hold}
             </Text>
-            <Text style={{ color: theme.colors.white }}>
-               {' '}
-               users: {currentAnime.statistics.num_list_users}
+            <Text style={styles.smallTitle}>
+               <Text style={styles.smallTitleGrey}>total: </Text>{' '}
+               {currentAnime.statistics.num_list_users}
             </Text>
          </View>
       </ScrollView>
@@ -232,30 +189,8 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          paddingVertical: 4,
          paddingHorizontal: 8,
       },
-      picture: {
-         width: 200,
-         aspectRatio: 2 / 3,
-         marginLeft: 5,
-      },
-      relatedBlock: {
-         width: 200,
-         marginLeft: 10,
-      },
-      relatedTitle: {
-         position: 'absolute',
-         bottom: 5,
-         color: colors.colors.white,
-         paddingHorizontal: 5,
-         flexShrink: 1,
-         flexWrap: 'wrap',
-         width: '100%',
-         fontSize: 16,
-         marginLeft: 5,
-         backgroundColor: 'rgba(0,0,0,0.7)',
-      },
       myRatingBlock: {
          alignItems: 'center',
-         opacity: 0.9,
          gap: 5,
          zIndex: 15,
          position: 'absolute',
@@ -263,6 +198,25 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          top: 10,
          padding: 10,
          borderRadius: 25,
-         backgroundColor: colors.colors.white,
+         backgroundColor: colors.colors.grey2,
+      },
+      upperBlock: {
+         width: '100%',
+         position: 'absolute',
+         top: 0,
+         height: 70,
+         zIndex: 2,
+      },
+      secondTitle: {
+         color: colors.colors.white,
+         marginTop: 20,
+         fontSize: 20,
+         fontWeight: '600',
+      },
+      smallTitle: {
+         color: colors.colors.white,
+      },
+      smallTitleGrey: {
+         color: colors.colors.grey0,
       },
    })
