@@ -23,6 +23,8 @@ export const SignUp = ({ navigation }: RootTabScreenProps<'SignUp'>) => {
       dispatch(signUp({ email, password, userName: name }))
       setEmail('')
       setPassword('')
+      setPasswordRepeat('')
+      setName('')
    }
    if (userId) {
       navigation.navigate('Home')

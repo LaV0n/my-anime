@@ -18,15 +18,16 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
-   const loginHandler = () => {
-      dispatch(login({ email, password }))
+   const loginHandler = async () => {
+      await dispatch(login({ email, password }))
       dispatch(getMyAnimeList())
       setEmail('')
       setPassword('')
       navigation.navigate('Profile')
    }
-   const testUser = () => {
-      dispatch(login({ email: 'test@test.com', password: '123456' }))
+   const testUser = async () => {
+      await dispatch(login({ email: 'test@test.com', password: '123456' }))
+      dispatch(getMyAnimeList())
       setEmail('')
       setPassword('')
       navigation.navigate('Profile')
@@ -100,7 +101,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       backIcon: {
          position: 'absolute',
-         top: 10,
+         top: 20,
          left: 10,
       },
       titleName: {

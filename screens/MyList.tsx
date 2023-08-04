@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getMyAnimeList } from '../bll/myDataReducer'
 import { MyAnimeItem } from '../components/MyAnimeItem'
 import { ErrorMessage } from '../components/ErrorMessage'
-import { Colors, Theme, useTheme } from '@rneui/themed'
+import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
 
 export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
@@ -24,7 +24,20 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
       <View style={styles.container}>
          <ErrorMessage />
          <ScrollView>
-            {myList.length === 0 && <Text>empty list</Text>}
+            {myList.length === 0 && (
+               <View style={styles.emptyBlock}>
+                  <Icon
+                     name={'content-paste'}
+                     color={theme.colors.secondary}
+                     size={180}
+                     style={styles.icon}
+                  />
+                  <Text style={styles.mainTitle}>Your list is Empty</Text>
+                  <Text style={styles.title}>
+                     It seems that you haven't added any anime to the list
+                  </Text>
+               </View>
+            )}
             {myList.map(a => (
                <MyAnimeItem anime={a} key={a.id} navigator={navigator} />
             ))}
@@ -39,5 +52,26 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          paddingTop: 20,
          height: '100%',
          backgroundColor: colors.colors.background,
+      },
+      emptyBlock: {
+         justifyContent: 'center',
+         alignItems: 'center',
+         marginTop: '50%',
+      },
+      title: {
+         color: colors.colors.white,
+         marginTop: 20,
+         textAlign: 'center',
+         fontSize: 16,
+         fontWeight: '400',
+         paddingHorizontal: 50,
+      },
+      mainTitle: {
+         color: colors.colors.secondary,
+         fontSize: 20,
+         fontWeight: '600',
+      },
+      icon: {
+         opacity: 0.6,
       },
    })

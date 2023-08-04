@@ -115,6 +115,7 @@ export const signUp = createAsyncThunk<
    dispatch(changeStatus('loading'))
    try {
       dispatch(changeStatus('success'))
+      dispatch(clearMyList)
       await createUserWithEmailAndPassword(auth, email, password)
       const newUser = {
          name: userName,
