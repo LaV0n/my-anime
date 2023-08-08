@@ -1,7 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AuthType } from '../common/types'
 import { changeStatus, setError } from './appReducer'
-import { signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth'
+import {
+   signInWithEmailAndPassword,
+   signOut,
+   createUserWithEmailAndPassword,
+   sendPasswordResetEmail,
+} from 'firebase/auth'
 import { setDoc, doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../config/firebase'
 import { clearMyList } from './myDataReducer'
@@ -100,6 +105,7 @@ export const logout = createAsyncThunk<unknown, undefined>(
       try {
          await signOut(auth)
          await AsyncStorage.removeItem('user')
+         dispatch(clearMyList)
          dispatch(changeStatus('success'))
       } catch (err) {
          const error = errorAsString(err)
@@ -144,6 +150,17 @@ export const getUserData = createAsyncThunk<AuthType, undefined>(
       } catch (err) {
          const error = errorAsString(err)
          dispatch(changeStatus('error'))
+         dispatch(setError(error))
+      }
+   }
+)
+export const resetPassword = createAsyncThunk<unknown, string>(
+   'auth/resetPassword',
+   async (email, { dispatch }) => {
+      try {
+         await sendPasswordResetEmail(auth, email)
+      } catch (err) {
+         const error = errorAsString(err)
          dispatch(setError(error))
       }
    }

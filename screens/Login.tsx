@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
-import { login } from '../bll/authReducer'
+import { login, resetPassword } from '../bll/authReducer'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { getMyAnimeList } from '../bll/myDataReducer'
 import { RootTabScreenProps } from '../common/types'
-import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
+import { Colors, Icon, Overlay, Theme, useTheme } from '@rneui/themed'
 import { verification } from '../utils/verification'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 
@@ -13,6 +13,7 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
    const [isChecked, setIsChecked] = useState(false)
+   const [isOpenWindow, setIsOpenWindow] = useState(false)
    const dispatch = useAppDispatch()
    const statusApp = useAppSelector(state => state.app.appStatus)
    const { theme } = useTheme()
@@ -31,6 +32,12 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
       setEmail('')
       setPassword('')
       navigation.navigate('Profile')
+   }
+   const resetPasswordHandler = () => {
+      if (email) {
+         setIsOpenWindow(true)
+         dispatch(resetPassword(email))
+      }
    }
 
    if (statusApp === 'loading') {
@@ -82,12 +89,20 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
          >
             <Text style={styles.loginTitle}>Login</Text>
          </TouchableOpacity>
+         <TouchableOpacity onPress={resetPasswordHandler}>
+            <Text style={styles.restorePasBlock}>Forgot the password?</Text>
+         </TouchableOpacity>
          <View style={styles.singUpBlock}>
             <Text style={styles.singUpTitle}>Do not have an account?</Text>
             <Text style={styles.singUpTitleLink} onPress={() => navigation.navigate('SignUp')}>
                Sing up
             </Text>
          </View>
+         <Overlay isVisible={isOpenWindow} onBackdropPress={() => setIsOpenWindow(!isOpenWindow)}>
+            <View style={styles.windowMessage}>
+               <Text style={styles.windowMessageTitle}>Check your email</Text>
+            </View>
+         </Overlay>
       </View>
    )
 }
@@ -163,5 +178,21 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          marginLeft: 10,
          fontSize: 16,
          color: colors.colors.secondary,
+      },
+      restorePasBlock: {
+         color: colors.colors.secondary,
+         marginTop: 15,
+         fontSize: 16,
+      },
+      windowMessage: {
+         width: 250,
+         height: 150,
+         alignItems: 'center',
+         justifyContent: 'center',
+         backgroundColor: colors.colors.background,
+      },
+      windowMessageTitle: {
+         color: colors.colors.primary,
+         fontSize: 20,
       },
    })
