@@ -103,3 +103,15 @@ export type CustomFlatListType = {
    data: AnimeResponseType[] | PictureSourceType[]
    isLinked: boolean
 }
+export type RatingStarsType = {
+   id: string
+   myRating: number
+   selectedColor?: string
+   currentAnimeId?: string
+}
+export type CustomSelectListType = {
+   idDoc: string
+   myStatus: AnimeStatusType
+   isMyList: boolean
+   currentAnimeId?: string
+}

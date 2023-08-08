@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { AnimeType, RootTabScreenProps } from '../common/types'
-import { AirbnbRating, Colors, Icon, Theme, useTheme } from '@rneui/themed'
+import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { useAppDispatch } from '../bll/store'
-import { changeItemData, delItemFromMyList } from '../bll/myDataReducer'
-import { SelectList } from 'react-native-dropdown-select-list/index'
+import { delItemFromMyList } from '../bll/myDataReducer'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
+import { RatingStars } from './RatingStars'
+import { CustomSelectList } from './CustomSelectList'
 
 export const MyAnimeItem = ({
    anime,
@@ -15,26 +16,11 @@ export const MyAnimeItem = ({
    navigator: RootTabScreenProps<'MyList'>
 }) => {
    const dispatch = useAppDispatch()
-   const [selected, setSelected] = useState('')
-   const data = [
-      { key: 'watched', value: 'watched' },
-      { key: 'unwatch', value: 'unwatch' },
-      { key: 'dropped', value: 'dropped' },
-   ]
-   const [rating, setRating] = useState(anime.myRating)
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
-   const onSelectedHandler = () => {
-      dispatch(changeItemData({ id: anime.idDoc, data: selected }))
-   }
-
    const delItemHandler = (id: string) => {
       dispatch(delItemFromMyList(id))
-   }
-   const setRatingHandler = (number: number) => {
-      setRating(rating)
-      dispatch(changeItemData({ id: anime.idDoc, data: number }))
    }
    const getCurrentAnimeItemHandler = () => {
       dispatch(getCurrentAnimeItem(anime.id))
@@ -50,27 +36,11 @@ export const MyAnimeItem = ({
          <View style={styles.description}>
             <View style={styles.titleBlock}>
                <Text style={styles.titleName}> {anime.title}</Text>
-               <AirbnbRating
-                  size={15}
-                  showRating={false}
-                  onFinishRating={(number: number) => setRatingHandler(number)}
-                  defaultRating={rating}
-               />
+               <RatingStars id={anime.idDoc} myRating={anime.myRating} />
             </View>
             <Text style={styles.episodes}> episodes: {anime.num_episodes}</Text>
             <View style={styles.actionBlock}>
-               <SelectList
-                  setSelected={(val: string) => setSelected(val)}
-                  data={data}
-                  save="value"
-                  arrowicon={<Icon name="arrow-downward" />}
-                  search={false}
-                  dropdownTextStyles={{ color: theme.colors.white }}
-                  inputStyles={{ color: theme.colors.white }}
-                  boxStyles={styles.selectBlock}
-                  onSelect={onSelectedHandler}
-                  defaultOption={data.filter(d => d.value === anime.myStatus)[0]}
-               />
+               <CustomSelectList idDoc={anime.idDoc} myStatus={anime.myStatus} isMyList={true} />
                <Icon
                   name={'delete'}
                   color={theme.colors.secondary}
@@ -117,11 +87,6 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          flexDirection: 'row',
          alignItems: 'center',
          justifyContent: 'space-between',
-      },
-      selectBlock: {
-         borderRadius: 15,
-         width: 120,
-         color: colors.colors.white,
       },
       titleBlock: {
          justifyContent: 'space-between',

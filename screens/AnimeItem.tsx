@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
-import { AirbnbRating, Colors, Icon, Theme, useTheme } from '@rneui/themed'
+import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { addItemToMyList } from '../bll/myDataReducer'
@@ -9,6 +9,8 @@ import { LoadingIndicator } from '../components/LoadingIndicator'
 import { LinearGradient } from 'expo-linear-gradient'
 import { statusAnimeItem } from '../utils/utils'
 import { CustomFlatLIst } from '../components/CustomFlatLIst'
+import { RatingStars } from '../components/RatingStars'
+import { CustomSelectList } from '../components/CustomSelectList'
 
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
@@ -45,14 +47,18 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
             <Image source={{ uri: currentAnime.main_picture.large }} style={styles.coverImg} />
             {currentAnime.idDoc ? (
                <View style={styles.myRatingBlock}>
-                  <AirbnbRating
-                     isDisabled={true}
-                     size={15}
+                  <RatingStars
+                     id={currentAnime.idDoc}
+                     myRating={currentAnime.myRating}
                      selectedColor={theme.colors.secondary}
-                     showRating={false}
-                     defaultRating={currentAnime.myRating}
+                     currentAnimeId={currentAnime.id}
                   />
-                  <Text style={{ color: theme.colors.secondary }}>{currentAnime.myStatus}</Text>
+                  <CustomSelectList
+                     idDoc={currentAnime.idDoc}
+                     myStatus={currentAnime.myStatus}
+                     currentAnimeId={currentAnime.id}
+                     isMyList={false}
+                  />
                </View>
             ) : (
                uid && (
