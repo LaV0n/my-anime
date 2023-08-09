@@ -22,12 +22,13 @@ export type CommonListType = {
    topAnimeList: AnimeResponseType[]
    newAnimeList: AnimeResponseType[]
    randomAnimeItem: AnimeType | null
+   filterData: FilterDataType
 }
 
 export type MyDataType = {
    animeList: AnimeType[]
 }
-type NameType = {
+export type NameType = {
    id: string | number
    name: string
 }
@@ -114,4 +115,15 @@ export type CustomSelectListType = {
    myStatus: AnimeStatusType
    isMyList: boolean
    currentAnimeId?: string
+}
+export type FilterButtonType = {
+   name: string
+   filterData: string | string[]
+   callback: (value: string) => void
+}
+export type FilterDataType = {
+   sortByRating: string
+   category: string
+   genre: string[]
+   releaseFilter: string
 }

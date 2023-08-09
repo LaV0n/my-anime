@@ -1,5 +1,11 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AnimeResponseType, AnimeType, CommonListType, CurrentAnimeType } from '../common/types'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+   AnimeResponseType,
+   AnimeType,
+   CommonListType,
+   CurrentAnimeType,
+   FilterDataType,
+} from '../common/types'
 import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { changeStatus, setError } from './appReducer'
@@ -30,6 +36,12 @@ const initialState: CommonListType = {
    topAnimeList: [],
    newAnimeList: [],
    randomAnimeItem: null,
+   filterData: {
+      sortByRating: 'rating',
+      releaseFilter: 'all',
+      category: 'all',
+      genre: ['all'],
+   },
 }
 
 const slice = createSlice({
@@ -38,6 +50,9 @@ const slice = createSlice({
    reducers: {
       clearList(state) {
          state.homeAnimeList = []
+      },
+      setFilterData(state, action: PayloadAction<FilterDataType>) {
+         state.filterData = action.payload
       },
    },
    extraReducers: builder => {
@@ -64,7 +79,7 @@ const slice = createSlice({
 })
 
 export const animeListReducer = slice.reducer
-export const { clearList } = slice.actions
+export const { clearList, setFilterData } = slice.actions
 
 export const getAnimeList = createAsyncThunk<AnimeType[], string, { state: AppRootStateType }>(
    'animeList/getAnimeList',
@@ -107,12 +122,17 @@ export const getShortAnimeList = createAsyncThunk<
 })
 export const getSearchAnimeList = createAsyncThunk<
    AnimeType[],
-   string,
+   string | undefined,
    { state: AppRootStateType }
 >('animeList/getSearchAnimeList', async (searchAnime, { dispatch, getState }) => {
    dispatch(changeStatus('loading'))
    try {
-      const res = await MyAnimeListAPI.getSearchAnime(searchAnime)
+      let res = {}
+      if (searchAnime) {
+         res = await MyAnimeListAPI.getSearchAnime(searchAnime)
+      } else {
+         res = await MyAnimeListAPI.getRankingAnime(getState().animeList.filterData.category)
+      }
       const data = await filteredData(
          res.data.data,
          getState().auth.uid,

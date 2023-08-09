@@ -23,7 +23,10 @@ export const MyAnimeListAPI = {
       )
    },
    getSearchAnime(anime: string) {
-      return instance.get(`v2/anime?q=${anime}`, anonymousParams)
+      return instance.get(`v2/anime?q=${anime}&limit=100`, anonymousParams)
+   },
+   getRankingAnime(ranking: string) {
+      return instance.get(`v2/anime/ranking?ranking_type=${ranking}&limit=50`, anonymousParams)
    },
    getCurrentAnimeItem(idAnime: string) {
       return instance.get(

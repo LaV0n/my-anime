@@ -1,4 +1,4 @@
-import { ScrollView, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getAnimeList, getSearchAnimeList } from '../bll/animeListReducer'
@@ -44,6 +44,9 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
             goFilterLink={goFilterLink}
          />
          <View>
+            {animeList.length === 0 && (
+               <Text style={{ color: theme.colors.primary }}>Empty list</Text>
+            )}
             {animeList.map(a => (
                <AnimeItemShort anime={a} key={a.id} navigator={navigator} />
             ))}

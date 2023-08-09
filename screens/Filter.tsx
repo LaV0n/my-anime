@@ -1,11 +1,63 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { RootTabScreenProps } from '../common/types'
 import { Button, Colors, Icon, Theme, useTheme } from '@rneui/themed'
+import { FilterButton } from '../components/FilterButton'
+import { useAppDispatch, useAppSelector } from '../bll/store'
+import { getSearchAnimeList, setFilterData } from '../bll/animeListReducer'
 
 export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
+   const filterData = useAppSelector(state => state.animeList.filterData)
+   const [sortByRating, setSortByRating] = useState(filterData.sortByRating)
+   const [category, setCategory] = useState(filterData.category)
+   const [genre, setGenre] = useState<string[]>(filterData.genre)
+   const [releaseFilter, setReleaseFilter] = useState(filterData.releaseFilter)
+   const dispatch = useAppDispatch()
+
+   const addGenre = (item: string) => {
+      let result = genre
+      if (item === 'all') {
+         return setGenre(['all'])
+      } else {
+         result = genre.filter(g => g !== 'all')
+         if (genre.includes(item)) {
+            result = result.filter(g => g !== item)
+         } else {
+            result = [...result, item]
+         }
+      }
+      if (result.length === 0) {
+         result = ['all']
+      }
+      setGenre(result)
+   }
+   const applyFilterHandler = () => {
+      const data = {
+         sortByRating,
+         category,
+         genre,
+         releaseFilter,
+      }
+      dispatch(setFilterData(data))
+      dispatch(getSearchAnimeList())
+      navigation.navigate('Search')
+   }
+   const resetFilterHAndler = () => {
+      const data = {
+         sortByRating: 'all',
+         category: 'all',
+         genre: ['all'],
+         releaseFilter: 'all',
+      }
+      dispatch(setFilterData(data))
+      setSortByRating('rating')
+      setCategory('all')
+      setGenre(['all'])
+      setReleaseFilter('all')
+   }
+
    return (
       <View style={styles.container}>
          <ScrollView>
@@ -18,111 +70,79 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
             <View style={styles.sortBlock}>
                <Text style={styles.titleName}>Sort</Text>
                <View style={styles.sortButtonBlock}>
-                  <TouchableOpacity style={styles.filterItemActive}>
-                     <Text style={styles.filterNameActive}>Rating</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Newest</Text>
-                  </TouchableOpacity>
+                  <FilterButton
+                     name={'Rating'}
+                     filterData={sortByRating}
+                     callback={setSortByRating}
+                  />
+                  <FilterButton
+                     name={'Newest'}
+                     filterData={sortByRating}
+                     callback={setSortByRating}
+                  />
                </View>
                <Text style={styles.titleName}>Category</Text>
                <View style={styles.sortButtonBlock}>
-                  <TouchableOpacity style={styles.filterItemActive}>
-                     <Text style={styles.filterNameActive}>All</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Airing</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Upcoming</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>TV</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Ova</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Movie</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Special</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>By Popularity</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Favorite</Text>
-                  </TouchableOpacity>
+                  <FilterButton name={'All'} filterData={category} callback={setCategory} />
+                  <FilterButton name={'Airing'} filterData={category} callback={setCategory} />
+                  <FilterButton name={'Upcoming'} filterData={category} callback={setCategory} />
+                  <FilterButton name={'TV'} filterData={category} callback={setCategory} />
+                  <FilterButton name={'Ova'} filterData={category} callback={setCategory} />
+                  <FilterButton name={'Movie'} filterData={category} callback={setCategory} />
+                  <FilterButton name={'Special'} filterData={category} callback={setCategory} />
+                  <FilterButton
+                     name={'By Popularity'}
+                     filterData={category}
+                     callback={setCategory}
+                  />
+                  <FilterButton name={'Favorite'} filterData={category} callback={setCategory} />
                </View>
                <Text style={styles.titleName}>Genre</Text>
                <View style={styles.sortButtonBlock}>
-                  <TouchableOpacity style={styles.filterItemActive}>
-                     <Text style={styles.filterNameActive}>All</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Action</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Adventure</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Avant Garde</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Award Winning</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Comedy</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Drama</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Fantasy</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Girls Love</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Horror</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Mystery</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Romance</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Sci-Fi</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Sports</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Supernatural</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>Suspense</Text>
-                  </TouchableOpacity>
+                  <FilterButton name={'All'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Action'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Adventure'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Avant Garde'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Award Winning'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Comedy'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Drama'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Fantasy'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Girls Love'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Horror'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Mystery'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Romance'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Sci-Fi'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Sports'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Supernatural'} filterData={genre} callback={addGenre} />
+                  <FilterButton name={'Suspense'} filterData={genre} callback={addGenre} />
                </View>
                <Text style={styles.titleName}>Release Year</Text>
                <View style={styles.sortButtonBlock}>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>All</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>2023</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>2022</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>2021</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.filterItem}>
-                     <Text style={styles.filterName}>2020</Text>
-                  </TouchableOpacity>
+                  <FilterButton
+                     name={'All'}
+                     filterData={releaseFilter}
+                     callback={setReleaseFilter}
+                  />
+                  <FilterButton
+                     name={'2023'}
+                     filterData={releaseFilter}
+                     callback={setReleaseFilter}
+                  />
+                  <FilterButton
+                     name={'2022'}
+                     filterData={releaseFilter}
+                     callback={setReleaseFilter}
+                  />
+                  <FilterButton
+                     name={'2021'}
+                     filterData={releaseFilter}
+                     callback={setReleaseFilter}
+                  />
+                  <FilterButton
+                     name={'2020'}
+                     filterData={releaseFilter}
+                     callback={setReleaseFilter}
+                  />
                </View>
             </View>
          </ScrollView>
@@ -136,6 +156,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                   backgroundColor: theme.colors.grey0,
                }}
                titleStyle={{ color: theme.colors.white }}
+               onPress={resetFilterHAndler}
             />
             <Button
                title="Apply"
@@ -146,6 +167,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                   width: 140,
                }}
                titleStyle={{ color: theme.colors.white }}
+               onPress={applyFilterHandler}
             />
          </View>
       </View>
@@ -177,6 +199,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       buttonBlock: {
          borderStyle: 'solid',
+         marginVertical: 10,
          borderWidth: 1,
          borderColor: colors.colors.grey0,
          flexDirection: 'row',
