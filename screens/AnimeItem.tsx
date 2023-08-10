@@ -88,7 +88,9 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
             </Text>
          </View>
          <View style={styles.shortStatBlock}>
-            <Text style={styles.smallTitle}>{currentAnime.start_date.slice(0, 4)}</Text>
+            {currentAnime.start_date && (
+               <Text style={styles.smallTitle}>{currentAnime.start_date.slice(0, 4)}</Text>
+            )}
             {currentAnime.studios.map(s => (
                <Text style={styles.smallTitle} key={s.id}>
                   {s.name}

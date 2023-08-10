@@ -2,11 +2,12 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { Colors, Theme, useTheme } from '@rneui/themed'
 import { FilterButtonType } from '../common/types'
+import { toLowCaseString } from '../utils/utils'
 
 export const FilterButton = ({ name, filterData, callback }: FilterButtonType) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
-   const data = name.toLowerCase().replace(/\s/g, '')
+   const data = toLowCaseString(name)
    const isTrueHandler = () => {
       if (typeof filterData === 'string') {
          return filterData === data
@@ -20,7 +21,9 @@ export const FilterButton = ({ name, filterData, callback }: FilterButtonType) =
          style={isTrueHandler() ? styles.filterItemActive : styles.filterItem}
          onPress={() => callback(data)}
       >
-         <Text style={isTrueHandler() ? styles.filterNameActive : styles.filterName}>{name}</Text>
+         <Text style={isTrueHandler() ? styles.filterNameActive : styles.filterName}>
+            {name === '0' ? 'All' : name}
+         </Text>
       </TouchableOpacity>
    )
 }

@@ -4,6 +4,7 @@ import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { useAppDispatch } from '../bll/store'
 import { getSearchAnimeList } from '../bll/animeListReducer'
 import { SearchBlockType } from '../common/types'
+import { getMyAnimeList, searchMyList } from '../bll/myDataReducer'
 
 export const SearchBlock = ({ setLastRequest, goHomeLink, goFilterLink }: SearchBlockType) => {
    const [open, setOpen] = useState(false)
@@ -12,11 +13,16 @@ export const SearchBlock = ({ setLastRequest, goHomeLink, goFilterLink }: Search
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
-   const searchAnimeHandler = () => {
-      dispatch(getSearchAnimeList(search))
-      setLastRequest(search)
-      setSearch('')
-      setOpen(!open)
+   const searchAnimeHandler = async () => {
+      if (setLastRequest) {
+         setLastRequest(search)
+         dispatch(getSearchAnimeList(search))
+         setSearch('')
+         setOpen(!open)
+      } else {
+         await dispatch(getMyAnimeList())
+         dispatch(searchMyList(search))
+      }
    }
    return (
       <View style={styles.container}>

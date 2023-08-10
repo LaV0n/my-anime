@@ -11,20 +11,20 @@ import { errorAsString } from '../utils/errorAsString'
 import { changeStatus, setError } from './appReducer'
 import { AppRootStateType } from './store'
 import { Ranking } from '../common/variables'
+import { filterAnimeListData } from '../utils/utils'
 
-const filteredData = async (allItems: AnimeResponseType[], uid: string, animeList: AnimeType[]) => {
+const filteredByOwnerData = (
+   allItems: AnimeResponseType[],
+   uid: string,
+   animeList: AnimeType[]
+) => {
    const result: AnimeType[] = []
    for (let i = 0; i < allItems.length; i++) {
-      const responseItem = await MyAnimeListAPI.getTitleShortInfo(allItems[i].node.id)
-      if (uid) {
-         const index = animeList.findIndex(a => a.id === allItems[i].node.id)
-         if (index !== -1) {
-            result.push(animeList[index])
-         } else {
-            result.push({ ...responseItem.data, myStatus: 'unwatch', myRating: 0, idDoc: '' })
-         }
+      const index = animeList.findIndex(a => a.id === allItems[i].node.id)
+      if (uid && index !== -1) {
+         result.push(animeList[index])
       } else {
-         result.push({ ...responseItem.data, myStatus: 'unwatch', myRating: 0, idDoc: '' })
+         result.push({ ...allItems[i].node, myStatus: 'unwatch', myRating: 0, idDoc: '' })
       }
    }
    return result
@@ -87,7 +87,7 @@ export const getAnimeList = createAsyncThunk<AnimeType[], string, { state: AppRo
       dispatch(changeStatus('loading'))
       try {
          const res = await MyAnimeListAPI.getAnimeByType(type)
-         const data = await filteredData(
+         const data = filteredByOwnerData(
             res.data.data,
             getState().auth.uid,
             getState().myData.animeList
@@ -127,19 +127,19 @@ export const getSearchAnimeList = createAsyncThunk<
 >('animeList/getSearchAnimeList', async (searchAnime, { dispatch, getState }) => {
    dispatch(changeStatus('loading'))
    try {
-      let res = {}
+      let res: any = {}
       if (searchAnime) {
          res = await MyAnimeListAPI.getSearchAnime(searchAnime)
       } else {
          res = await MyAnimeListAPI.getRankingAnime(getState().animeList.filterData.category)
       }
-      const data = await filteredData(
+      const data = filteredByOwnerData(
          res.data.data,
          getState().auth.uid,
          getState().myData.animeList
       )
       dispatch(changeStatus('success'))
-      return data
+      return filterAnimeListData(data, getState().animeList.filterData)
    } catch (err) {
       const error = errorAsString(err)
       dispatch(changeStatus('error'))

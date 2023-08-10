@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getAnimeList, getSearchAnimeList } from '../bll/animeListReducer'
@@ -9,6 +9,8 @@ import { RootTabScreenProps } from '../common/types'
 import { useTheme } from '@rneui/themed'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { Ranking } from '../common/variables'
+import { NotFound } from '../components/NotFound'
+import { toggleMyListFilterData } from '../bll/appReducer'
 
 export const Search = (navigator: RootTabScreenProps<'Search'>) => {
    const animeList = useAppSelector(state => state.animeList.homeAnimeList)
@@ -22,6 +24,7 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
       navigator.navigation.navigate('Home')
    }
    const goFilterLink = () => {
+      dispatch(toggleMyListFilterData(false))
       navigator.navigation.navigate('Filter')
    }
    const getAnime = () => {
@@ -44,9 +47,7 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
             goFilterLink={goFilterLink}
          />
          <View>
-            {animeList.length === 0 && (
-               <Text style={{ color: theme.colors.primary }}>Empty list</Text>
-            )}
+            {animeList.length === 0 && <NotFound />}
             {animeList.map(a => (
                <AnimeItemShort anime={a} key={a.id} navigator={navigator} />
             ))}

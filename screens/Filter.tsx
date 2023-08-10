@@ -5,15 +5,25 @@ import { Button, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { FilterButton } from '../components/FilterButton'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getSearchAnimeList, setFilterData } from '../bll/animeListReducer'
+import { filterMyList, getMyAnimeList, setFilterMyListData } from '../bll/myDataReducer'
 
 export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
-   const filterData = useAppSelector(state => state.animeList.filterData)
+   const isMyListFilterData = useAppSelector(state => state.app.isMyListFilter)
+   const filterSearchData = useAppSelector(state => state.animeList.filterData)
+   const filterMyListData = useAppSelector(state => state.myData.filterData)
+
+   const filterData = isMyListFilterData ? filterMyListData : filterSearchData
+
    const [sortByRating, setSortByRating] = useState(filterData.sortByRating)
    const [category, setCategory] = useState(filterData.category)
    const [genre, setGenre] = useState<string[]>(filterData.genre)
    const [releaseFilter, setReleaseFilter] = useState(filterData.releaseFilter)
+   const [myStatus, setMyStatus] = useState(filterData.myStatus)
+   const [myStars, setMyStars] = useState<string>(
+      filterData.myStars ? filterData.myStars.toString() : '0'
+   )
    const dispatch = useAppDispatch()
 
    const addGenre = (item: string) => {
@@ -33,16 +43,25 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
       }
       setGenre(result)
    }
-   const applyFilterHandler = () => {
+   const applyFilterHandler = async () => {
       const data = {
          sortByRating,
          category,
          genre,
          releaseFilter,
+         myStars,
+         myStatus,
       }
-      dispatch(setFilterData(data))
-      dispatch(getSearchAnimeList())
-      navigation.navigate('Search')
+      if (isMyListFilterData) {
+         dispatch(setFilterMyListData(data))
+         await dispatch(getMyAnimeList())
+         dispatch(filterMyList())
+         navigation.navigate('MyList')
+      } else {
+         dispatch(setFilterData(data))
+         dispatch(getSearchAnimeList())
+         navigation.navigate('Search')
+      }
    }
    const resetFilterHAndler = () => {
       const data = {
@@ -50,19 +69,34 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
          category: 'all',
          genre: ['all'],
          releaseFilter: 'all',
+         myStatus: 'all',
+         myStars: '0',
       }
-      dispatch(setFilterData(data))
+      if (isMyListFilterData) {
+         dispatch(setFilterMyListData(data))
+      } else {
+         dispatch(setFilterData(data))
+      }
       setSortByRating('rating')
       setCategory('all')
       setGenre(['all'])
       setReleaseFilter('all')
+      setMyStars('0')
+      setMyStatus('all')
+   }
+   const goBackHandler = () => {
+      if (isMyListFilterData) {
+         navigation.navigate('MyList')
+      } else {
+         navigation.navigate('Search')
+      }
    }
 
    return (
       <View style={styles.container}>
          <ScrollView>
             <View style={styles.header}>
-               <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+               <TouchableOpacity onPress={goBackHandler}>
                   <Icon name={'arrow-back'} color={theme.colors.white} />
                </TouchableOpacity>
                <Text style={styles.headerTitle}>Sort & Filter</Text>
@@ -81,22 +115,42 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                      callback={setSortByRating}
                   />
                </View>
-               <Text style={styles.titleName}>Category</Text>
-               <View style={styles.sortButtonBlock}>
-                  <FilterButton name={'All'} filterData={category} callback={setCategory} />
-                  <FilterButton name={'Airing'} filterData={category} callback={setCategory} />
-                  <FilterButton name={'Upcoming'} filterData={category} callback={setCategory} />
-                  <FilterButton name={'TV'} filterData={category} callback={setCategory} />
-                  <FilterButton name={'Ova'} filterData={category} callback={setCategory} />
-                  <FilterButton name={'Movie'} filterData={category} callback={setCategory} />
-                  <FilterButton name={'Special'} filterData={category} callback={setCategory} />
-                  <FilterButton
-                     name={'By Popularity'}
-                     filterData={category}
-                     callback={setCategory}
-                  />
-                  <FilterButton name={'Favorite'} filterData={category} callback={setCategory} />
-               </View>
+               {!isMyListFilterData && (
+                  <>
+                     <Text style={styles.titleName}>Category</Text>
+                     <View style={styles.sortButtonBlock}>
+                        <FilterButton name={'All'} filterData={category} callback={setCategory} />
+                        <FilterButton
+                           name={'Airing'}
+                           filterData={category}
+                           callback={setCategory}
+                        />
+                        <FilterButton
+                           name={'Upcoming'}
+                           filterData={category}
+                           callback={setCategory}
+                        />
+                        <FilterButton name={'TV'} filterData={category} callback={setCategory} />
+                        <FilterButton name={'Ova'} filterData={category} callback={setCategory} />
+                        <FilterButton name={'Movie'} filterData={category} callback={setCategory} />
+                        <FilterButton
+                           name={'Special'}
+                           filterData={category}
+                           callback={setCategory}
+                        />
+                        <FilterButton
+                           name={'By Popularity'}
+                           filterData={category}
+                           callback={setCategory}
+                        />
+                        <FilterButton
+                           name={'Favorite'}
+                           filterData={category}
+                           callback={setCategory}
+                        />
+                     </View>
+                  </>
+               )}
                <Text style={styles.titleName}>Genre</Text>
                <View style={styles.sortButtonBlock}>
                   <FilterButton name={'All'} filterData={genre} callback={addGenre} />
@@ -144,6 +198,38 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                      callback={setReleaseFilter}
                   />
                </View>
+               {isMyListFilterData && (
+                  <>
+                     <Text style={styles.titleName}>My Status</Text>
+                     <View style={styles.sortButtonBlock}>
+                        <FilterButton name={'All'} filterData={myStatus!} callback={setMyStatus} />
+                        <FilterButton
+                           name={'watched'}
+                           filterData={myStatus!}
+                           callback={setMyStatus}
+                        />
+                        <FilterButton
+                           name={'unwatch'}
+                           filterData={myStatus!}
+                           callback={setMyStatus}
+                        />
+                        <FilterButton
+                           name={'dropped'}
+                           filterData={myStatus!}
+                           callback={setMyStatus}
+                        />
+                     </View>
+                     <Text style={styles.titleName}>My Rating</Text>
+                     <View style={styles.sortButtonBlock}>
+                        <FilterButton name={'0'} filterData={myStars!} callback={setMyStars} />
+                        <FilterButton name={'1'} filterData={myStars!} callback={setMyStars} />
+                        <FilterButton name={'2'} filterData={myStars!} callback={setMyStars} />
+                        <FilterButton name={'3'} filterData={myStars!} callback={setMyStars} />
+                        <FilterButton name={'4'} filterData={myStars!} callback={setMyStars} />
+                        <FilterButton name={'5'} filterData={myStars!} callback={setMyStars} />
+                     </View>
+                  </>
+               )}
             </View>
          </ScrollView>
          <View style={styles.buttonBlock}>

@@ -14,7 +14,10 @@ const anonymousParams = {
 }
 export const MyAnimeListAPI = {
    getAnimeByType(type: string) {
-      return instance.get(`v2/anime/ranking?ranking_type=${type}`, anonymousParams)
+      return instance.get(
+         `v2/anime/ranking?ranking_type=${type}&fields=start_date,end_date,mean,status,genres,num_episodes`,
+         anonymousParams
+      )
    },
    getTitleShortInfo(id: string) {
       return instance.get(
@@ -23,10 +26,16 @@ export const MyAnimeListAPI = {
       )
    },
    getSearchAnime(anime: string) {
-      return instance.get(`v2/anime?q=${anime}&limit=100`, anonymousParams)
+      return instance.get(
+         `v2/anime?q=${anime}&limit=100&fields=start_date,end_date,mean,status,genres,num_episodes`,
+         anonymousParams
+      )
    },
    getRankingAnime(ranking: string) {
-      return instance.get(`v2/anime/ranking?ranking_type=${ranking}&limit=50`, anonymousParams)
+      return instance.get(
+         `v2/anime/ranking?ranking_type=${ranking}&limit=50&fields=start_date,end_date,mean,status,genres,num_episodes`,
+         anonymousParams
+      )
    },
    getCurrentAnimeItem(idAnime: string) {
       return instance.get(

@@ -27,6 +27,7 @@ export type CommonListType = {
 
 export type MyDataType = {
    animeList: AnimeType[]
+   filterData: FilterDataType
 }
 export type NameType = {
    id: string | number
@@ -82,12 +83,19 @@ export type AnimeResponseType = {
       id: string
       title: string
       main_picture: PictureSourceType
+      start_date: string
+      end_date: string
+      mean: number
+      status: string
+      genres: NameType[]
+      num_episodes: string | number
    }
 }
 export type AppStatusType = 'success' | 'loading' | 'error'
 export type AppType = {
    appStatus: AppStatusType
    error: string
+   isMyListFilter: boolean
 }
 export type AuthType = {
    uid: string
@@ -95,7 +103,7 @@ export type AuthType = {
    name: string
 }
 export type SearchBlockType = {
-   setLastRequest: (value: string) => void
+   setLastRequest?: (value: string) => void
    goHomeLink: () => void
    goFilterLink: () => void
 }
@@ -126,4 +134,6 @@ export type FilterDataType = {
    category: string
    genre: string[]
    releaseFilter: string
+   myStatus?: string
+   myStars?: string
 }

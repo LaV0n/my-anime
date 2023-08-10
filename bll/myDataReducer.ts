@@ -1,12 +1,21 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AnimeType, CurrentAnimeType, MyDataType } from '../common/types'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { AnimeType, CurrentAnimeType, FilterDataType, MyDataType } from '../common/types'
 import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { AppRootStateType } from './store'
 import { changeStatus, setError } from './appReducer'
+import { filterAnimeListData } from '../utils/utils'
 
 const initialState: MyDataType = {
    animeList: [],
+   filterData: {
+      sortByRating: 'rating',
+      releaseFilter: 'all',
+      category: 'all',
+      genre: ['all'],
+      myStatus: 'all',
+      myStars: '0',
+   },
 }
 
 const slice = createSlice({
@@ -15,6 +24,17 @@ const slice = createSlice({
    reducers: {
       clearMyList(state) {
          state.animeList = []
+      },
+      filterMyList(state) {
+         state.animeList = filterAnimeListData(state.animeList, state.filterData)
+      },
+      searchMyList(state, action: PayloadAction<string>) {
+         state.animeList = state.animeList.filter(a =>
+            a.title.toLowerCase().includes(action.payload.toLowerCase())
+         )
+      },
+      setFilterMyListData(state, action: PayloadAction<FilterDataType>) {
+         state.filterData = action.payload
       },
    },
    extraReducers: builder => {
@@ -27,7 +47,7 @@ const slice = createSlice({
 })
 
 export const myDataReducer = slice.reducer
-export const { clearMyList } = slice.actions
+export const { clearMyList, searchMyList, filterMyList, setFilterMyListData } = slice.actions
 
 export const getMyAnimeList = createAsyncThunk<AnimeType[], undefined, { state: AppRootStateType }>(
    'myData/getMyAnimeList',

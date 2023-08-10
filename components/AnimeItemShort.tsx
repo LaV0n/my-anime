@@ -37,7 +37,10 @@ export const AnimeItemShort = ({
          <View style={styles.description}>
             <Text style={styles.titleName}> {anime.title}</Text>
             <Text style={styles.descriptionTitle}> {statusAnimeItem(anime.status)}</Text>
-            <Text style={styles.descriptionTitle}>{anime.start_date.slice(0, 4)}</Text>
+            {anime.start_date && (
+               <Text style={styles.descriptionTitle}>{anime.start_date.slice(0, 4)}</Text>
+            )}
+
             <Text style={styles.descriptionTitle}>episodes: {anime.num_episodes}</Text>
             <View style={styles.genresBlock}>
                {anime.genres.map(a => (

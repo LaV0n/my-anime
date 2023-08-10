@@ -6,6 +6,8 @@ import { MyAnimeItem } from '../components/MyAnimeItem'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
+import { SearchBlock } from '../components/SearchBlock'
+import { toggleMyListFilterData } from '../bll/appReducer'
 
 export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const myList = useAppSelector(state => state.myData.animeList)
@@ -13,6 +15,13 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const uid = useAppSelector(state => state.auth.uid)
    const { theme } = useTheme()
    const styles = makeStyles(theme)
+   const goFilterLink = () => {
+      dispatch(toggleMyListFilterData(true))
+      navigator.navigation.navigate('Filter')
+   }
+   const goHomeLink = () => {
+      navigator.navigation.navigate('Home')
+   }
 
    useEffect(() => {
       if (uid) {
@@ -23,6 +32,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    return (
       <View style={styles.container}>
          <ErrorMessage />
+         <SearchBlock goHomeLink={goHomeLink} goFilterLink={goFilterLink} />
          <ScrollView>
             {myList.length === 0 && (
                <View style={styles.emptyBlock}>
