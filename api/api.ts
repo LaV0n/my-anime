@@ -39,7 +39,7 @@ export const MyAnimeListAPI = {
    },
    getCurrentAnimeItem(idAnime: string) {
       return instance.get(
-         `v2/anime/${idAnime}?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,,media_type,status,genres,num_episodes,source,rating,pictures,related_anime,recommendations,studios,statistics`,
+         `v2/anime/${idAnime}?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,media_type,status,genres,num_episodes,source,rating,pictures,related_anime,recommendations,studios,statistics`,
          anonymousParams
       )
    },

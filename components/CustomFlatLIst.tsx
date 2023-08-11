@@ -21,6 +21,7 @@ export const CustomFlatLIst = ({ name, data, isLinked }: CustomFlatListType) => 
       setUri(url)
       setVisible(!visible)
    }
+   if (data.length === 0) return <View></View>
 
    return (
       <View>
@@ -45,6 +46,9 @@ export const CustomFlatLIst = ({ name, data, isLinked }: CustomFlatListType) => 
                         style={styles.picture}
                      />
                      <Text style={styles.relatedTitle}>{item.node.title}</Text>
+                     {item.relation_type_formatted && (
+                        <Text style={styles.heightTitle}>{item.relation_type_formatted}</Text>
+                     )}
                   </TouchableOpacity>
                )}
             />
@@ -70,8 +74,9 @@ export const CustomFlatLIst = ({ name, data, isLinked }: CustomFlatListType) => 
 const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       secondTitle: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
          marginTop: 20,
+         marginBottom: 10,
          fontSize: 20,
          fontWeight: '600',
       },
@@ -82,6 +87,18 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       relatedTitle: {
          position: 'absolute',
          bottom: 5,
+         color: colors.colors.white,
+         paddingHorizontal: 5,
+         flexShrink: 1,
+         flexWrap: 'wrap',
+         width: '100%',
+         fontSize: 16,
+         marginLeft: 5,
+         backgroundColor: colors.colors.grey2,
+      },
+      heightTitle: {
+         position: 'absolute',
+         top: 5,
          color: colors.colors.white,
          paddingHorizontal: 5,
          flexShrink: 1,

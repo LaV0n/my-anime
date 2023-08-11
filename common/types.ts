@@ -78,6 +78,9 @@ export interface CurrentAnimeType extends AnimeType {
       num_list_users: number
    }
 }
+export interface RelatedAnimeResponseType extends AnimeResponseType {
+   relation_type_formatted: string
+}
 export type AnimeResponseType = {
    node: {
       id: string
@@ -90,6 +93,7 @@ export type AnimeResponseType = {
       genres: NameType[]
       num_episodes: string | number
    }
+   relation_type_formatted?: string
 }
 export type AppStatusType = 'success' | 'loading' | 'error'
 export type AppType = {
@@ -109,7 +113,7 @@ export type SearchBlockType = {
 }
 export type CustomFlatListType = {
    name: string
-   data: AnimeResponseType[] | PictureSourceType[]
+   data: AnimeResponseType[] | PictureSourceType[] | RelatedAnimeResponseType[]
    isLinked: boolean
 }
 export type RatingStarsType = {

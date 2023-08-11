@@ -135,7 +135,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          gap: 10,
       },
       titleName: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
          fontSize: 18,
          fontWeight: '600',
       },

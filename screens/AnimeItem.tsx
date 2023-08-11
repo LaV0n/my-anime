@@ -15,7 +15,7 @@ import { CustomSelectList } from '../components/CustomSelectList'
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
    const statusApp = useAppSelector(state => state.app.appStatus)
-   const [viewMore, setViewMore] = useState(false)
+   const [viewMore, setViewMore] = useState(true)
    const uid = useAppSelector(state => state.auth.uid)
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
@@ -68,89 +68,93 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                )
             )}
          </View>
-         <Text style={styles.nameTitle}>{currentAnime.title}</Text>
-         <View>
-            {currentAnime.alternative_titles.synonyms.length !== 0 && (
-               <Text style={styles.smallTitleGrey}>
-                  synonyms: {currentAnime.alternative_titles.synonyms}
+         <View style={styles.descriptionBlock}>
+            <Text style={styles.nameTitle}>{currentAnime.title}</Text>
+            <View>
+               {currentAnime.alternative_titles.synonyms.length !== 0 && (
+                  <Text style={styles.smallTitleGrey}>
+                     synonyms: {currentAnime.alternative_titles.synonyms}
+                  </Text>
+               )}
+               <Text style={styles.smallTitleGrey}>eng: {currentAnime.alternative_titles.en}</Text>
+               <Text style={styles.smallTitleGrey}> jp: {currentAnime.alternative_titles.ja}</Text>
+            </View>
+            <View style={styles.shortStatBlock}>
+               <Icon name={'star'} color={theme.colors.secondary} size={20} />
+               <Text style={styles.meanTitle}>{currentAnime.mean}</Text>
+               <Text style={styles.smallTitle}>Ranked #{currentAnime.rank}</Text>
+               <Text style={styles.smallTitle}>Popularity #{currentAnime.popularity}</Text>
+               <Text style={styles.ratingTitle}>
+                  {currentAnime.rating.replace('_', ' ').toUpperCase()}
                </Text>
-            )}
-            <Text style={styles.smallTitleGrey}>eng: {currentAnime.alternative_titles.en}</Text>
-            <Text style={styles.smallTitleGrey}> jp: {currentAnime.alternative_titles.ja}</Text>
-         </View>
-         <View style={styles.shortStatBlock}>
-            <Icon name={'star'} color={theme.colors.secondary} size={20} />
-            <Text style={styles.meanTitle}>{currentAnime.mean}</Text>
-            <Text style={styles.smallTitle}>Ranked #{currentAnime.rank}</Text>
-            <Text style={styles.smallTitle}>Popularity #{currentAnime.popularity}</Text>
-            <Text style={styles.ratingTitle}>
-               {currentAnime.rating.replace('_', ' ').toUpperCase()}
-            </Text>
-         </View>
-         <View style={styles.shortStatBlock}>
-            {currentAnime.start_date && (
-               <Text style={styles.smallTitle}>{currentAnime.start_date.slice(0, 4)}</Text>
-            )}
-            {currentAnime.studios.map(s => (
-               <Text style={styles.smallTitle} key={s.id}>
-                  {s.name}
+            </View>
+            <View style={styles.shortStatBlock}>
+               {currentAnime.start_date && (
+                  <Text style={styles.smallTitle}>{currentAnime.start_date.slice(0, 4)}</Text>
+               )}
+               {currentAnime.studios.map(s => (
+                  <Text style={styles.smallTitle} key={s.id}>
+                     {s.name}
+                  </Text>
+               ))}
+               <Text style={styles.smallTitle}>{statusAnimeItem(currentAnime.status)}</Text>
+               <Text style={styles.smallTitle}> episodes: {currentAnime.num_episodes}</Text>
+            </View>
+            <View style={styles.shortStatBlock}>
+               <Text style={styles.smallTitle}>type: {currentAnime.media_type}</Text>
+               <Text style={styles.smallTitle}>
+                  source: {currentAnime.source.replace('_', ' ')}
                </Text>
-            ))}
-            <Text style={styles.smallTitle}>{statusAnimeItem(currentAnime.status)}</Text>
-            <Text style={styles.smallTitle}> episodes: {currentAnime.num_episodes}</Text>
-         </View>
-         <View style={styles.shortStatBlock}>
-            <Text style={styles.smallTitle}>type: {currentAnime.media_type}</Text>
-            <Text style={styles.smallTitle}>source: {currentAnime.source.replace('_', ' ')}</Text>
-         </View>
-         <View style={styles.shortStatBlock}>
-            {currentAnime.genres.map(g => (
-               <Text style={{ color: theme.colors.secondary }} key={g.id}>
-                  {g.name}
+            </View>
+            <View style={styles.shortStatBlock}>
+               {currentAnime.genres.map(g => (
+                  <Text style={{ color: theme.colors.secondary }} key={g.id}>
+                     {g.name}
+                  </Text>
+               ))}
+            </View>
+            <View>
+               <Text numberOfLines={viewMore ? 3 : undefined} style={styles.smallTitle}>
+                  {currentAnime.synopsis}
                </Text>
-            ))}
-         </View>
-         <View>
-            <Text numberOfLines={viewMore ? 3 : undefined} style={styles.smallTitle}>
-               {currentAnime.synopsis}
-            </Text>
-            <Text style={{ color: theme.colors.secondary }} onPress={toggleViewMode}>
-               {viewMore ? 'read more...' : 'read less...'}
-            </Text>
-         </View>
-         <CustomFlatLIst name={'Covers images'} data={currentAnime.pictures} isLinked={false} />
-         <CustomFlatLIst name={'Related'} data={currentAnime.related_anime} isLinked={true} />
-         <CustomFlatLIst
-            name={'Recommendations'}
-            data={currentAnime.recommendations}
-            isLinked={true}
-         />
-         <View>
-            <Text style={styles.secondTitle}> Statistics of viewers</Text>
-            <Text style={styles.smallTitle}>
-               <Text style={styles.smallTitleGrey}>watching: </Text>
-               {currentAnime.statistics.status.watching}
-            </Text>
-            <Text style={styles.smallTitle}>
-               <Text style={styles.smallTitleGrey}>completed: </Text>
-               {currentAnime.statistics.status.completed}
-            </Text>
-            <Text style={styles.smallTitle}>
-               <Text style={styles.smallTitleGrey}>plan to watch: </Text>
-               {currentAnime.statistics.status.plan_to_watch}
-            </Text>
-            <Text style={styles.smallTitle}>
-               <Text style={styles.smallTitleGrey}>dropped: </Text>
-               {currentAnime.statistics.status.dropped}
-            </Text>
-            <Text style={styles.smallTitle}>
-               <Text style={styles.smallTitleGrey}>on hold: </Text>
-               {currentAnime.statistics.status.on_hold}
-            </Text>
-            <Text style={styles.smallTitle}>
-               <Text style={styles.smallTitleGrey}>total: </Text>{' '}
-               {currentAnime.statistics.num_list_users}
-            </Text>
+               <Text style={{ color: theme.colors.secondary }} onPress={toggleViewMode}>
+                  {viewMore ? 'read more...' : 'read less...'}
+               </Text>
+            </View>
+            <CustomFlatLIst name={'Covers images'} data={currentAnime.pictures} isLinked={false} />
+            <CustomFlatLIst name={'Related'} data={currentAnime.related_anime} isLinked={true} />
+            <CustomFlatLIst
+               name={'Recommendations'}
+               data={currentAnime.recommendations}
+               isLinked={true}
+            />
+            <View>
+               <Text style={styles.secondTitle}> Statistics of viewers</Text>
+               <Text style={styles.smallTitle}>
+                  <Text style={styles.smallTitleGrey}>watching: </Text>
+                  {currentAnime.statistics.status.watching}
+               </Text>
+               <Text style={styles.smallTitle}>
+                  <Text style={styles.smallTitleGrey}>completed: </Text>
+                  {currentAnime.statistics.status.completed}
+               </Text>
+               <Text style={styles.smallTitle}>
+                  <Text style={styles.smallTitleGrey}>plan to watch: </Text>
+                  {currentAnime.statistics.status.plan_to_watch}
+               </Text>
+               <Text style={styles.smallTitle}>
+                  <Text style={styles.smallTitleGrey}>dropped: </Text>
+                  {currentAnime.statistics.status.dropped}
+               </Text>
+               <Text style={styles.smallTitle}>
+                  <Text style={styles.smallTitleGrey}>on hold: </Text>
+                  {currentAnime.statistics.status.on_hold}
+               </Text>
+               <Text style={styles.smallTitle}>
+                  <Text style={styles.smallTitleGrey}>total: </Text>{' '}
+                  {currentAnime.statistics.num_list_users}
+               </Text>
+            </View>
          </View>
       </ScrollView>
    )
@@ -161,8 +165,11 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       container: {
          backgroundColor: colors.colors.background,
       },
+      descriptionBlock: {
+         padding: 5,
+      },
       nameTitle: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
          marginVertical: 10,
          fontSize: 24,
          fontWeight: '600',
@@ -216,13 +223,14 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          zIndex: 2,
       },
       secondTitle: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
          marginTop: 20,
+         marginBottom: 10,
          fontSize: 20,
          fontWeight: '600',
       },
       smallTitle: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
       },
       smallTitleGrey: {
          color: colors.colors.grey0,

@@ -94,10 +94,10 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          flexWrap: 'wrap',
       },
       titleName: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
          fontSize: 15,
       },
       episodes: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
       },
    })

@@ -49,7 +49,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
                </View>
             )}
             {myList.map(a => (
-               <MyAnimeItem anime={a} key={a.id} navigator={navigator} />
+               <MyAnimeItem anime={a} key={a.idDoc} navigator={navigator} />
             ))}
          </ScrollView>
       </View>
@@ -59,7 +59,6 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
 const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       container: {
-         paddingTop: 20,
          height: '100%',
          backgroundColor: colors.colors.background,
       },
@@ -69,7 +68,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          marginTop: '50%',
       },
       title: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
          marginTop: 20,
          textAlign: 'center',
          fontSize: 16,

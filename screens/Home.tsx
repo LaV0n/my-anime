@@ -63,7 +63,7 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
             <Text style={styles.rating}>{randomAnimeItem.mean}</Text>
             <LinearGradient
                style={styles.descriptionBlock}
-               colors={['transparent', theme.colors.background]}
+               colors={['transparent', theme.colors.black]}
             >
                <Text style={styles.titleRandomName}>{randomAnimeItem.title}</Text>
                <View style={styles.genresBlock}>
@@ -80,7 +80,7 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
                </View>
             </LinearGradient>
          </TouchableOpacity>
-         <Text style={styles.titleName}>Top Hits Anime</Text>
+         <Text style={styles.mainTitleName}>Top Hits Anime</Text>
          <FlatList
             style={styles.listBlock}
             data={topAnimeList}
@@ -89,7 +89,7 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
                <AnimeItemPreview anime={item} navigator={navigator} key={item.node.id} />
             )}
          />
-         <Text style={styles.titleName}>New Releases</Text>
+         <Text style={styles.mainTitleName}>New Releases</Text>
          <FlatList
             style={styles.listBlock}
             data={newAnimeList}
@@ -125,6 +125,11 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          paddingLeft: 10,
          fontSize: 16,
       },
+      mainTitleName: {
+         color: colors.colors.primary,
+         paddingLeft: 10,
+         fontSize: 16,
+      },
       imgRandom: {
          aspectRatio: 1,
       },
@@ -153,7 +158,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          gap: 10,
       },
       genreTitle: {
-         color: colors.colors.primary,
+         color: colors.colors.white,
          fontSize: 12,
       },
       rating: {

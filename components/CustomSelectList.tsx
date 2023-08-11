@@ -37,8 +37,8 @@ export const CustomSelectList = ({
          save="value"
          search={false}
          arrowicon={<Icon name={'expand-more'} style={{ marginLeft: 10 }} />}
-         dropdownTextStyles={{ color: theme.colors.white }}
-         inputStyles={{ color: theme.colors.white }}
+         dropdownTextStyles={{ color: isMyList ? theme.colors.primary : theme.colors.white }}
+         inputStyles={{ color: isMyList ? theme.colors.primary : theme.colors.white }}
          boxStyles={{ borderRadius: 15, width: 120, borderWidth: isMyList ? 1 : 0 }}
          onSelect={onSelectedHandler}
          defaultOption={data.filter(d => d.value === myStatus)[0]}

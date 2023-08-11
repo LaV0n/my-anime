@@ -27,7 +27,7 @@ export const SearchBlock = ({ setLastRequest, goHomeLink, goFilterLink }: Search
    return (
       <View style={styles.container}>
          <TouchableOpacity onPress={goHomeLink}>
-            <Icon name={'arrow-back'} color={theme.colors.white} />
+            <Icon name={'arrow-back'} color={theme.colors.primary} />
          </TouchableOpacity>
          {open ? (
             <View style={styles.searchContainer}>
@@ -40,12 +40,12 @@ export const SearchBlock = ({ setLastRequest, goHomeLink, goFilterLink }: Search
                   onEndEditing={searchAnimeHandler}
                />
                <TouchableOpacity onPress={goFilterLink}>
-                  <Icon name={'tune'} color={theme.colors.white} />
+                  <Icon name={'tune'} color={theme.colors.primary} />
                </TouchableOpacity>
             </View>
          ) : (
             <TouchableOpacity onPress={() => setOpen(!open)}>
-               <Icon name={'search'} color={theme.colors.white} />
+               <Icon name={'search'} color={theme.colors.primary} />
             </TouchableOpacity>
          )}
       </View>
@@ -71,7 +71,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          paddingHorizontal: 10,
          borderRadius: 20,
          width: '90%',
-         color: colors.colors.white,
+         color: colors.colors.primary,
       },
       searchContainer: {
          justifyContent: 'space-between',

@@ -10,7 +10,7 @@ export const NotFound = () => {
          <Icon name={'search-off'} color={theme.colors.secondary} size={180} style={styles.icon} />
          <Text style={styles.mainTitle}>Not Found</Text>
          <Text style={styles.title}>
-            Sorry,the keyword you entered could not be found. Try to search with other keywords or
+            Sorry, the keyword you entered could not be found. Try to search with other keywords or
             change thi filter
          </Text>
       </View>
@@ -24,7 +24,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          marginTop: '50%',
       },
       title: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
          marginTop: 20,
          textAlign: 'center',
          fontSize: 16,
