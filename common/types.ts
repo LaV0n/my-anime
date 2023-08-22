@@ -104,7 +104,6 @@ export type AppType = {
 export type AuthType = {
    uid: string
    email: string
-   name: string
 }
 export type SearchBlockType = {
    setLastRequest?: (value: string) => void
@@ -140,4 +139,10 @@ export type FilterDataType = {
    releaseFilter: string
    myStatus?: string
    myStars?: string
+}
+export type UserDataType = AuthType & ProfileDataType
+export type ColorModeType = 'dark' | 'light'
+export type ProfileDataType = {
+   name: string
+   colorMode: ColorModeType
 }

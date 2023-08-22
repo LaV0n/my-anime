@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
    FlatList,
    Image,
@@ -10,7 +10,7 @@ import {
    View,
 } from 'react-native'
 import { RootTabScreenProps } from '../common/types'
-import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
+import { Colors, Icon, Theme, useTheme, useThemeMode } from '@rneui/themed'
 import { getUserData } from '../bll/authReducer'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { AnimeItemPreview } from '../components/AnimeItemPreview'
@@ -26,8 +26,9 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
    const styles = makeStyles(theme)
    const topAnimeList = useAppSelector(state => state.animeList.topAnimeList)
    const newAnimeList = useAppSelector(state => state.animeList.newAnimeList)
-   const statusApp = useAppSelector(state => state.app.appStatus)
    const randomAnimeItem = useAppSelector(state => state.animeList.randomAnimeItem)
+   const { mode, setMode } = useThemeMode()
+   const colorMode = useAppSelector(state => state.profile.colorMode)
 
    useState(() => {
       dispatch(getUserData())
@@ -36,7 +37,13 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
       dispatch(getRandomAnimeItem())
    }, [])
 
-   if (statusApp === 'loading' || randomAnimeItem === null) {
+   useEffect(() => {
+      if (colorMode !== mode) {
+         setMode(colorMode)
+      }
+   }, [colorMode])
+
+   if (randomAnimeItem === null) {
       return <LoadingIndicator />
    }
 
@@ -48,6 +55,7 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
    return (
       <ScrollView style={styles.container}>
          <StatusBar />
+         <LoadingIndicator />
          <TouchableOpacity
             onPress={() => navigator.navigation.navigate('Search')}
             style={styles.searchLink}

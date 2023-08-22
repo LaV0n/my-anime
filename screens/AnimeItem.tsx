@@ -14,7 +14,6 @@ import { CustomSelectList } from '../components/CustomSelectList'
 
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
-   const statusApp = useAppSelector(state => state.app.appStatus)
    const [viewMore, setViewMore] = useState(true)
    const uid = useAppSelector(state => state.auth.uid)
    const dispatch = useAppDispatch()

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AuthType } from '../common/types'
+import { AuthType, UserDataType } from '../common/types'
 import { changeStatus, setError } from './appReducer'
 import {
    signInWithEmailAndPassword,
@@ -12,58 +12,36 @@ import { auth, db } from '../config/firebase'
 import { clearMyList } from './myDataReducer'
 import { errorAsString } from '../utils/errorAsString'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-const setUserData = async (user: AuthType) => {
-   try {
-      await AsyncStorage.setItem('user', JSON.stringify(user))
-   } catch (e) {
-      // saving error
-   }
-}
+import { setColorMode, setUserName, setUserStorageData } from './profileReducer'
 
 const initialState: AuthType = {
    uid: '',
    email: '',
-   name: '',
 }
 const slice = createSlice({
    name: 'auth',
    initialState,
    reducers: {},
    extraReducers: builder => {
-      builder.addCase(login.fulfilled, (state, action) => {
+      builder.addCase(login.fulfilled, state => {
          if (auth.currentUser) {
             state.email = auth.currentUser.email!
             state.uid = auth.currentUser.uid
-            state.name = action.payload
-            setUserData({
-               name: action.payload,
-               email: auth.currentUser.email!,
-               uid: auth.currentUser.uid,
-            })
          }
       })
       builder.addCase(logout.fulfilled, state => {
          state.email = ''
          state.uid = ''
-         state.name = ''
       })
-      builder.addCase(signUp.fulfilled, (state, action) => {
+      builder.addCase(signUp.fulfilled, state => {
          if (auth.currentUser) {
             state.email = auth.currentUser.email!
             state.uid = auth.currentUser.uid
-            state.name = action.payload
-            setUserData({
-               name: action.payload,
-               email: auth.currentUser.email!,
-               uid: auth.currentUser.uid,
-            })
          }
       })
       builder.addCase(getUserData.fulfilled, (state, action) => {
          if (action.payload) {
             state.email = action.payload.email
-            state.name = action.payload.name
             state.uid = action.payload.uid
          }
       })
@@ -72,7 +50,7 @@ const slice = createSlice({
 
 export const authReducer = slice.reducer
 
-export const login = createAsyncThunk<string, { email: string; password: string }>(
+export const login = createAsyncThunk<unknown, { email: string; password: string }>(
    'auth/login',
    async ({ email, password }, { dispatch }) => {
       dispatch(changeStatus('loading'))
@@ -82,8 +60,14 @@ export const login = createAsyncThunk<string, { email: string; password: string 
          const docRef = doc(db, 'users', userId)
          const data = await getDoc(docRef)
          dispatch(changeStatus('success'))
-         if (data.exists()) {
-            return data.data().name
+         if (data.exists() && auth.currentUser) {
+            dispatch(setUserName(data.data().name))
+            await setUserStorageData({
+               name: data.data().name,
+               email: auth.currentUser.email!,
+               uid: auth.currentUser.uid,
+               colorMode: 'dark',
+            })
          }
       } catch (err) {
          dispatch(changeStatus('error'))
@@ -106,6 +90,7 @@ export const logout = createAsyncThunk<unknown, undefined>(
          await signOut(auth)
          await AsyncStorage.removeItem('user')
          dispatch(clearMyList)
+         dispatch(setUserName(''))
          dispatch(changeStatus('success'))
       } catch (err) {
          const error = errorAsString(err)
@@ -115,7 +100,7 @@ export const logout = createAsyncThunk<unknown, undefined>(
    }
 )
 export const signUp = createAsyncThunk<
-   string,
+   unknown,
    { email: string; password: string; userName: string }
 >('auth/signUp', async ({ email, password, userName }, { dispatch }) => {
    dispatch(changeStatus('loading'))
@@ -123,37 +108,44 @@ export const signUp = createAsyncThunk<
       dispatch(changeStatus('success'))
       dispatch(clearMyList)
       await createUserWithEmailAndPassword(auth, email, password)
-      const newUser = {
-         name: userName,
-      }
       const userId = auth.currentUser?.uid ? auth.currentUser?.uid : 'customId'
       const docRef = doc(db, 'users', userId)
-      await setDoc(docRef, newUser)
-      return userName
+      await setDoc(docRef, { name: userName })
+      dispatch(setUserName(userName))
+      if (auth.currentUser) {
+         await setUserStorageData({
+            name: userName,
+            email: auth.currentUser.email!,
+            uid: auth.currentUser.uid,
+            colorMode: 'dark',
+         })
+      }
    } catch (err) {
       const error = errorAsString(err)
       dispatch(changeStatus('error'))
       dispatch(setError(error))
-      return ''
    }
 })
-export const getUserData = createAsyncThunk<AuthType, undefined>(
-   'auth/getUserData',
-   async (_, { dispatch }) => {
-      dispatch(changeStatus('loading'))
-      try {
-         dispatch(changeStatus('success'))
-         const value = await AsyncStorage.getItem('user')
-         if (value !== null) {
-            return JSON.parse(value)
-         }
-      } catch (err) {
-         const error = errorAsString(err)
-         dispatch(changeStatus('error'))
-         dispatch(setError(error))
-      }
+export const getUserData = createAsyncThunk<
+   AuthType,
+   undefined,
+   { rejectValue: { error: string } }
+>('auth/getUserData', async (_, { dispatch, rejectWithValue }) => {
+   dispatch(changeStatus('loading'))
+   try {
+      dispatch(changeStatus('success'))
+      const value = await AsyncStorage.getItem('user')
+      const userData = JSON.parse(value!) as UserDataType
+      dispatch(setUserName(userData.name))
+      dispatch(setColorMode(userData.colorMode))
+      return { uid: userData.uid, email: userData.email }
+   } catch (err) {
+      const error = errorAsString(err)
+      dispatch(changeStatus('error'))
+      dispatch(setError(error))
+      return rejectWithValue({ error })
    }
-)
+})
 export const resetPassword = createAsyncThunk<unknown, string>(
    'auth/resetPassword',
    async (email, { dispatch }) => {

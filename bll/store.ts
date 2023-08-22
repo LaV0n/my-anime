@@ -4,12 +4,14 @@ import { appReducer } from './appReducer'
 import { myDataReducer } from './myDataReducer'
 import { animeListReducer } from './animeListReducer'
 import { authReducer } from './authReducer'
+import { profileReducer } from './profileReducer'
 
 export const rootReducer = combineReducers({
    app: appReducer,
    auth: authReducer,
    myData: myDataReducer,
    animeList: animeListReducer,
+   profile: profileReducer,
 })
 
 export const store = configureStore({ reducer: rootReducer })

@@ -4,19 +4,19 @@ import { useAppDispatch, useAppSelector } from '../bll/store'
 import { logout } from '../bll/authReducer'
 import { RootTabScreenProps } from '../common/types'
 import { ErrorMessage } from '../components/ErrorMessage'
-import { Avatar, Colors, Icon, Switch, Theme, useTheme, useThemeMode } from '@rneui/themed'
+import { Avatar, Colors, Icon, Switch, Theme, useTheme } from '@rneui/themed'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { defaultImg } from '../common/variables'
+import { setStorageColorMode } from '../bll/profileReducer'
 
 export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    const emailUser = useAppSelector(state => state.auth.email)
-   const userName = useAppSelector(state => state.auth.name)
+   const userName = useAppSelector(state => state.profile.name)
+   const colorMode = useAppSelector(state => state.profile.colorMode)
    const uid = useAppSelector(state => state.auth.uid)
    const error = useAppSelector(state => state.app.error)
    const dispatch = useAppDispatch()
-   const statusApp = useAppSelector(state => state.app.appStatus)
    const { theme } = useTheme()
-   const { mode, setMode } = useThemeMode()
    const styles = makeStyles(theme)
 
    const logoutHandler = () => {
@@ -24,10 +24,10 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
       navigation.navigate('Login')
    }
    const toggleMode = () => {
-      if (mode === 'dark') {
-         setMode('light')
+      if (colorMode === 'dark') {
+         dispatch(setStorageColorMode('light'))
       } else {
-         setMode('dark')
+         dispatch(setStorageColorMode('dark'))
       }
    }
    const toggleLanguage = () => {}
@@ -47,12 +47,9 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
       return unsubscribe
    }, [navigation, uid, error])
 
-   if (statusApp === 'loading') {
-      return <LoadingIndicator />
-   }
-
    return (
       <ScrollView style={styles.container}>
+         <LoadingIndicator />
          <StatusBar />
          <ErrorMessage />
          <View style={styles.profileBlock}>
@@ -74,7 +71,7 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
                <Text style={styles.title}>Dark mode</Text>
                <Switch
                   color={theme.colors.secondary}
-                  value={mode === 'dark'}
+                  value={colorMode === 'dark'}
                   onValueChange={toggleMode}
                   style={styles.switchBlock}
                />
