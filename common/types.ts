@@ -145,4 +145,9 @@ export type ColorModeType = 'dark' | 'light'
 export type ProfileDataType = {
    name: string
    colorMode: ColorModeType
+   profileImg: string
+}
+export type ProfileSettingType = {
+   isOpen: boolean
+   setIsOpen: (value: boolean) => void
 }

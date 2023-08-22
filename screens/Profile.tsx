@@ -1,13 +1,13 @@
 import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { logout } from '../bll/authReducer'
 import { RootTabScreenProps } from '../common/types'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Avatar, Colors, Icon, Switch, Theme, useTheme } from '@rneui/themed'
 import { LoadingIndicator } from '../components/LoadingIndicator'
-import { defaultImg } from '../common/variables'
-import { setStorageColorMode } from '../bll/profileReducer'
+import { setColorMode, setStorageData } from '../bll/profileReducer'
+import { ProfileSetting } from '../components/ProfileSetting'
 
 export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    const emailUser = useAppSelector(state => state.auth.email)
@@ -15,7 +15,9 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    const colorMode = useAppSelector(state => state.profile.colorMode)
    const uid = useAppSelector(state => state.auth.uid)
    const error = useAppSelector(state => state.app.error)
+   const profileImg = useAppSelector(state => state.profile.profileImg)
    const dispatch = useAppDispatch()
+   const [isOpen, setIsOpen] = useState(false)
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
@@ -25,12 +27,17 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    }
    const toggleMode = () => {
       if (colorMode === 'dark') {
-         dispatch(setStorageColorMode('light'))
+         dispatch(setColorMode('light'))
+         dispatch(setStorageData())
       } else {
-         dispatch(setStorageColorMode('dark'))
+         dispatch(setColorMode('dark'))
+         dispatch(setStorageData())
       }
    }
    const toggleLanguage = () => {}
+   const toggleSetting = () => {
+      setIsOpen(true)
+   }
 
    useEffect(() => {
       const unsubscribe = navigation.addListener('tabPress', e => {
@@ -52,12 +59,13 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
          <LoadingIndicator />
          <StatusBar />
          <ErrorMessage />
+         <ProfileSetting isOpen={isOpen} setIsOpen={setIsOpen} />
          <View style={styles.profileBlock}>
             <Avatar
                size={100}
                rounded
                source={{
-                  uri: defaultImg,
+                  uri: profileImg,
                }}
             />
             <View>
@@ -80,6 +88,10 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
                <Icon name={'language'} color={theme.colors.primary} />
                <Text style={styles.title}>Language</Text>
                <Text style={styles.langBlock}>Eng</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.titleBlock} onPress={toggleSetting}>
+               <Icon name={'settings'} color={theme.colors.primary} />
+               <Text style={styles.title}>Setting</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={logoutHandler} style={styles.titleBlock}>
                <Icon name={'logout'} color={theme.colors.error} />

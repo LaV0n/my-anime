@@ -12,7 +12,8 @@ import { auth, db } from '../config/firebase'
 import { clearMyList } from './myDataReducer'
 import { errorAsString } from '../utils/errorAsString'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { setColorMode, setUserName, setUserStorageData } from './profileReducer'
+import { setColorMode, setProfileImg, setUserName, setUserStorageData } from './profileReducer'
+import { defaultImg } from '../common/variables'
 
 const initialState: AuthType = {
    uid: '',
@@ -67,6 +68,7 @@ export const login = createAsyncThunk<unknown, { email: string; password: string
                email: auth.currentUser.email!,
                uid: auth.currentUser.uid,
                colorMode: 'dark',
+               profileImg: defaultImg.girl,
             })
          }
       } catch (err) {
@@ -118,6 +120,7 @@ export const signUp = createAsyncThunk<
             email: auth.currentUser.email!,
             uid: auth.currentUser.uid,
             colorMode: 'dark',
+            profileImg: defaultImg.girl,
          })
       }
    } catch (err) {
@@ -138,6 +141,7 @@ export const getUserData = createAsyncThunk<
       const userData = JSON.parse(value!) as UserDataType
       dispatch(setUserName(userData.name))
       dispatch(setColorMode(userData.colorMode))
+      dispatch(setProfileImg(userData.profileImg))
       return { uid: userData.uid, email: userData.email }
    } catch (err) {
       const error = errorAsString(err)

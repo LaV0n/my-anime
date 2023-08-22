@@ -46,7 +46,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
                   />
                   <Text style={styles.mainTitle}>Your list is Empty</Text>
                   <Text style={styles.title}>
-                     It seems that you haven't added any anime to the list
+                     It seems that you have not added any anime to the list
                   </Text>
                </View>
             )}
