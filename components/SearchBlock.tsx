@@ -55,7 +55,7 @@ export const SearchBlock = ({ setLastRequest, goHomeLink, goFilterLink }: Search
 const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       container: {
-         marginTop: 20,
+         marginTop: 5,
          height: 50,
          flexDirection: 'row',
          backgroundColor: colors.colors.background,

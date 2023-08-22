@@ -31,13 +31,13 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const toggleViewMode = () => {
       setViewMore(!viewMore)
    }
-
-   if (statusApp === 'loading' || !currentAnime) {
+   if (!currentAnime) {
       return <LoadingIndicator />
    }
 
    return (
       <ScrollView style={styles.container}>
+         <LoadingIndicator />
          <View>
             <LinearGradient colors={[theme.colors.grey2, 'transparent']} style={styles.upperBlock}>
                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackLink}>

@@ -8,6 +8,7 @@ import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
 import { SearchBlock } from '../components/SearchBlock'
 import { toggleMyListFilterData } from '../bll/appReducer'
+import { LoadingIndicator } from '../components/LoadingIndicator'
 
 export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const myList = useAppSelector(state => state.myData.animeList)
@@ -32,6 +33,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    return (
       <View style={styles.container}>
          <ErrorMessage />
+         <LoadingIndicator />
          <SearchBlock goHomeLink={goHomeLink} goFilterLink={goFilterLink} />
          <ScrollView>
             {myList.length === 0 && (
@@ -61,6 +63,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       container: {
          height: '100%',
          backgroundColor: colors.colors.background,
+         paddingVertical: 10,
       },
       emptyBlock: {
          justifyContent: 'center',
