@@ -151,3 +151,7 @@ export type ProfileSettingType = {
    isOpen: boolean
    setIsOpen: (value: boolean) => void
 }
+export type YearSelectType = {
+   year: string
+   callback: (value: string) => void
+}

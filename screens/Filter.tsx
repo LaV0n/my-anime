@@ -6,6 +6,7 @@ import { FilterButton } from '../components/FilterButton'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getSearchAnimeList, setFilterData } from '../bll/animeListReducer'
 import { filterMyList, getMyAnimeList, setFilterMyListData } from '../bll/myDataReducer'
+import { YearSelect } from '../components/YearSelect'
 
 export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
    const { theme } = useTheme()
@@ -54,9 +55,9 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
       }
       if (isMyListFilterData) {
          dispatch(setFilterMyListData(data))
+         navigation.navigate('MyList')
          await dispatch(getMyAnimeList())
          dispatch(filterMyList())
-         navigation.navigate('MyList')
       } else {
          dispatch(setFilterData(data))
          dispatch(getSearchAnimeList())
@@ -172,31 +173,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                </View>
                <Text style={styles.titleName}>Release Year</Text>
                <View style={styles.sortButtonBlock}>
-                  <FilterButton
-                     name={'All'}
-                     filterData={releaseFilter}
-                     callback={setReleaseFilter}
-                  />
-                  <FilterButton
-                     name={'2023'}
-                     filterData={releaseFilter}
-                     callback={setReleaseFilter}
-                  />
-                  <FilterButton
-                     name={'2022'}
-                     filterData={releaseFilter}
-                     callback={setReleaseFilter}
-                  />
-                  <FilterButton
-                     name={'2021'}
-                     filterData={releaseFilter}
-                     callback={setReleaseFilter}
-                  />
-                  <FilterButton
-                     name={'2020'}
-                     filterData={releaseFilter}
-                     callback={setReleaseFilter}
-                  />
+                  <YearSelect year={releaseFilter} callback={setReleaseFilter} />
                </View>
                {isMyListFilterData && (
                   <>
@@ -204,17 +181,22 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                      <View style={styles.sortButtonBlock}>
                         <FilterButton name={'All'} filterData={myStatus!} callback={setMyStatus} />
                         <FilterButton
-                           name={'watched'}
+                           name={'completed'}
                            filterData={myStatus!}
                            callback={setMyStatus}
                         />
                         <FilterButton
-                           name={'unwatch'}
+                           name={'unwatched'}
                            filterData={myStatus!}
                            callback={setMyStatus}
                         />
                         <FilterButton
                            name={'dropped'}
+                           filterData={myStatus!}
+                           callback={setMyStatus}
+                        />
+                        <FilterButton
+                           name={'watching'}
                            filterData={myStatus!}
                            callback={setMyStatus}
                         />
