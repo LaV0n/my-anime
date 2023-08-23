@@ -11,6 +11,7 @@ import { statusAnimeItem } from '../utils/utils'
 import { CustomFlatLIst } from '../components/CustomFlatLIst'
 import { RatingStars } from '../components/RatingStars'
 import { CustomSelectList } from '../components/CustomSelectList'
+import { StatisticBlock } from '../components/StatisticBlock'
 
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
@@ -127,33 +128,10 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                data={currentAnime.recommendations}
                isLinked={true}
             />
-            <View>
-               <Text style={styles.secondTitle}> Statistics of viewers</Text>
-               <Text style={styles.smallTitle}>
-                  <Text style={styles.smallTitleGrey}>watching: </Text>
-                  {currentAnime.statistics.status.watching}
-               </Text>
-               <Text style={styles.smallTitle}>
-                  <Text style={styles.smallTitleGrey}>completed: </Text>
-                  {currentAnime.statistics.status.completed}
-               </Text>
-               <Text style={styles.smallTitle}>
-                  <Text style={styles.smallTitleGrey}>plan to watch: </Text>
-                  {currentAnime.statistics.status.plan_to_watch}
-               </Text>
-               <Text style={styles.smallTitle}>
-                  <Text style={styles.smallTitleGrey}>dropped: </Text>
-                  {currentAnime.statistics.status.dropped}
-               </Text>
-               <Text style={styles.smallTitle}>
-                  <Text style={styles.smallTitleGrey}>on hold: </Text>
-                  {currentAnime.statistics.status.on_hold}
-               </Text>
-               <Text style={styles.smallTitle}>
-                  <Text style={styles.smallTitleGrey}>total: </Text>{' '}
-                  {currentAnime.statistics.num_list_users}
-               </Text>
-            </View>
+            <StatisticBlock
+               status={currentAnime.statistics.status}
+               num_list_users={currentAnime.statistics.num_list_users}
+            />
          </View>
       </ScrollView>
    )

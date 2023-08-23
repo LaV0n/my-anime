@@ -19,6 +19,7 @@ import { LoadingIndicator } from '../components/LoadingIndicator'
 import { Ranking } from '../common/variables'
 import { statusAnimeItem } from '../utils/utils'
 import { LinearGradient } from 'expo-linear-gradient'
+import { getMyAnimeList } from '../bll/myDataReducer'
 
 export const Home = (navigator: RootTabScreenProps<'Home'>) => {
    const { theme } = useTheme()
@@ -30,11 +31,12 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
    const { mode, setMode } = useThemeMode()
    const colorMode = useAppSelector(state => state.profile.colorMode)
 
-   useState(() => {
-      dispatch(getUserData())
+   useState(async () => {
+      await dispatch(getUserData())
       dispatch(getShortAnimeList(Ranking.ALL))
       dispatch(getShortAnimeList(Ranking.AIRING))
       dispatch(getRandomAnimeItem())
+      dispatch(getMyAnimeList())
    }, [])
 
    useEffect(() => {

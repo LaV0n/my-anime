@@ -9,7 +9,7 @@ import { defaultImg } from '../common/variables'
 const windowWidth = Dimensions.get('window').width
 export const CustomFlatLIst = ({ name, data, isLinked }: CustomFlatListType) => {
    const [visible, setVisible] = useState(false)
-   const [uri, setUri] = useState<string>(defaultImg)
+   const [uri, setUri] = useState<string>(defaultImg.girl)
    const { theme } = useTheme()
    const styles = makeStyles(theme)
    const dispatch = useAppDispatch()

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { SelectList } from 'react-native-dropdown-select-list'
-import { Icon, useTheme } from '@rneui/themed'
+import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { changeItemData } from '../bll/myDataReducer'
 import { useAppDispatch } from '../bll/store'
 import { CustomSelectListType } from '../common/types'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export const CustomSelectList = ({
    idDoc,
@@ -12,36 +12,75 @@ export const CustomSelectList = ({
    isMyList,
    currentAnimeId,
 }: CustomSelectListType) => {
-   const [selected, setSelected] = useState('')
-   const { theme } = useTheme()
+   const [isOpen, setIsOpen] = useState(false)
    const dispatch = useAppDispatch()
-   const data = [
-      { key: 'watched', value: 'watched' },
-      { key: 'unwatch', value: 'unwatch' },
-      { key: 'dropped', value: 'dropped' },
-   ]
+   const { theme } = useTheme()
+   const styles = makeStyles(theme)
+   const animeStatus = ['completed', 'unwatched', 'dropped', 'watching']
 
-   const onSelectedHandler = () => {
-      if (myStatus !== selected) {
-         dispatch(changeItemData({ id: idDoc, data: selected }))
+   const onSelectedHandler = (status: string) => {
+      if (myStatus !== status) {
+         dispatch(changeItemData({ id: idDoc, data: status }))
          if (currentAnimeId) {
             dispatch(getCurrentAnimeItem(currentAnimeId))
          }
       }
+      setIsOpen(false)
    }
 
    return (
-      <SelectList
-         setSelected={(val: string) => setSelected(val)}
-         data={data}
-         save="value"
-         search={false}
-         arrowicon={<Icon name={'expand-more'} style={{ marginLeft: 10 }} />}
-         dropdownTextStyles={{ color: isMyList ? theme.colors.primary : theme.colors.white }}
-         inputStyles={{ color: isMyList ? theme.colors.primary : theme.colors.white }}
-         boxStyles={{ borderRadius: 15, width: 120, borderWidth: isMyList ? 1 : 0 }}
-         onSelect={onSelectedHandler}
-         defaultOption={data.filter(d => d.value === myStatus)[0]}
-      />
+      <View style={styles.container}>
+         <TouchableOpacity onPress={() => setIsOpen(!isOpen)} style={styles.headerBlock}>
+            <Text style={{ color: isMyList ? theme.colors.primary : theme.colors.white }}>
+               {myStatus}
+            </Text>
+            {isOpen ? (
+               <Icon
+                  name={'expand-less'}
+                  style={{ paddingLeft: 5 }}
+                  color={isMyList ? theme.colors.primary : theme.colors.white}
+               />
+            ) : (
+               <Icon
+                  name={'expand-more'}
+                  style={{ paddingLeft: 5 }}
+                  color={isMyList ? theme.colors.primary : theme.colors.white}
+               />
+            )}
+         </TouchableOpacity>
+         {isOpen && (
+            <View style={styles.itemsList}>
+               {animeStatus.map(s => (
+                  <TouchableOpacity key={s} onPress={() => onSelectedHandler(s)}>
+                     <Text style={{ color: isMyList ? theme.colors.primary : theme.colors.white }}>
+                        {s}
+                     </Text>
+                  </TouchableOpacity>
+               ))}
+            </View>
+         )}
+      </View>
    )
 }
+const makeStyles = (colors: { colors: Colors } & Theme) =>
+   StyleSheet.create({
+      headerBlock: {
+         flexDirection: 'row',
+         gap: 5,
+         alignItems: 'center',
+      },
+      container: {
+         margin: 5,
+         paddingHorizontal: 10,
+         paddingVertical: 5,
+         borderStyle: 'solid',
+         borderWidth: 1,
+         borderColor: colors.colors.grey0,
+         borderRadius: 5,
+      },
+      itemsList: {
+         gap: 5,
+         marginBottom: 5,
+         marginTop: 10,
+      },
+   })

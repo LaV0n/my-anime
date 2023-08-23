@@ -15,7 +15,7 @@ export type RootTabScreenProps<T extends keyof RootTabParamList> = BottomTabScre
    T
 >
 
-type AnimeStatusType = 'watched' | 'unwatch' | 'dropped'
+export type AnimeStatusType = 'completed' | 'unwatched' | 'dropped' | 'watching'
 export type CommonListType = {
    homeAnimeList: AnimeType[]
    currentAnimeItem: CurrentAnimeType | null
@@ -42,7 +42,6 @@ export type AnimeType = {
    title: string
    main_picture: PictureSourceType
    start_date: string
-   end_date: string
    mean: number
    status: string
    genres: NameType[]
@@ -67,16 +66,17 @@ export interface CurrentAnimeType extends AnimeType {
    related_anime: AnimeResponseType[]
    recommendations: AnimeResponseType[]
    studios: NameType[]
-   statistics: {
-      status: {
-         watching: string
-         completed: string
-         on_hold: string
-         dropped: string
-         plan_to_watch: string
-      }
-      num_list_users: number
+   statistics: StatisticViewType
+}
+export type StatisticViewType = {
+   status: {
+      watching: string
+      completed: string
+      on_hold: string
+      dropped: string
+      plan_to_watch: string
    }
+   num_list_users: number
 }
 export interface RelatedAnimeResponseType extends AnimeResponseType {
    relation_type_formatted: string
