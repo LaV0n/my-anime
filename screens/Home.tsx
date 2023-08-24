@@ -58,12 +58,6 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
       <ScrollView style={styles.container}>
          <StatusBar />
          <LoadingIndicator />
-         <TouchableOpacity
-            onPress={() => navigator.navigation.navigate('Search')}
-            style={styles.searchLink}
-         >
-            <Icon name={'search'} color={theme.colors.white} />
-         </TouchableOpacity>
          <TouchableOpacity style={styles.randomBlock} onPress={getCurrentAnimeItemHandler}>
             <LinearGradient
                colors={[theme.colors.grey2, 'transparent']}
@@ -119,16 +113,10 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       randomBlock: {
          marginVertical: 10,
-         height: 400,
+         height: 200,
       },
       listBlock: {
          marginVertical: 15,
-      },
-      searchLink: {
-         position: 'absolute',
-         right: 20,
-         top: 20,
-         zIndex: 10,
       },
       titleName: {
          color: colors.colors.white,
@@ -141,7 +129,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          fontSize: 16,
       },
       imgRandom: {
-         aspectRatio: 1,
+         height: 200,
       },
       descriptionBlock: {
          width: '100%',

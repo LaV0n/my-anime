@@ -44,8 +44,13 @@ export const Navigation = () => {
                component={Search}
                options={{
                   headerShown: false,
-                  tabBarButton: () => null,
-                  tabBarStyle: { display: 'none' },
+                  tabBarIcon: ({ focused }) => (
+                     <Icon
+                        name="search"
+                        color={focused ? theme.colors.secondary : theme.colors.grey0}
+                     />
+                  ),
+                  tabBarActiveTintColor: theme.colors.secondary,
                }}
             />
             <Tab.Screen

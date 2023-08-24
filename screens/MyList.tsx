@@ -9,11 +9,13 @@ import { RootTabScreenProps } from '../common/types'
 import { SearchBlock } from '../components/SearchBlock'
 import { toggleMyListFilterData } from '../bll/appReducer'
 import { LoadingIndicator } from '../components/LoadingIndicator'
+import { MyStatusLink } from '../components/MyStatusLink'
 
 export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const myList = useAppSelector(state => state.myData.animeList)
    const dispatch = useAppDispatch()
    const uid = useAppSelector(state => state.auth.uid)
+   const filterMyStatus = useAppSelector(state => state.myData.filterData.myStatus)
    const { theme } = useTheme()
    const styles = makeStyles(theme)
    const goFilterLink = () => {
@@ -36,6 +38,13 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
          <LoadingIndicator />
          <SearchBlock goHomeLink={goHomeLink} goFilterLink={goFilterLink} />
          <ScrollView>
+            <ScrollView style={styles.statusBlock} horizontal>
+               <MyStatusLink name={'all'} />
+               <MyStatusLink name={'completed'} />
+               <MyStatusLink name={'unwatched'} />
+               <MyStatusLink name={'dropped'} />
+               <MyStatusLink name={'watching'} />
+            </ScrollView>
             {myList.length === 0 && (
                <View style={styles.emptyBlock}>
                   <Icon
@@ -50,9 +59,11 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
                   </Text>
                </View>
             )}
-            {myList.map(a => (
-               <MyAnimeItem anime={a} key={a.idDoc} navigator={navigator} />
-            ))}
+            {myList
+               .filter(a => (filterMyStatus !== 'all' ? a.myStatus === filterMyStatus : a))
+               .map(a => (
+                  <MyAnimeItem anime={a} key={a.idDoc} navigator={navigator} />
+               ))}
          </ScrollView>
       </View>
    )
@@ -85,5 +96,8 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       icon: {
          opacity: 0.6,
+      },
+      statusBlock: {
+         height: 50,
       },
    })
