@@ -21,6 +21,17 @@ export const YearSelect = ({ year, callback }: YearSelectType) => {
 
    return (
       <View style={styles.container}>
+         {isOpen && (
+            <View style={styles.listBlock}>
+               <ScrollView horizontal={true}>
+                  {years.map(y => (
+                     <TouchableOpacity key={y} onPress={() => setYearHandler(y)}>
+                        <Text style={styles.title}>{y}</Text>
+                     </TouchableOpacity>
+                  ))}
+               </ScrollView>
+            </View>
+         )}
          <TouchableOpacity onPress={() => setIsOpen(!isOpen)} style={styles.headerBlock}>
             <Text style={styles.name}>{year}</Text>
             {isOpen ? (
@@ -37,28 +48,12 @@ export const YearSelect = ({ year, callback }: YearSelectType) => {
                />
             )}
          </TouchableOpacity>
-         {isOpen && (
-            <View style={styles.listBlock}>
-               <ScrollView horizontal={true}>
-                  {years.map(y => (
-                     <TouchableOpacity key={y} onPress={() => setYearHandler(y)}>
-                        <Text style={styles.title}>{y}</Text>
-                     </TouchableOpacity>
-                  ))}
-               </ScrollView>
-            </View>
-         )}
       </View>
    )
 }
 const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
-      container: {
-         borderStyle: 'solid',
-         borderWidth: 2,
-         borderColor: colors.colors.secondary,
-         borderRadius: 30,
-      },
+      container: {},
       name: {
          color: colors.colors.white,
          backgroundColor: colors.colors.secondary,
@@ -75,9 +70,14 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       title: {
          color: colors.colors.primary,
          textAlign: 'center',
-         paddingHorizontal: 3,
+         paddingHorizontal: 5,
       },
       listBlock: {
          padding: 10,
+         marginBottom: 10,
+         borderStyle: 'solid',
+         borderWidth: 2,
+         borderColor: colors.colors.secondary,
+         borderRadius: 30,
       },
    })

@@ -177,30 +177,6 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                </View>
                {isMyListFilterData && (
                   <>
-                     {/* <Text style={styles.titleName}>My Status</Text>
-                     <View style={styles.sortButtonBlock}>
-                        <FilterButton name={'All'} filterData={myStatus!} callback={setMyStatus} />
-                        <FilterButton
-                           name={'completed'}
-                           filterData={myStatus!}
-                           callback={setMyStatus}
-                        />
-                        <FilterButton
-                           name={'unwatched'}
-                           filterData={myStatus!}
-                           callback={setMyStatus}
-                        />
-                        <FilterButton
-                           name={'dropped'}
-                           filterData={myStatus!}
-                           callback={setMyStatus}
-                        />
-                        <FilterButton
-                           name={'watching'}
-                           filterData={myStatus!}
-                           callback={setMyStatus}
-                        />
-                     </View>*/}
                      <Text style={styles.titleName}>My Rating</Text>
                      <View style={styles.sortButtonBlock}>
                         <FilterButton name={'0'} filterData={myStars!} callback={setMyStars} />

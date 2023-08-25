@@ -17,7 +17,7 @@ export const SearchBlock = ({ setLastRequest, goHomeLink, goFilterLink }: Search
       if (setLastRequest) {
          setLastRequest(search)
          dispatch(getSearchAnimeList(search))
-         setSearch('')
+         //setSearch('')
          setOpen(!open)
       } else {
          await dispatch(getMyAnimeList())

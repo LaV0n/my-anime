@@ -28,6 +28,7 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
       navigator.navigation.navigate('Filter')
    }
    const getAnime = () => {
+      console.log('tyt')
       lastRequest ? dispatch(getSearchAnimeList(lastRequest)) : dispatch(getAnimeList(Ranking.ALL))
    }
    useEffect(() => {

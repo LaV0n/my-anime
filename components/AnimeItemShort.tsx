@@ -36,12 +36,13 @@ export const AnimeItemShort = ({
          </TouchableOpacity>
          <View style={styles.description}>
             <Text style={styles.titleName}> {anime.title}</Text>
-            <Text style={styles.descriptionTitle}> {statusAnimeItem(anime.status)}</Text>
-            {anime.start_date && (
-               <Text style={styles.descriptionTitle}>{anime.start_date.slice(0, 4)}</Text>
-            )}
-
-            <Text style={styles.descriptionTitle}>episodes: {anime.num_episodes}</Text>
+            <View style={styles.descriptionStatus}>
+               {anime.start_date && (
+                  <Text style={styles.descriptionTitle}>{anime.start_date.slice(0, 4)}</Text>
+               )}
+               <Text style={styles.descriptionTitle}> {statusAnimeItem(anime.status)}</Text>
+               <Text style={styles.descriptionTitle}>total: {anime.num_episodes}</Text>
+            </View>
             <View style={styles.genresBlock}>
                {anime.genres.map(a => (
                   <Text key={a.id} style={styles.genreItem}>
@@ -98,8 +99,8 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          width: '40%',
       },
       picture: {
-         aspectRatio: 3 / 5,
          borderRadius: 10,
+         height: '100%',
       },
       rating: {
          position: 'absolute',
@@ -141,5 +142,9 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       descriptionTitle: {
          color: colors.colors.grey0,
+      },
+      descriptionStatus: {
+         flexDirection: 'row',
+         gap: 10,
       },
    })
