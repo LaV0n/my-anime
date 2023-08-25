@@ -20,7 +20,7 @@ export const CustomSelectList = ({
 
    const onSelectedHandler = (status: string) => {
       if (myStatus !== status) {
-         dispatch(changeItemData({ id: idDoc, data: status }))
+         dispatch(changeItemData({ id: idDoc, data: status, requestType: 'myStatus' }))
          if (currentAnimeId) {
             dispatch(getCurrentAnimeItem(currentAnimeId))
          }
@@ -66,8 +66,8 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       headerBlock: {
          flexDirection: 'row',
-         gap: 5,
          alignItems: 'center',
+         justifyContent: 'space-between',
       },
       container: {
          margin: 5,
@@ -77,6 +77,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          borderWidth: 1,
          borderColor: colors.colors.grey0,
          borderRadius: 5,
+         width: 120,
       },
       itemsList: {
          gap: 5,

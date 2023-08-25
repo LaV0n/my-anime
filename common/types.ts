@@ -48,6 +48,7 @@ export type AnimeType = {
    num_episodes: string | number
    myStatus: AnimeStatusType
    myRating: number
+   myProgress: number
    idDoc: string
 }
 export interface CurrentAnimeType extends AnimeType {
@@ -155,3 +156,9 @@ export type YearSelectType = {
    year: string
    callback: (value: string) => void
 }
+export type ProgressLineType = {
+   startValue: number
+   maxValue: number
+   idDoc: string
+}
+export type RequestItemType = 'myRating' | 'myStatus' | 'myProgress'

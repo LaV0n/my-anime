@@ -34,7 +34,6 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
          dispatch(setStorageData())
       }
    }
-   const toggleLanguage = () => {}
    const toggleSetting = () => {
       setIsOpen(true)
    }
@@ -83,11 +82,6 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
                   onValueChange={toggleMode}
                   style={styles.switchBlock}
                />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={toggleLanguage} style={styles.titleBlock}>
-               <Icon name={'language'} color={theme.colors.primary} />
-               <Text style={styles.title}>Language</Text>
-               <Text style={styles.langBlock}>Eng</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.titleBlock} onPress={toggleSetting}>
                <Icon name={'settings'} color={theme.colors.primary} />

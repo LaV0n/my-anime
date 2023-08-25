@@ -10,7 +10,7 @@ export const RatingStars = ({ myRating, id, selectedColor, currentAnimeId }: Rat
    const dispatch = useAppDispatch()
 
    const setRatingHandler = (number: number) => {
-      dispatch(changeItemData({ id, data: number }))
+      dispatch(changeItemData({ id, data: number, requestType: 'myRating' }))
       if (currentAnimeId) {
          dispatch(getCurrentAnimeItem(currentAnimeId))
       }

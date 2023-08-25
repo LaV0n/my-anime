@@ -4,7 +4,7 @@ export const theme = createTheme({
    mode: 'dark',
    lightColors: {
       primary: 'black',
-      background: 'white',
+      background: '#eeeeee',
       grey0: 'grey',
       grey1: '#c9c9c9',
       secondary: '#06bf48',

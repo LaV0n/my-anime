@@ -7,6 +7,7 @@ import { delItemFromMyList } from '../bll/myDataReducer'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { RatingStars } from './RatingStars'
 import { CustomSelectList } from './CustomSelectList'
+import { ProgressLine } from './ProgressLine'
 
 export const MyAnimeItem = ({
    anime,
@@ -38,7 +39,16 @@ export const MyAnimeItem = ({
                <Text style={styles.titleName}> {anime.title}</Text>
                <RatingStars id={anime.idDoc} myRating={anime.myRating} />
             </View>
-            <Text style={styles.episodes}> episodes: {anime.num_episodes}</Text>
+            <View style={styles.progressBlock}>
+               <ProgressLine
+                  startValue={anime.myProgress}
+                  maxValue={+anime.num_episodes}
+                  idDoc={anime.idDoc}
+               />
+               <Text style={styles.titleName}>
+                  <Text style={styles.episodes}>total:</Text> {anime.num_episodes}
+               </Text>
+            </View>
             <View style={styles.actionBlock}>
                <CustomSelectList idDoc={anime.idDoc} myStatus={anime.myStatus} isMyList={true} />
                <Icon
@@ -57,6 +67,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       container: {
          marginTop: 10,
+         height: 150,
          marginHorizontal: 10,
          flexDirection: 'row',
          backgroundColor: colors.colors.background,
@@ -66,7 +77,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          width: '40%',
       },
       picture: {
-         aspectRatio: 1,
+         height: '100%',
          borderRadius: 10,
       },
       rating: {
@@ -79,7 +90,6 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       description: {
          justifyContent: 'space-between',
-         gap: 10,
          width: '60%',
          padding: 7,
       },
@@ -98,6 +108,12 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          fontSize: 15,
       },
       episodes: {
-         color: colors.colors.primary,
+         color: colors.colors.grey0,
+         fontSize: 13,
+      },
+      progressBlock: {
+         flexDirection: 'row',
+         justifyContent: 'space-between',
+         alignItems: 'center',
       },
    })

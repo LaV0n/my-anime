@@ -10,7 +10,7 @@ import {
    View,
 } from 'react-native'
 import { RootTabScreenProps } from '../common/types'
-import { Colors, Icon, Theme, useTheme, useThemeMode } from '@rneui/themed'
+import { Colors, Theme, useTheme, useThemeMode } from '@rneui/themed'
 import { getUserData } from '../bll/authReducer'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { AnimeItemPreview } from '../components/AnimeItemPreview'

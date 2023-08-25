@@ -12,6 +12,7 @@ import { CustomFlatLIst } from '../components/CustomFlatLIst'
 import { RatingStars } from '../components/RatingStars'
 import { CustomSelectList } from '../components/CustomSelectList'
 import { StatisticBlock } from '../components/StatisticBlock'
+import { ProgressLine } from '../components/ProgressLine'
 
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
@@ -53,6 +54,11 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                      selectedColor={theme.colors.secondary}
                      currentAnimeId={currentAnime.id}
                   />
+                  <ProgressLine
+                     startValue={currentAnime.myProgress}
+                     maxValue={+currentAnime.num_episodes}
+                     idDoc={currentAnime.idDoc}
+                  />
                   <CustomSelectList
                      idDoc={currentAnime.idDoc}
                      myStatus={currentAnime.myStatus}
@@ -73,11 +79,18 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
             <View>
                {currentAnime.alternative_titles.synonyms.length !== 0 && (
                   <Text style={styles.smallTitleGrey}>
-                     synonyms: {currentAnime.alternative_titles.synonyms}
+                     synonyms:{' '}
+                     <Text style={styles.smallTitle}>
+                        {currentAnime.alternative_titles.synonyms}
+                     </Text>
                   </Text>
                )}
-               <Text style={styles.smallTitleGrey}>eng: {currentAnime.alternative_titles.en}</Text>
-               <Text style={styles.smallTitleGrey}> jp: {currentAnime.alternative_titles.ja}</Text>
+               <Text style={styles.smallTitleGrey}>
+                  eng: <Text style={styles.smallTitle}>{currentAnime.alternative_titles.en}</Text>
+               </Text>
+               <Text style={styles.smallTitleGrey}>
+                  jp: <Text style={styles.smallTitle}>{currentAnime.alternative_titles.ja}</Text>
+               </Text>
             </View>
             <View style={styles.shortStatBlock}>
                <Icon name={'star'} color={theme.colors.secondary} size={20} />
@@ -92,18 +105,28 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                {currentAnime.start_date && (
                   <Text style={styles.smallTitle}>{currentAnime.start_date.slice(0, 4)}</Text>
                )}
+               <Text style={styles.smallTitle}>{statusAnimeItem(currentAnime.status)}</Text>
+               <Text style={styles.smallTitle}>
+                  <Text style={styles.smallTitleGrey}>episodes: </Text>
+                  {currentAnime.num_episodes}
+               </Text>
+            </View>
+            <View style={styles.shortStatBlock}>
+               <Text style={styles.smallTitleGrey}>studios: </Text>
                {currentAnime.studios.map(s => (
                   <Text style={styles.smallTitle} key={s.id}>
                      {s.name}
                   </Text>
                ))}
-               <Text style={styles.smallTitle}>{statusAnimeItem(currentAnime.status)}</Text>
-               <Text style={styles.smallTitle}> episodes: {currentAnime.num_episodes}</Text>
             </View>
             <View style={styles.shortStatBlock}>
-               <Text style={styles.smallTitle}>type: {currentAnime.media_type}</Text>
                <Text style={styles.smallTitle}>
-                  source: {currentAnime.source.replace('_', ' ')}
+                  <Text style={styles.smallTitleGrey}>type: </Text>
+                  {currentAnime.media_type}
+               </Text>
+               <Text style={styles.smallTitle}>
+                  <Text style={styles.smallTitleGrey}>source: </Text>
+                  {currentAnime.source.replace('_', ' ')}
                </Text>
             </View>
             <View style={styles.shortStatBlock}>
@@ -154,9 +177,10 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       shortStatBlock: {
          flexDirection: 'row',
          alignItems: 'center',
+         flexWrap: 'wrap',
          gap: 10,
          justifyContent: 'flex-start',
-         height: 30,
+         minHeight: 30,
       },
       coverImg: {
          minHeight: 500,

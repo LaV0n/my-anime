@@ -24,7 +24,13 @@ const filteredByOwnerData = (
       if (uid && index !== -1) {
          result.push(animeList[index])
       } else {
-         result.push({ ...allItems[i].node, myStatus: 'unwatch', myRating: 0, idDoc: '' })
+         result.push({
+            ...allItems[i].node,
+            myStatus: 'unwatched',
+            myRating: 0,
+            myProgress: 0,
+            idDoc: '',
+         })
       }
    }
    return result
@@ -164,6 +170,7 @@ export const getCurrentAnimeItem = createAsyncThunk<
             resData.myStatus = myList[i].myStatus
             resData.myRating = myList[i].myRating
             resData.idDoc = myList[i].idDoc
+            resData.myProgress = myList[i].myProgress
          }
       }
       return resData
@@ -181,7 +188,7 @@ export const getRandomAnimeItem = createAsyncThunk<
 >('animeList/getRandomAnimeItem', async (_, { dispatch, rejectWithValue }) => {
    dispatch(changeStatus('loading'))
    try {
-      const random = Math.floor(Math.random() * 1000).toString()
+      const random = Math.floor(Math.random() * 1000 + 1).toString()
       const res = await MyAnimeListAPI.getTitleShortInfo(random)
       dispatch(changeStatus('success'))
       return res.data

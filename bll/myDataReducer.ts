@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AnimeType, CurrentAnimeType, FilterDataType, MyDataType } from '../common/types'
+import {
+   AnimeType,
+   CurrentAnimeType,
+   FilterDataType,
+   MyDataType,
+   RequestItemType,
+} from '../common/types'
 import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { AppRootStateType } from './store'
@@ -83,6 +89,7 @@ export const addItemToMyList = createAsyncThunk<
          num_episodes: anime.num_episodes,
          myStatus: 'unwatched',
          myRating: 0,
+         myProgress: 0,
          idDoc: '',
       }
       await MyAnimeListAPI.addItemToMyList(getState().auth.uid, animeItem)
@@ -106,11 +113,11 @@ export const delItemFromMyList = createAsyncThunk<unknown, string, { state: AppR
 )
 export const changeItemData = createAsyncThunk<
    unknown,
-   { id: string; data: string | number },
+   { id: string; data: string | number; requestType: RequestItemType },
    { state: AppRootStateType }
->('myData/changeItemData', async ({ id, data }, { dispatch, getState }) => {
+>('myData/changeItemData', async ({ id, data, requestType }, { dispatch, getState }) => {
    try {
-      await MyAnimeListAPI.changeItemData(getState().auth.uid, id, data)
+      await MyAnimeListAPI.changeItemData(getState().auth.uid, id, data, requestType)
       dispatch(getMyAnimeList())
    } catch (err) {
       const error = errorAsString(err)
