@@ -3,17 +3,19 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { YearSelectType } from '../common/types'
 
-export const YearSelect = ({ year, callback }: YearSelectType) => {
+export const YearSelect = ({ year, callback, isSeason }: YearSelectType) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
    const [isOpen, setIsOpen] = useState(false)
    const currentYear = new Date().getFullYear()
    const years = [
-      'all',
       ...Array(50)
          .fill('')
          .map((v, i) => (currentYear - i).toString()),
    ]
+   if (!isSeason) {
+      years.unshift('all')
+   }
    const setYearHandler = (date: string) => {
       setIsOpen(false)
       callback(date)

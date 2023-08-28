@@ -14,9 +14,8 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
    const isMyListFilterData = useAppSelector(state => state.app.isMyListFilter)
    const filterSearchData = useAppSelector(state => state.animeList.filterData)
    const filterMyListData = useAppSelector(state => state.myData.filterData)
-
+   const lastSearchRequest = useAppSelector(state => state.animeList.lastRequest)
    const filterData = isMyListFilterData ? filterMyListData : filterSearchData
-
    const [sortByRating, setSortByRating] = useState(filterData.sortByRating)
    const [category, setCategory] = useState(filterData.category)
    const [genre, setGenre] = useState<string[]>(filterData.genre)
@@ -60,7 +59,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
          dispatch(filterMyList())
       } else {
          dispatch(setFilterData(data))
-         dispatch(getSearchAnimeList())
+         dispatch(getSearchAnimeList(lastSearchRequest))
          navigation.navigate('Search')
       }
    }

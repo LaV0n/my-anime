@@ -1,7 +1,10 @@
-import { AnimeType, FilterDataType } from '../common/types'
+import { AnimeType, FilterDataType, SeasonKindType, SeasonType } from '../common/types'
 
 export const statusAnimeItem = (status: string | undefined) => {
-   return status === 'finished_airing' ? 'finished' : 'currently'
+   let result = 'currently'
+   if (status === 'finished_airing') result = 'finished'
+   if (status === 'not_yet_aired') result = 'not yet aired'
+   return result
 }
 export const stringToDateTime = (s: string) => {
    return new Date(s).getTime()
@@ -39,4 +42,35 @@ export const filterAnimeListData = (animeList: AnimeType[], filter: FilterDataTy
    }
 
    return result
+}
+
+export const seasonKind = ({ type }: SeasonKindType): SeasonType => {
+   let date = new Date().getMonth()
+   if (type === 'next') date += 3
+   if (type === 'prev') date -= 3
+   switch (date) {
+      case 0:
+      case 1:
+      case 11:
+      case 12:
+      case 13:
+      case -1:
+         return 'winter'
+      case 2:
+      case 3:
+      case 4:
+         return 'spring'
+      case 5:
+      case 6:
+      case 7:
+         return 'summer'
+      case 8 | 9 | 10 | -2 | -3:
+      case 9:
+      case 10:
+      case -2:
+      case -3:
+         return 'fall'
+      default:
+         return 'spring'
+   }
 }

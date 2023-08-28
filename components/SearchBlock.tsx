@@ -1,23 +1,23 @@
 import React, { useState } from 'react'
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
-import { useAppDispatch } from '../bll/store'
-import { getSearchAnimeList } from '../bll/animeListReducer'
+import { useAppDispatch, useAppSelector } from '../bll/store'
+import { getSearchAnimeList, setLastSearchRequest } from '../bll/animeListReducer'
 import { SearchBlockType } from '../common/types'
 import { getMyAnimeList, searchMyList } from '../bll/myDataReducer'
 
-export const SearchBlock = ({ setLastRequest, goHomeLink, goFilterLink }: SearchBlockType) => {
+export const SearchBlock = ({ goHomeLink, goFilterLink }: SearchBlockType) => {
    const [open, setOpen] = useState(false)
    const [search, setSearch] = useState('')
+   const isMyListFilterData = useAppSelector(state => state.app.isMyListFilter)
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
    const searchAnimeHandler = async () => {
-      if (setLastRequest) {
-         setLastRequest(search)
+      if (!isMyListFilterData) {
+         dispatch(setLastSearchRequest(search))
          dispatch(getSearchAnimeList(search))
-         //setSearch('')
          setOpen(!open)
       } else {
          await dispatch(getMyAnimeList())

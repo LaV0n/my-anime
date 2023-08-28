@@ -5,6 +5,7 @@ import {
    CommonListType,
    CurrentAnimeType,
    FilterDataType,
+   SeasonDateType,
 } from '../common/types'
 import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
@@ -42,6 +43,7 @@ const initialState: CommonListType = {
    topAnimeList: [],
    newAnimeList: [],
    randomAnimeItem: null,
+   lastRequest: '',
    filterData: {
       sortByRating: 'rating',
       releaseFilter: 'all',
@@ -59,6 +61,9 @@ const slice = createSlice({
       },
       setFilterData(state, action: PayloadAction<FilterDataType>) {
          state.filterData = action.payload
+      },
+      setLastSearchRequest(state, action: PayloadAction<string>) {
+         state.lastRequest = action.payload
       },
    },
    extraReducers: builder => {
@@ -81,11 +86,14 @@ const slice = createSlice({
       builder.addCase(getRandomAnimeItem.fulfilled, (state, action) => {
          state.randomAnimeItem = action.payload
       })
+      builder.addCase(getSeasonAnimeList.fulfilled, (state, action) => {
+         state.homeAnimeList = action.payload
+      })
    },
 })
 
 export const animeListReducer = slice.reducer
-export const { clearList, setFilterData } = slice.actions
+export const { clearList, setFilterData, setLastSearchRequest } = slice.actions
 
 export const getAnimeList = createAsyncThunk<AnimeType[], string, { state: AppRootStateType }>(
    'animeList/getAnimeList',
@@ -109,6 +117,28 @@ export const getAnimeList = createAsyncThunk<AnimeType[], string, { state: AppRo
    }
 )
 
+export const getSeasonAnimeList = createAsyncThunk<
+   AnimeType[],
+   SeasonDateType,
+   { state: AppRootStateType }
+>('animeList/getSeasonAnimeList', async (date, { dispatch, getState }) => {
+   dispatch(changeStatus('loading'))
+   try {
+      const res = await MyAnimeListAPI.getSeasonAnime(date)
+      const data = filteredByOwnerData(
+         res.data.data,
+         getState().auth.uid,
+         getState().myData.animeList
+      )
+      dispatch(changeStatus('success'))
+      return data
+   } catch (err) {
+      const error = errorAsString(err)
+      dispatch(changeStatus('error'))
+      dispatch(setError(error))
+      return []
+   }
+})
 export const getShortAnimeList = createAsyncThunk<
    { animeList: AnimeResponseType[]; type: string },
    string,

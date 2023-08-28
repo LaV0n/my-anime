@@ -2,7 +2,7 @@ import axios from 'axios'
 import { MY_API_KEY } from '@env'
 import { collection, getDocs, deleteDoc, doc, addDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../config/firebase'
-import { AnimeType, RequestItemType } from '../common/types'
+import { AnimeType, RequestItemType, SeasonDateType } from '../common/types'
 
 const instance = axios.create({
    baseURL: 'https://api.myanimelist.net',
@@ -34,6 +34,12 @@ export const MyAnimeListAPI = {
    getRankingAnime(ranking: string) {
       return instance.get(
          `v2/anime/ranking?ranking_type=${ranking}&limit=50&fields=start_date,end_date,mean,status,genres,num_episodes`,
+         anonymousParams
+      )
+   },
+   getSeasonAnime(data: SeasonDateType) {
+      return instance.get(
+         `v2/anime/season/${data.year}/${data.season}?fields=start_date,end_date,mean,status,genres,num_episodes`,
          anonymousParams
       )
    },

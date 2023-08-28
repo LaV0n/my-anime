@@ -12,7 +12,7 @@ export const AnimeItemShort = ({
    navigator,
 }: {
    anime: AnimeType
-   navigator: RootTabScreenProps<'Search'>
+   navigator: RootTabScreenProps<'Search'> | RootTabScreenProps<'Seasonal'>
 }) => {
    const dispatch = useAppDispatch()
    const uid = useAppSelector(state => state.auth.uid)
@@ -32,7 +32,7 @@ export const AnimeItemShort = ({
       <View style={styles.container}>
          <TouchableOpacity style={styles.pictureBlock} onPress={getCurrentAnimeItemHandler}>
             <Image source={{ uri: anime.main_picture.medium }} style={styles.picture} />
-            <Text style={styles.rating}>{anime.mean}</Text>
+            <Text style={styles.rating}>{anime.mean ? anime.mean : 0}</Text>
          </TouchableOpacity>
          <View style={styles.description}>
             <Text style={styles.titleName}> {anime.title}</Text>

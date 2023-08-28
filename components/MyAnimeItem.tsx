@@ -67,7 +67,6 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       container: {
          marginTop: 10,
-         height: 150,
          marginHorizontal: 10,
          flexDirection: 'row',
          backgroundColor: colors.colors.background,
@@ -75,6 +74,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       pictureBlock: {
          width: '40%',
+         height: 150,
       },
       picture: {
          height: '100%',

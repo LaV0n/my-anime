@@ -13,6 +13,7 @@ import { Search } from '../screens/Search'
 import { Home } from '../screens/Home'
 import { Filter } from '../screens/Filter'
 import { AnimeItem } from '../screens/AnimeItem'
+import { Seasonal } from '../screens/Seasonal'
 
 export const Navigation = () => {
    const Tab = createBottomTabNavigator<RootTabParamList>()
@@ -47,6 +48,20 @@ export const Navigation = () => {
                   tabBarIcon: ({ focused }) => (
                      <Icon
                         name="search"
+                        color={focused ? theme.colors.secondary : theme.colors.grey0}
+                     />
+                  ),
+                  tabBarActiveTintColor: theme.colors.secondary,
+               }}
+            />
+            <Tab.Screen
+               name="Seasonal"
+               component={Seasonal}
+               options={{
+                  headerShown: false,
+                  tabBarIcon: ({ focused }) => (
+                     <Icon
+                        name="date-range"
                         color={focused ? theme.colors.secondary : theme.colors.grey0}
                      />
                   ),

@@ -9,6 +9,7 @@ export type RootTabParamList = {
    MyList: undefined
    Filter: undefined
    AnimeItem: undefined
+   Seasonal: undefined
 }
 export type RootTabScreenProps<T extends keyof RootTabParamList> = BottomTabScreenProps<
    RootTabParamList,
@@ -23,6 +24,7 @@ export type CommonListType = {
    newAnimeList: AnimeResponseType[]
    randomAnimeItem: AnimeType | null
    filterData: FilterDataType
+   lastRequest: string
 }
 
 export type MyDataType = {
@@ -107,7 +109,6 @@ export type AuthType = {
    email: string
 }
 export type SearchBlockType = {
-   setLastRequest?: (value: string) => void
    goHomeLink: () => void
    goFilterLink: () => void
 }
@@ -155,6 +156,7 @@ export type ProfileSettingType = {
 export type YearSelectType = {
    year: string
    callback: (value: string) => void
+   isSeason?: boolean
 }
 export type ProgressLineType = {
    startValue: number
@@ -162,3 +164,12 @@ export type ProgressLineType = {
    idDoc: string
 }
 export type RequestItemType = 'myRating' | 'myStatus' | 'myProgress'
+export type SeasonType = 'winter' | 'spring' | 'summer' | 'fall'
+export type SeasonDateType = {
+   year: string
+   season: SeasonType
+}
+export type SeasonTabType = 'Last' | 'This Season' | 'Next' | 'Archive'
+export type SeasonKindType = {
+   type: 'current' | 'prev' | 'next'
+}
