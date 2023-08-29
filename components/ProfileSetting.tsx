@@ -4,12 +4,13 @@ import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { ProfileSettingType } from '../common/types'
 import { defaultImg } from '../common/variables'
-import { setProfileImg, setStorageData } from '../bll/profileReducer'
+import { setProfileImg, setStorageData, setUserName } from '../bll/profileReducer'
 
 export const ProfileSetting = ({ isOpen, setIsOpen }: ProfileSettingType) => {
    const userName = useAppSelector(state => state.profile.name)
+   const userImg = useAppSelector(state => state.profile.profileImg)
    const [name, setName] = useState(userName)
-   const [image, setImage] = useState(defaultImg.girl)
+   const [image, setImage] = useState(userImg)
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
@@ -20,6 +21,7 @@ export const ProfileSetting = ({ isOpen, setIsOpen }: ProfileSettingType) => {
    const setUserDataHandler = () => {
       setIsOpen(false)
       dispatch(setProfileImg(image))
+      dispatch(setUserName(name))
       dispatch(setStorageData())
    }
 

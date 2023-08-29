@@ -99,10 +99,11 @@ export type AnimeResponseType = {
    relation_type_formatted?: string
 }
 export type AppStatusType = 'success' | 'loading' | 'error'
+export type FilterScreenType = 'search' | 'myList' | 'season'
 export type AppType = {
    appStatus: AppStatusType
    error: string
-   isMyListFilter: boolean
+   filterScreen: FilterScreenType
 }
 export type AuthType = {
    uid: string

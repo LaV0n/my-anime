@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Colors, Theme, useTheme } from '@rneui/themed'
+import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { NotFound } from '../components/NotFound'
 import { AnimeItemShort } from '../components/AnimeItemShort'
 import { RootTabScreenProps, SeasonDateType, SeasonTabType } from '../common/types'
@@ -11,6 +11,7 @@ import { ErrorMessage } from '../components/ErrorMessage'
 import { useIsFocused } from '@react-navigation/native'
 import { seasonKind } from '../utils/utils'
 import { ArchiveSeason } from '../components/ArchiveSeason'
+import { changeFilterScreen } from '../bll/appReducer'
 
 export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
    const { theme } = useTheme()
@@ -57,6 +58,12 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
          </TouchableOpacity>
       )
    }
+
+   const goFilterLink = () => {
+      dispatch(changeFilterScreen('season'))
+      navigator.navigation.navigate('Filter')
+   }
+
    useEffect(() => {
       if (isFocused) {
          getCurrentSeason()
@@ -72,6 +79,9 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
             <SeasonTab name={'This Season'} callback={getCurrentSeason} />
             <SeasonTab name={'Next'} callback={getNextSeason} />
             <SeasonTab name={'Archive'} callback={getArchiveSeason} />
+            <TouchableOpacity onPress={goFilterLink}>
+               <Icon name={'tune'} color={theme.colors.primary} />
+            </TouchableOpacity>
          </View>
          {seasonTab === 'Archive' && <ArchiveSeason />}
          <ScrollView>

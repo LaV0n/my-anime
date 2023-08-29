@@ -7,9 +7,9 @@ import { ErrorMessage } from '../components/ErrorMessage'
 import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
 import { SearchBlock } from '../components/SearchBlock'
-import { toggleMyListFilterData } from '../bll/appReducer'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { MyStatusLink } from '../components/MyStatusLink'
+import { changeFilterScreen } from '../bll/appReducer'
 
 export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const myList = useAppSelector(state => state.myData.animeList)
@@ -19,7 +19,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
    const goFilterLink = () => {
-      dispatch(toggleMyListFilterData(true))
+      dispatch(changeFilterScreen('myList'))
       navigator.navigation.navigate('Filter')
    }
    const goHomeLink = () => {

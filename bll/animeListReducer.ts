@@ -56,9 +56,6 @@ const slice = createSlice({
    name: 'animeList',
    initialState,
    reducers: {
-      clearList(state) {
-         state.homeAnimeList = []
-      },
       setFilterData(state, action: PayloadAction<FilterDataType>) {
          state.filterData = action.payload
       },
@@ -93,7 +90,7 @@ const slice = createSlice({
 })
 
 export const animeListReducer = slice.reducer
-export const { clearList, setFilterData, setLastSearchRequest } = slice.actions
+export const { setFilterData, setLastSearchRequest } = slice.actions
 
 export const getAnimeList = createAsyncThunk<AnimeType[], string, { state: AppRootStateType }>(
    'animeList/getAnimeList',
@@ -131,7 +128,7 @@ export const getSeasonAnimeList = createAsyncThunk<
          getState().myData.animeList
       )
       dispatch(changeStatus('success'))
-      return data
+      return filterAnimeListData(data, getState().animeList.filterData)
    } catch (err) {
       const error = errorAsString(err)
       dispatch(changeStatus('error'))

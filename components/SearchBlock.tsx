@@ -9,17 +9,18 @@ import { getMyAnimeList, searchMyList } from '../bll/myDataReducer'
 export const SearchBlock = ({ goHomeLink, goFilterLink }: SearchBlockType) => {
    const [open, setOpen] = useState(false)
    const [search, setSearch] = useState('')
-   const isMyListFilterData = useAppSelector(state => state.app.isMyListFilter)
+   const filterScreen = useAppSelector(state => state.app.filterScreen)
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
    const searchAnimeHandler = async () => {
-      if (!isMyListFilterData) {
+      if (filterScreen === 'search') {
          dispatch(setLastSearchRequest(search))
          dispatch(getSearchAnimeList(search))
          setOpen(!open)
-      } else {
+      }
+      if (filterScreen === 'myList') {
          await dispatch(getMyAnimeList())
          dispatch(searchMyList(search))
       }

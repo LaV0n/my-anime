@@ -11,11 +11,11 @@ import { YearSelect } from '../components/YearSelect'
 export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
-   const isMyListFilterData = useAppSelector(state => state.app.isMyListFilter)
+   const filterScreen = useAppSelector(state => state.app.filterScreen)
    const filterSearchData = useAppSelector(state => state.animeList.filterData)
    const filterMyListData = useAppSelector(state => state.myData.filterData)
    const lastSearchRequest = useAppSelector(state => state.animeList.lastRequest)
-   const filterData = isMyListFilterData ? filterMyListData : filterSearchData
+   const filterData = filterScreen === 'myList' ? filterMyListData : filterSearchData
    const [sortByRating, setSortByRating] = useState(filterData.sortByRating)
    const [category, setCategory] = useState(filterData.category)
    const [genre, setGenre] = useState<string[]>(filterData.genre)
@@ -52,15 +52,20 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
          myStars,
          myStatus,
       }
-      if (isMyListFilterData) {
+      if (filterScreen === 'myList') {
          dispatch(setFilterMyListData(data))
          navigation.navigate('MyList')
          await dispatch(getMyAnimeList())
          dispatch(filterMyList())
-      } else {
+      }
+      if (filterScreen === 'search') {
          dispatch(setFilterData(data))
          dispatch(getSearchAnimeList(lastSearchRequest))
          navigation.navigate('Search')
+      }
+      if (filterScreen === 'season') {
+         dispatch(setFilterData(data))
+         navigation.navigate('Seasonal')
       }
    }
    const resetFilterHAndler = () => {
@@ -72,7 +77,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
          myStatus: 'all',
          myStars: '0',
       }
-      if (isMyListFilterData) {
+      if (filterScreen === 'myList') {
          dispatch(setFilterMyListData(data))
       } else {
          dispatch(setFilterData(data))
@@ -85,10 +90,14 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
       setMyStatus('all')
    }
    const goBackHandler = () => {
-      if (isMyListFilterData) {
+      if (filterScreen === 'myList') {
          navigation.navigate('MyList')
-      } else {
+      }
+      if (filterScreen === 'search') {
          navigation.navigate('Search')
+      }
+      if (filterScreen === 'season') {
+         navigation.navigate('Seasonal')
       }
    }
 
@@ -115,7 +124,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                      callback={setSortByRating}
                   />
                </View>
-               {!isMyListFilterData && (
+               {filterScreen === 'search' && (
                   <>
                      <Text style={styles.titleName}>Category</Text>
                      <View style={styles.sortButtonBlock}>
@@ -170,11 +179,15 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                   <FilterButton name={'Supernatural'} filterData={genre} callback={addGenre} />
                   <FilterButton name={'Suspense'} filterData={genre} callback={addGenre} />
                </View>
-               <Text style={styles.titleName}>Release Year</Text>
-               <View style={styles.sortButtonBlock}>
-                  <YearSelect year={releaseFilter} callback={setReleaseFilter} />
-               </View>
-               {isMyListFilterData && (
+               {filterScreen !== 'season' && (
+                  <>
+                     <Text style={styles.titleName}>Release Year</Text>
+                     <View style={styles.sortButtonBlock}>
+                        <YearSelect year={releaseFilter} callback={setReleaseFilter} />
+                     </View>
+                  </>
+               )}
+               {filterScreen === 'myList' && (
                   <>
                      <Text style={styles.titleName}>My Rating</Text>
                      <View style={styles.sortButtonBlock}>

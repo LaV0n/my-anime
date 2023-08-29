@@ -10,14 +10,15 @@ import { Colors, Theme, useTheme } from '@rneui/themed'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { Ranking } from '../common/variables'
 import { NotFound } from '../components/NotFound'
-import { toggleMyListFilterData } from '../bll/appReducer'
 import { useIsFocused } from '@react-navigation/native'
+import { changeFilterScreen } from '../bll/appReducer'
 
 export const Search = (navigator: RootTabScreenProps<'Search'>) => {
    const animeList = useAppSelector(state => state.animeList.homeAnimeList)
    const myAnimeList = useAppSelector(state => state.myData.animeList)
    const dispatch = useAppDispatch()
    const lastRequest = useAppSelector(state => state.animeList.lastRequest)
+   const filterScreen = useAppSelector(state => state.app.filterScreen)
    const isFocused = useIsFocused()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
@@ -26,14 +27,14 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
       navigator.navigation.navigate('Home')
    }
    const goFilterLink = () => {
-      dispatch(toggleMyListFilterData(false))
+      dispatch(changeFilterScreen('search'))
       navigator.navigation.navigate('Filter')
    }
    const getAnime = () => {
       lastRequest ? dispatch(getSearchAnimeList(lastRequest)) : dispatch(getAnimeList(Ranking.ALL))
    }
    useEffect(() => {
-      if (isFocused) {
+      if (isFocused && filterScreen !== 'search') {
          getAnime()
       }
    }, [myAnimeList, isFocused])
