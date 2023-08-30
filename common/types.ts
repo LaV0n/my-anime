@@ -25,6 +25,8 @@ export type CommonListType = {
    randomAnimeItem: AnimeType | null
    filterData: FilterDataType
    lastRequest: string
+   currentPage: number
+   pageSize: number
 }
 
 export type MyDataType = {
@@ -112,6 +114,7 @@ export type AuthType = {
 export type SearchBlockType = {
    goHomeLink: () => void
    goFilterLink: () => void
+   filterScreen: FilterScreenType
 }
 export type CustomFlatListType = {
    name: string

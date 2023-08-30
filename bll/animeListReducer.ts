@@ -50,6 +50,8 @@ const initialState: CommonListType = {
       category: 'all',
       genre: ['all'],
    },
+   currentPage: 0,
+   pageSize: 5,
 }
 
 const slice = createSlice({
@@ -61,6 +63,13 @@ const slice = createSlice({
       },
       setLastSearchRequest(state, action: PayloadAction<string>) {
          state.lastRequest = action.payload
+      },
+      setCurrentPage(state, action: PayloadAction<number>) {
+         state.currentPage = action.payload
+      },
+      setPageSize(state, action: PayloadAction<number>) {
+         state.pageSize = action.payload
+         state.currentPage = 0
       },
    },
    extraReducers: builder => {
@@ -90,21 +99,25 @@ const slice = createSlice({
 })
 
 export const animeListReducer = slice.reducer
-export const { setFilterData, setLastSearchRequest } = slice.actions
+export const { setFilterData, setLastSearchRequest, setCurrentPage, setPageSize } = slice.actions
 
 export const getAnimeList = createAsyncThunk<AnimeType[], string, { state: AppRootStateType }>(
    'animeList/getAnimeList',
    async (type, { dispatch, getState }) => {
       dispatch(changeStatus('loading'))
       try {
-         const res = await MyAnimeListAPI.getAnimeByType(type)
+         const res = await MyAnimeListAPI.getAnimeByType(
+            type,
+            getState().animeList.currentPage,
+            getState().animeList.pageSize
+         )
          const data = filteredByOwnerData(
             res.data.data,
             getState().auth.uid,
             getState().myData.animeList
          )
          dispatch(changeStatus('success'))
-         return data
+         return filterAnimeListData(data, getState().animeList.filterData)
       } catch (err) {
          const error = errorAsString(err)
          dispatch(changeStatus('error'))
@@ -143,7 +156,7 @@ export const getShortAnimeList = createAsyncThunk<
 >('animeList/getShortAnimeList', async (type, { dispatch, rejectWithValue }) => {
    dispatch(changeStatus('loading'))
    try {
-      const res = await MyAnimeListAPI.getAnimeByType(type)
+      const res = await MyAnimeListAPI.getAnimeByType(type, 0, 5)
       dispatch(changeStatus('success'))
       return { animeList: res.data.data, type: type }
    } catch (err) {
@@ -162,9 +175,17 @@ export const getSearchAnimeList = createAsyncThunk<
    try {
       let res: any = {}
       if (searchAnime) {
-         res = await MyAnimeListAPI.getSearchAnime(searchAnime)
+         res = await MyAnimeListAPI.getSearchAnime(
+            searchAnime,
+            getState().animeList.currentPage,
+            getState().animeList.pageSize
+         )
       } else {
-         res = await MyAnimeListAPI.getRankingAnime(getState().animeList.filterData.category)
+         res = await MyAnimeListAPI.getRankingAnime(
+            getState().animeList.filterData.category,
+            getState().animeList.currentPage,
+            getState().animeList.pageSize
+         )
       }
       const data = filteredByOwnerData(
          res.data.data,

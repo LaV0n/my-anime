@@ -13,9 +13,9 @@ const anonymousParams = {
    },
 }
 export const MyAnimeListAPI = {
-   getAnimeByType(type: string) {
+   getAnimeByType(type: string, currentPage: number, pageSize: number) {
       return instance.get(
-         `v2/anime/ranking?ranking_type=${type}&fields=start_date,end_date,mean,status,genres,num_episodes`,
+         `v2/anime/ranking?ranking_type=${type}&fields=start_date,end_date,mean,status,genres,num_episodes&limit=${pageSize.toString()}&offset=${currentPage.toString()}`,
          anonymousParams
       )
    },
@@ -25,15 +25,15 @@ export const MyAnimeListAPI = {
          anonymousParams
       )
    },
-   getSearchAnime(anime: string) {
+   getSearchAnime(anime: string, currentPage: number, pageSize: number) {
       return instance.get(
-         `v2/anime?q=${anime}&limit=100&fields=start_date,end_date,mean,status,genres,num_episodes`,
+         `v2/anime?q=${anime}&limit=${pageSize.toString()}&fields=start_date,end_date,mean,status,genres,num_episodes&offset=${currentPage.toString()}`,
          anonymousParams
       )
    },
-   getRankingAnime(ranking: string) {
+   getRankingAnime(ranking: string, currentPage: number, pageSize: number) {
       return instance.get(
-         `v2/anime/ranking?ranking_type=${ranking}&limit=50&fields=start_date,end_date,mean,status,genres,num_episodes`,
+         `v2/anime/ranking?ranking_type=${ranking}&limit=${pageSize.toString()}&fields=start_date,end_date,mean,status,genres,num_episodes&offset=${currentPage.toString()}`,
          anonymousParams
       )
    },

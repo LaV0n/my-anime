@@ -36,7 +36,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
       <View style={styles.container}>
          <ErrorMessage />
          <LoadingIndicator />
-         <SearchBlock goHomeLink={goHomeLink} goFilterLink={goFilterLink} />
+         <SearchBlock goHomeLink={goHomeLink} goFilterLink={goFilterLink} filterScreen={'myList'} />
          <ScrollView>
             <ScrollView style={styles.statusBlock} horizontal>
                <MyStatusLink name={'all'} />

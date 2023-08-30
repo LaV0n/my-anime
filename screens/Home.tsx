@@ -45,45 +45,48 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
       }
    }, [colorMode])
 
-   if (randomAnimeItem === null) {
-      return <LoadingIndicator />
-   }
-
    const getCurrentAnimeItemHandler = () => {
-      dispatch(getCurrentAnimeItem(randomAnimeItem.id))
-      navigator.navigation.navigate('AnimeItem')
+      if (randomAnimeItem) {
+         dispatch(getCurrentAnimeItem(randomAnimeItem.id))
+         navigator.navigation.navigate('AnimeItem')
+      }
    }
 
    return (
       <ScrollView style={styles.container}>
          <StatusBar />
          <LoadingIndicator />
-         <TouchableOpacity style={styles.randomBlock} onPress={getCurrentAnimeItemHandler}>
-            <LinearGradient
-               colors={[theme.colors.grey2, 'transparent']}
-               style={styles.upperBlock}
-            />
-            <Image source={{ uri: randomAnimeItem.main_picture.large }} style={styles.imgRandom} />
-            <Text style={styles.rating}>{randomAnimeItem.mean}</Text>
-            <LinearGradient
-               style={styles.descriptionBlock}
-               colors={['transparent', theme.colors.black]}
-            >
-               <Text style={styles.titleRandomName}>{randomAnimeItem.title}</Text>
-               <View style={styles.genresBlock}>
-                  {randomAnimeItem?.genres.map(g => (
-                     <Text key={g.id} style={styles.genreTitle}>
-                        {g.name}
-                     </Text>
-                  ))}
-               </View>
-               <Text style={styles.titleName}>Episodes: {randomAnimeItem.num_episodes}</Text>
-               <View>
-                  <Text style={styles.titleName}>{randomAnimeItem.start_date.slice(0, 4)}</Text>
-                  <Text style={styles.titleName}>{statusAnimeItem(randomAnimeItem.status)}</Text>
-               </View>
-            </LinearGradient>
-         </TouchableOpacity>
+         {randomAnimeItem && (
+            <TouchableOpacity style={styles.randomBlock} onPress={getCurrentAnimeItemHandler}>
+               <LinearGradient
+                  colors={[theme.colors.grey2, 'transparent']}
+                  style={styles.upperBlock}
+               />
+               <Image
+                  source={{ uri: randomAnimeItem.main_picture.large }}
+                  style={styles.imgRandom}
+               />
+               <Text style={styles.rating}>{randomAnimeItem.mean}</Text>
+               <LinearGradient
+                  style={styles.descriptionBlock}
+                  colors={['transparent', theme.colors.black]}
+               >
+                  <Text style={styles.titleRandomName}>{randomAnimeItem.title}</Text>
+                  <View style={styles.genresBlock}>
+                     {randomAnimeItem?.genres.map(g => (
+                        <Text key={g.id} style={styles.genreTitle}>
+                           {g.name}
+                        </Text>
+                     ))}
+                  </View>
+                  <Text style={styles.titleName}>Episodes: {randomAnimeItem.num_episodes}</Text>
+                  <View>
+                     <Text style={styles.titleName}>{randomAnimeItem.start_date.slice(0, 4)}</Text>
+                     <Text style={styles.titleName}>{statusAnimeItem(randomAnimeItem.status)}</Text>
+                  </View>
+               </LinearGradient>
+            </TouchableOpacity>
+         )}
          <Text style={styles.mainTitleName}>Top Hits Anime</Text>
          <FlatList
             style={styles.listBlock}
