@@ -37,9 +37,11 @@ export const MyAnimeListAPI = {
          anonymousParams
       )
    },
-   getSeasonAnime(data: SeasonDateType) {
+   getSeasonAnime(data: SeasonDateType, currentPage: number, pageSize: number) {
       return instance.get(
-         `v2/anime/season/${data.year}/${data.season}?fields=start_date,end_date,mean,status,genres,num_episodes`,
+         `v2/anime/season/${data.year}/${
+            data.season
+         }?fields=start_date,end_date,mean,status,genres,num_episodes&offset=${currentPage.toString()}&limit=${pageSize.toString()}`,
          anonymousParams
       )
    },

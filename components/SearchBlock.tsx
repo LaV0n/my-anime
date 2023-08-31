@@ -6,8 +6,7 @@ import { getSearchAnimeList, setCurrentPage, setLastSearchRequest } from '../bll
 import { SearchBlockType } from '../common/types'
 import { getMyAnimeList, searchMyList } from '../bll/myDataReducer'
 
-export const SearchBlock = ({ goHomeLink, goFilterLink, filterScreen }: SearchBlockType) => {
-   const [open, setOpen] = useState(false)
+export const SearchBlock = ({ goFilterLink, filterScreen }: SearchBlockType) => {
    const [search, setSearch] = useState('')
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
@@ -23,32 +22,22 @@ export const SearchBlock = ({ goHomeLink, goFilterLink, filterScreen }: SearchBl
          await dispatch(getMyAnimeList())
          dispatch(searchMyList(search))
       }
-      setOpen(false)
    }
    return (
       <View style={styles.container}>
-         <TouchableOpacity onPress={goHomeLink}>
-            <Icon name={'arrow-back'} color={theme.colors.primary} />
-         </TouchableOpacity>
-         {open ? (
-            <View style={styles.searchContainer}>
-               <TextInput
-                  placeholder={'find anime...'}
-                  placeholderTextColor={theme.colors.grey0}
-                  value={search}
-                  onChangeText={e => setSearch(e)}
-                  style={styles.searchBlock}
-                  onEndEditing={searchAnimeHandler}
-               />
-               <TouchableOpacity onPress={goFilterLink}>
-                  <Icon name={'tune'} color={theme.colors.primary} />
-               </TouchableOpacity>
-            </View>
-         ) : (
-            <TouchableOpacity onPress={() => setOpen(!open)}>
-               <Icon name={'search'} color={theme.colors.primary} />
+         <View style={styles.searchContainer}>
+            <TextInput
+               placeholder={'find anime...'}
+               placeholderTextColor={theme.colors.grey0}
+               value={search}
+               onChangeText={e => setSearch(e)}
+               style={styles.searchBlock}
+               onEndEditing={searchAnimeHandler}
+            />
+            <TouchableOpacity onPress={goFilterLink}>
+               <Icon name={'tune'} color={theme.colors.primary} />
             </TouchableOpacity>
-         )}
+         </View>
       </View>
    )
 }
@@ -61,7 +50,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          flexDirection: 'row',
          backgroundColor: colors.colors.background,
          alignItems: 'center',
-         justifyContent: 'space-between',
+         justifyContent: 'flex-end',
          paddingHorizontal: 20,
       },
       searchBlock: {

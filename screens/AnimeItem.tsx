@@ -7,7 +7,7 @@ import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { addItemToMyList } from '../bll/myDataReducer'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { LinearGradient } from 'expo-linear-gradient'
-import { statusAnimeItem } from '../utils/utils'
+import { chooseBackLink, statusAnimeItem } from '../utils/utils'
 import { CustomFlatLIst } from '../components/CustomFlatLIst'
 import { RatingStars } from '../components/RatingStars'
 import { CustomSelectList } from '../components/CustomSelectList'
@@ -16,6 +16,7 @@ import { ProgressLine } from '../components/ProgressLine'
 
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
+   const filterScreen = useAppSelector(state => state.app.filterScreen)
    const [viewMore, setViewMore] = useState(true)
    const uid = useAppSelector(state => state.auth.uid)
    const dispatch = useAppDispatch()
@@ -41,7 +42,10 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
          <LoadingIndicator />
          <View>
             <LinearGradient colors={[theme.colors.grey2, 'transparent']} style={styles.upperBlock}>
-               <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackLink}>
+               <TouchableOpacity
+                  onPress={() => navigation.navigate(chooseBackLink(filterScreen))}
+                  style={styles.goBackLink}
+               >
                   <Icon name={'arrow-back'} color={theme.colors.white} />
                </TouchableOpacity>
             </LinearGradient>

@@ -16,8 +16,11 @@ export const ErrorMessage = () => {
    return (
       <Overlay isVisible={!!errorMessage} onBackdropPress={toggleMessage}>
          <View style={styles.container}>
-            <Text style={styles.title}>{errorMessage}</Text>
-            <Icon name="close" onPress={toggleMessage} color={'black'} />
+            <View style={styles.headerBlock}>
+               <Text style={styles.headerTitle}>{errorMessage.split(',')[0]}</Text>
+               <Icon name="close" onPress={toggleMessage} color={'black'} />
+            </View>
+            <Text style={styles.title}>{errorMessage.split(',')[1]}</Text>
          </View>
       </Overlay>
    )
@@ -33,5 +36,17 @@ const styles = StyleSheet.create({
       color: 'black',
       fontWeight: '400',
       fontSize: 18,
+   },
+   headerTitle: {
+      color: 'red',
+      fontWeight: '600',
+      fontSize: 22,
+      textAlign: 'center',
+      width: '90%',
+   },
+   headerBlock: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
    },
 })

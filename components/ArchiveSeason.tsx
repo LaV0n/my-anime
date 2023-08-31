@@ -3,16 +3,19 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { YearSelect } from './YearSelect'
 import { SeasonDateType, SeasonType } from '../common/types'
-import { getSeasonAnimeList } from '../bll/animeListReducer'
-import { useAppDispatch } from '../bll/store'
 
-export const ArchiveSeason = () => {
+export const ArchiveSeason = ({
+   archiveDate,
+   setArchiveDate,
+}: {
+   archiveDate: SeasonDateType
+   setArchiveDate: (value: SeasonDateType) => void
+}) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
-   const [year, setYear] = useState('2023')
-   const [season, setSeason] = useState<SeasonType>('spring')
+   const [year, setYear] = useState(archiveDate.year)
+   const [season, setSeason] = useState<SeasonType>(archiveDate.season)
    const [seasonArchive, setSeasonArchive] = useState<SeasonDateType | null>(null)
-   const dispatch = useAppDispatch()
 
    const SeasonButton = ({ name }: { name: SeasonType }) => {
       return (
@@ -31,7 +34,7 @@ export const ArchiveSeason = () => {
          season,
       }
       setSeasonArchive(date)
-      dispatch(getSeasonAnimeList(date))
+      setArchiveDate(date)
    }
 
    return (

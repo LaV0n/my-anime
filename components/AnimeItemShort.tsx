@@ -1,18 +1,21 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { AnimeType, RootTabScreenProps } from '../common/types'
+import { AnimeType, FilterScreenType, RootTabScreenProps } from '../common/types'
 import { addItemToMyList } from '../bll/myDataReducer'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button, Colors, Theme, useTheme } from '@rneui/themed'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { statusAnimeItem } from '../utils/utils'
+import { changeFilterScreen } from '../bll/appReducer'
 
 export const AnimeItemShort = ({
    anime,
    navigator,
+   backKey,
 }: {
    anime: AnimeType
    navigator: RootTabScreenProps<'Search'> | RootTabScreenProps<'Seasonal'>
+   backKey: FilterScreenType
 }) => {
    const dispatch = useAppDispatch()
    const uid = useAppSelector(state => state.auth.uid)
@@ -25,6 +28,7 @@ export const AnimeItemShort = ({
    }
    const getCurrentAnimeItemHandler = () => {
       dispatch(getCurrentAnimeItem(anime.id))
+      dispatch(changeFilterScreen(backKey))
       navigator.navigation.navigate('AnimeItem')
    }
 

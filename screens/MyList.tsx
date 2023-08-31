@@ -22,9 +22,6 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
       dispatch(changeFilterScreen('myList'))
       navigator.navigation.navigate('Filter')
    }
-   const goHomeLink = () => {
-      navigator.navigation.navigate('Home')
-   }
 
    useEffect(() => {
       if (uid) {
@@ -36,7 +33,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
       <View style={styles.container}>
          <ErrorMessage />
          <LoadingIndicator />
-         <SearchBlock goHomeLink={goHomeLink} goFilterLink={goFilterLink} filterScreen={'myList'} />
+         <SearchBlock goFilterLink={goFilterLink} filterScreen={'myList'} />
          <ScrollView>
             <ScrollView style={styles.statusBlock} horizontal>
                <MyStatusLink name={'all'} />

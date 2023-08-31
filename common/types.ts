@@ -101,7 +101,7 @@ export type AnimeResponseType = {
    relation_type_formatted?: string
 }
 export type AppStatusType = 'success' | 'loading' | 'error'
-export type FilterScreenType = 'search' | 'myList' | 'season'
+export type FilterScreenType = 'search' | 'myList' | 'season' | 'home'
 export type AppType = {
    appStatus: AppStatusType
    error: string
@@ -112,7 +112,6 @@ export type AuthType = {
    email: string
 }
 export type SearchBlockType = {
-   goHomeLink: () => void
    goFilterLink: () => void
    filterScreen: FilterScreenType
 }

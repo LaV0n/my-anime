@@ -20,6 +20,7 @@ import { Ranking } from '../common/variables'
 import { statusAnimeItem } from '../utils/utils'
 import { LinearGradient } from 'expo-linear-gradient'
 import { getMyAnimeList } from '../bll/myDataReducer'
+import { changeFilterScreen } from '../bll/appReducer'
 
 export const Home = (navigator: RootTabScreenProps<'Home'>) => {
    const { theme } = useTheme()
@@ -47,6 +48,7 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
 
    const getCurrentAnimeItemHandler = () => {
       if (randomAnimeItem) {
+         dispatch(changeFilterScreen('home'))
          dispatch(getCurrentAnimeItem(randomAnimeItem.id))
          navigator.navigation.navigate('AnimeItem')
       }

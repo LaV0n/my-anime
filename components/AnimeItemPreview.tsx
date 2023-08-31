@@ -3,6 +3,7 @@ import { Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { useAppDispatch } from '../bll/store'
 import { AnimeResponseType, RootTabScreenProps } from '../common/types'
+import { changeFilterScreen } from '../bll/appReducer'
 
 export const AnimeItemPreview = ({
    anime,
@@ -15,6 +16,7 @@ export const AnimeItemPreview = ({
 
    const getCurrentAnimeItemHandler = () => {
       dispatch(getCurrentAnimeItem(anime.node.id))
+      dispatch(changeFilterScreen('home'))
       navigator.navigation.navigate('AnimeItem')
    }
 

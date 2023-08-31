@@ -8,6 +8,7 @@ import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { RatingStars } from './RatingStars'
 import { CustomSelectList } from './CustomSelectList'
 import { ProgressLine } from './ProgressLine'
+import { changeFilterScreen } from '../bll/appReducer'
 
 export const MyAnimeItem = ({
    anime,
@@ -25,6 +26,7 @@ export const MyAnimeItem = ({
    }
    const getCurrentAnimeItemHandler = () => {
       dispatch(getCurrentAnimeItem(anime.id))
+      dispatch(changeFilterScreen('myList'))
       navigator.navigation.navigate('AnimeItem')
    }
 

@@ -1,4 +1,10 @@
-import { AnimeType, FilterDataType, SeasonKindType, SeasonType } from '../common/types'
+import {
+   AnimeType,
+   FilterDataType,
+   FilterScreenType,
+   SeasonKindType,
+   SeasonType,
+} from '../common/types'
 
 export const statusAnimeItem = (status: string | undefined) => {
    let result = 'currently'
@@ -72,5 +78,17 @@ export const seasonKind = ({ type }: SeasonKindType): SeasonType => {
          return 'fall'
       default:
          return 'spring'
+   }
+}
+export const chooseBackLink = (link: FilterScreenType) => {
+   switch (link) {
+      case 'home':
+         return 'Home'
+      case 'season':
+         return 'Seasonal'
+      case 'myList':
+         return 'MyList'
+      case 'search':
+         return 'Search'
    }
 }

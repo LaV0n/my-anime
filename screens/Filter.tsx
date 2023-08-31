@@ -4,7 +4,7 @@ import { RootTabScreenProps } from '../common/types'
 import { Button, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { FilterButton } from '../components/FilterButton'
 import { useAppDispatch, useAppSelector } from '../bll/store'
-import { getSearchAnimeList, setFilterData } from '../bll/animeListReducer'
+import { getSearchAnimeList, setCurrentPage, setFilterData } from '../bll/animeListReducer'
 import { filterMyList, getMyAnimeList, setFilterMyListData } from '../bll/myDataReducer'
 import { YearSelect } from '../components/YearSelect'
 
@@ -52,6 +52,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
          myStars,
          myStatus,
       }
+      dispatch(setCurrentPage(0))
       if (filterScreen === 'myList') {
          dispatch(setFilterMyListData(data))
          navigation.navigate('MyList')

@@ -5,13 +5,14 @@ import { NotFound } from '../components/NotFound'
 import { AnimeItemShort } from '../components/AnimeItemShort'
 import { RootTabScreenProps, SeasonDateType, SeasonTabType } from '../common/types'
 import { useAppDispatch, useAppSelector } from '../bll/store'
-import { getSeasonAnimeList } from '../bll/animeListReducer'
+import { getSeasonAnimeList, setCurrentPage } from '../bll/animeListReducer'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { useIsFocused } from '@react-navigation/native'
 import { seasonKind } from '../utils/utils'
 import { ArchiveSeason } from '../components/ArchiveSeason'
 import { changeFilterScreen } from '../bll/appReducer'
+import { PagesBlock } from '../components/PagesBlock'
 
 export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
    const { theme } = useTheme()
@@ -19,37 +20,30 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
    const animeList = useAppSelector(state => state.animeList.homeAnimeList)
    const dispatch = useAppDispatch()
    const [seasonTab, setSeasonTab] = useState<SeasonTabType>('This Season')
-
+   const [archiveDate, setArchiveDate] = useState<SeasonDateType>({
+      season: 'spring',
+      year: '2023',
+   })
+   const currentPage = useAppSelector(state => state.animeList.currentPage)
+   const pageSize = useAppSelector(state => state.animeList.pageSize)
+   const myAnimeList = useAppSelector(state => state.myData.animeList)
    const currentYear = new Date().getFullYear().toString()
    const isFocused = useIsFocused()
    const getCurrentSeason = () => {
-      const date: SeasonDateType = {
-         year: currentYear,
-         season: seasonKind({ type: 'current' }),
-      }
-      dispatch(getSeasonAnimeList(date))
       setSeasonTab('This Season')
+      dispatch(setCurrentPage(0))
    }
    const getLastSeason = () => {
-      const date: SeasonDateType = {
-         year: currentYear,
-         season: seasonKind({ type: 'prev' }),
-      }
-
-      dispatch(getSeasonAnimeList(date))
       setSeasonTab('Last')
+      dispatch(setCurrentPage(0))
    }
    const getNextSeason = () => {
-      const date: SeasonDateType = {
-         year: currentYear,
-         season: seasonKind({ type: 'next' }),
-      }
-
-      dispatch(getSeasonAnimeList(date))
       setSeasonTab('Next')
+      dispatch(setCurrentPage(0))
    }
    const getArchiveSeason = () => {
       setSeasonTab('Archive')
+      dispatch(setCurrentPage(0))
    }
    const SeasonTab = ({ name, callback }: { name: SeasonTabType; callback?: () => void }) => {
       return (
@@ -63,11 +57,40 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
       dispatch(changeFilterScreen('season'))
       navigator.navigation.navigate('Filter')
    }
+   const getSeasonAnimeListHandler = () => {
+      if (seasonTab === 'Last') {
+         const date: SeasonDateType = {
+            year: currentYear,
+            season: seasonKind({ type: 'prev' }),
+         }
+         dispatch(getSeasonAnimeList(date))
+      }
+      if (seasonTab === 'This Season') {
+         const date: SeasonDateType = {
+            year: currentYear,
+            season: seasonKind({ type: 'current' }),
+         }
+         dispatch(getSeasonAnimeList(date))
+      }
+      if (seasonTab == 'Next') {
+         const date: SeasonDateType = {
+            year: currentYear,
+            season: seasonKind({ type: 'next' }),
+         }
+         dispatch(getSeasonAnimeList(date))
+      }
+      if (seasonTab == 'Archive') {
+         dispatch(getSeasonAnimeList(archiveDate))
+      }
+   }
 
    useEffect(() => {
       if (isFocused) {
-         getCurrentSeason()
+         getSeasonAnimeListHandler()
       }
+   }, [isFocused, currentPage, pageSize, myAnimeList, seasonTab, archiveDate])
+   useEffect(() => {
+      dispatch(setCurrentPage(0))
    }, [isFocused])
 
    return (
@@ -83,12 +106,25 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
                <Icon name={'tune'} color={theme.colors.primary} />
             </TouchableOpacity>
          </View>
-         {seasonTab === 'Archive' && <ArchiveSeason />}
+         {seasonTab === 'Archive' && (
+            <ArchiveSeason archiveDate={archiveDate} setArchiveDate={setArchiveDate} />
+         )}
          <ScrollView>
-            {(animeList.length === 0 || !animeList) && <NotFound />}
-            {animeList.map(a => (
-               <AnimeItemShort anime={a} key={a.id} navigator={navigator} />
-            ))}
+            {animeList.length === 0 || !animeList ? (
+               <NotFound />
+            ) : (
+               <>
+                  {animeList.map(a => (
+                     <AnimeItemShort
+                        anime={a}
+                        key={a.id}
+                        navigator={navigator}
+                        backKey={'season'}
+                     />
+                  ))}
+                  <PagesBlock />
+               </>
+            )}
          </ScrollView>
       </View>
    )

@@ -73,9 +73,6 @@ const slice = createSlice({
       },
    },
    extraReducers: builder => {
-      builder.addCase(getAnimeList.fulfilled, (state, action) => {
-         state.homeAnimeList = action.payload
-      })
       builder.addCase(getSearchAnimeList.fulfilled, (state, action) => {
          state.homeAnimeList = action.payload
       })
@@ -101,32 +98,6 @@ const slice = createSlice({
 export const animeListReducer = slice.reducer
 export const { setFilterData, setLastSearchRequest, setCurrentPage, setPageSize } = slice.actions
 
-export const getAnimeList = createAsyncThunk<AnimeType[], string, { state: AppRootStateType }>(
-   'animeList/getAnimeList',
-   async (type, { dispatch, getState }) => {
-      dispatch(changeStatus('loading'))
-      try {
-         const res = await MyAnimeListAPI.getAnimeByType(
-            type,
-            getState().animeList.currentPage,
-            getState().animeList.pageSize
-         )
-         const data = filteredByOwnerData(
-            res.data.data,
-            getState().auth.uid,
-            getState().myData.animeList
-         )
-         dispatch(changeStatus('success'))
-         return filterAnimeListData(data, getState().animeList.filterData)
-      } catch (err) {
-         const error = errorAsString(err)
-         dispatch(changeStatus('error'))
-         dispatch(setError(error))
-         return []
-      }
-   }
-)
-
 export const getSeasonAnimeList = createAsyncThunk<
    AnimeType[],
    SeasonDateType,
@@ -134,7 +105,11 @@ export const getSeasonAnimeList = createAsyncThunk<
 >('animeList/getSeasonAnimeList', async (date, { dispatch, getState }) => {
    dispatch(changeStatus('loading'))
    try {
-      const res = await MyAnimeListAPI.getSeasonAnime(date)
+      const res = await MyAnimeListAPI.getSeasonAnime(
+         date,
+         getState().animeList.currentPage,
+         getState().animeList.pageSize
+      )
       const data = filteredByOwnerData(
          res.data.data,
          getState().auth.uid,
