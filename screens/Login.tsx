@@ -3,7 +3,6 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { login, resetPassword } from '../bll/authReducer'
 import { ErrorMessage } from '../components/ErrorMessage'
-import { getMyAnimeList } from '../bll/myDataReducer'
 import { RootTabScreenProps } from '../common/types'
 import { Colors, Icon, Overlay, Theme, useTheme } from '@rneui/themed'
 import { verification } from '../utils/verification'
@@ -15,23 +14,25 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
    const [isChecked, setIsChecked] = useState(false)
    const [isOpenWindow, setIsOpenWindow] = useState(false)
    const dispatch = useAppDispatch()
-   const statusApp = useAppSelector(state => state.app.appStatus)
+   const errorMessage = useAppSelector(state => state.app.error)
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
    const loginHandler = async () => {
       await dispatch(login({ email, password }))
-      dispatch(getMyAnimeList())
       setEmail('')
       setPassword('')
-      navigation.navigate('Profile')
+      if (!errorMessage) {
+         navigation.navigate('Profile')
+      }
    }
    const testUser = async () => {
       await dispatch(login({ email: 'test@test.com', password: '123456' }))
-      dispatch(getMyAnimeList())
       setEmail('')
       setPassword('')
-      navigation.navigate('Profile')
+      if (!errorMessage) {
+         navigation.navigate('Profile')
+      }
    }
    const resetPasswordHandler = () => {
       if (email) {
@@ -40,13 +41,10 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
       }
    }
 
-   if (statusApp === 'loading') {
-      return <LoadingIndicator />
-   }
-
    return (
       <View style={styles.container}>
          <ErrorMessage />
+         <LoadingIndicator />
          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.backIcon}>
             <Icon name={'arrow-back'} color={theme.colors.white} />
          </TouchableOpacity>
@@ -83,7 +81,7 @@ export const Login = ({ navigation }: RootTabScreenProps<'Login'>) => {
          </View>
          <TouchableOpacity
             onPress={loginHandler}
-            onLongPress={testUser} // fix before deploy
+            onLongPress={testUser}
             style={verification(email, password) ? styles.loginButton : styles.loginButtonDisable}
             disabled={!verification(email, password)}
          >

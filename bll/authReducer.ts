@@ -75,10 +75,10 @@ export const login = createAsyncThunk<unknown, { email: string; password: string
          dispatch(changeStatus('error'))
          const { code } = JSON.parse(JSON.stringify(err))
          if (code === 'auth/user-not-found') {
-            dispatch(setError('No user found for that email'))
+            dispatch(setError('Error,No user found for that email'))
          }
          if (code === 'auth/wrong-password') {
-            dispatch(setError('Wrong password provided for that user.'))
+            dispatch(setError('Error,Wrong password provided for that user.'))
          }
       }
    }

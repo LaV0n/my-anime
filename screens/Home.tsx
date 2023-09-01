@@ -56,7 +56,11 @@ export const Home = (navigator: RootTabScreenProps<'Home'>) => {
 
    return (
       <ScrollView style={styles.container}>
-         <StatusBar />
+         <StatusBar
+            animated={true}
+            backgroundColor={theme.colors.background}
+            barStyle={'default'}
+         />
          <LoadingIndicator />
          {randomAnimeItem && (
             <TouchableOpacity style={styles.randomBlock} onPress={getCurrentAnimeItemHandler}>

@@ -1,4 +1,4 @@
-import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { logout } from '../bll/authReducer'
@@ -37,7 +37,6 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    const toggleSetting = () => {
       setIsOpen(true)
    }
-
    useEffect(() => {
       const unsubscribe = navigation.addListener('tabPress', e => {
          e.preventDefault()
@@ -56,7 +55,6 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    return (
       <ScrollView style={styles.container}>
          <LoadingIndicator />
-         <StatusBar />
          <ErrorMessage />
          <ProfileSetting isOpen={isOpen} setIsOpen={setIsOpen} />
          <View style={styles.profileBlock}>

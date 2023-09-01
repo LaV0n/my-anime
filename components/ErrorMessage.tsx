@@ -13,6 +13,8 @@ export const ErrorMessage = () => {
       setIsOpen(!isOpen)
       dispatch(setError(''))
    }
+   if (!errorMessage) return <></>
+
    return (
       <Overlay isVisible={!!errorMessage} onBackdropPress={toggleMessage}>
          <View style={styles.container}>
@@ -34,6 +36,7 @@ const styles = StyleSheet.create({
    },
    title: {
       color: 'black',
+      textAlign: 'center',
       fontWeight: '400',
       fontSize: 18,
    },

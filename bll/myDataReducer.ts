@@ -66,8 +66,7 @@ export const getMyAnimeList = createAsyncThunk<AnimeType[], undefined, { state: 
          return data.docs.map(doc => ({ ...doc.data(), idDoc: doc.id })) as AnimeType[]
       } catch (err) {
          dispatch(changeStatus('error'))
-         const error = errorAsString(err)
-         dispatch(setError(error))
+         dispatch(setError('Warning!,You are not log in'))
          return []
       }
    }
