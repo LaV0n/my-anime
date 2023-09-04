@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
-import { useAppDispatch } from '../bll/store'
+import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getSearchAnimeList, setCurrentPage, setLastSearchRequest } from '../bll/animeListReducer'
 import { SearchBlockType } from '../common/types'
 import { getMyAnimeList, searchMyList } from '../bll/myDataReducer'
 
 export const SearchBlock = ({ goFilterLink, filterScreen }: SearchBlockType) => {
-   const [search, setSearch] = useState('')
+   const lastSearch = useAppSelector(state => state.animeList.lastRequest)
+   const [search, setSearch] = useState(lastSearch ? lastSearch : '')
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
    const styles = makeStyles(theme)

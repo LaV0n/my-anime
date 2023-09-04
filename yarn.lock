@@ -7648,6 +7648,11 @@ react-native-screens@~3.20.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-scrollview-offset@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-scrollview-offset/-/react-native-scrollview-offset-1.0.0.tgz#d7c4473bddcb8f386f14e56ecb093d09bd2cc0aa"
+  integrity sha512-PXqbVNRu2Kq6XZOHg7F4J0rAY+STn2t89CdMhaHQY0+YNMzv9zqwvopZa5T+0jPgBJaj8cGM2c9MB925F/K7mA==
+
 react-native-size-matters@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.4.0.tgz#01bfd0d59454318f4e0b13fe9c1eb0523d70f2e0"

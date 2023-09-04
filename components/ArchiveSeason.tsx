@@ -70,7 +70,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       container: {
          backgroundColor: colors.colors.background,
-         paddingVertical: 10,
+         paddingTop: 10,
          height: '100%',
       },
       title: {

@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getSearchAnimeList, setCurrentPage } from '../bll/animeListReducer'
@@ -12,6 +12,7 @@ import { NotFound } from '../components/NotFound'
 import { useIsFocused } from '@react-navigation/native'
 import { PagesBlock } from '../components/PagesBlock'
 import { changeFilterScreen } from '../bll/appReducer'
+import ScrollViewOffset from 'react-native-scrollview-offset'
 
 export const Search = (navigator: RootTabScreenProps<'Search'>) => {
    const animeList = useAppSelector(state => state.animeList.homeAnimeList)
@@ -46,7 +47,7 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
          <LoadingIndicator />
          <ErrorMessage />
          <SearchBlock goFilterLink={goFilterLink} filterScreen={'search'} />
-         <ScrollView>
+         <ScrollViewOffset contentOffset={{ x: 0, y: 0 }} style={{ height: '93%' }}>
             {animeList.length === 0 ? (
                <NotFound />
             ) : (
@@ -62,7 +63,7 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
                   <PagesBlock />
                </>
             )}
-         </ScrollView>
+         </ScrollViewOffset>
       </View>
    )
 }

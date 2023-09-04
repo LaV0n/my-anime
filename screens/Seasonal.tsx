@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { NotFound } from '../components/NotFound'
 import { AnimeItemShort } from '../components/AnimeItemShort'
@@ -13,6 +13,7 @@ import { seasonKind } from '../utils/utils'
 import { ArchiveSeason } from '../components/ArchiveSeason'
 import { changeFilterScreen } from '../bll/appReducer'
 import { PagesBlock } from '../components/PagesBlock'
+import ScrollViewOffset from 'react-native-scrollview-offset'
 
 export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
    const { theme } = useTheme()
@@ -109,7 +110,10 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
          {seasonTab === 'Archive' && (
             <ArchiveSeason archiveDate={archiveDate} setArchiveDate={setArchiveDate} />
          )}
-         <ScrollView>
+         <ScrollViewOffset
+            contentOffset={{ x: 0, y: 0 }}
+            style={seasonTab === 'Archive' ? { height: '85%' } : { height: '93%' }}
+         >
             {animeList.length === 0 || !animeList ? (
                <NotFound />
             ) : (
@@ -125,7 +129,7 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
                   <PagesBlock />
                </>
             )}
-         </ScrollView>
+         </ScrollViewOffset>
       </View>
    )
 }
@@ -133,7 +137,6 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       container: {
          backgroundColor: colors.colors.background,
-         paddingVertical: 20,
          height: '100%',
       },
       tabBlock: {
