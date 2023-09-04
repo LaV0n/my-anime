@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { signUp } from '../bll/authReducer'
@@ -14,27 +14,26 @@ export const SignUp = ({ navigation }: RootTabScreenProps<'SignUp'>) => {
    const [passwordRepeat, setPasswordRepeat] = useState('')
    const [name, setName] = useState('')
    const userId = useAppSelector(state => state.auth.uid)
-   const statusApp = useAppSelector(state => state.app.appStatus)
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
-   const signUpHandler = () => {
-      dispatch(signUp({ email, password, userName: name }))
+   const signUpHandler = async () => {
+      await dispatch(signUp({ email, password, userName: name }))
       setEmail('')
       setPassword('')
       setPasswordRepeat('')
       setName('')
    }
-   if (userId) {
-      navigation.navigate('Home')
-   }
-   if (statusApp === 'loading') {
-      return <LoadingIndicator />
-   }
+   useEffect(() => {
+      if (userId) {
+         navigation.navigate('Home')
+      }
+   }, [userId])
 
    return (
       <View style={styles.container}>
+         <LoadingIndicator />
          <ErrorMessage />
          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.backIcon}>
             <Icon name={'arrow-back'} color={theme.colors.white} />

@@ -113,8 +113,8 @@ export const signUp = createAsyncThunk<
       const userId = auth.currentUser?.uid ? auth.currentUser?.uid : 'customId'
       const docRef = doc(db, 'users', userId)
       await setDoc(docRef, { name: userName })
-      dispatch(setUserName(userName))
       if (auth.currentUser) {
+         dispatch(setUserName(userName))
          await setUserStorageData({
             name: userName,
             email: auth.currentUser.email!,
@@ -124,9 +124,11 @@ export const signUp = createAsyncThunk<
          })
       }
    } catch (err) {
-      const error = errorAsString(err)
+      const { code } = JSON.parse(JSON.stringify(err))
+      if (code === 'auth/email-already-in-use') {
+         dispatch(setError('Error,User with this email already exists'))
+      }
       dispatch(changeStatus('error'))
-      dispatch(setError(error))
    }
 })
 export const getUserData = createAsyncThunk<
