@@ -13,15 +13,25 @@ export const ProgressLine = ({ startValue, maxValue, idDoc }: ProgressLineType) 
    const dispatch = useAppDispatch()
 
    const setValueHandler = () => {
-      dispatch(changeItemData({ id: idDoc, data: value, requestType: 'myProgress' }))
-      setIsDisabled(true)
+      if (!isDisabled) {
+         setIsDisabled(true)
+         dispatch(changeItemData({ id: idDoc, data: value, requestType: 'myProgress' }))
+      }
+   }
+   const setDisabledHandler = () => {
+      if (isDisabled) {
+         setIsDisabled(false)
+      }
+   }
+   const toggleDisabledHandler = () => {
+      setIsDisabled(!isDisabled)
    }
    useEffect(() => {
       setValue(startValue)
    }, [idDoc, startValue])
 
    return (
-      <TouchableOpacity style={styles.contentView} onPress={() => setIsDisabled(false)}>
+      <TouchableOpacity style={styles.contentView} onPress={toggleDisabledHandler}>
          <Slider
             value={value}
             onValueChange={setValue}
@@ -30,6 +40,7 @@ export const ProgressLine = ({ startValue, maxValue, idDoc }: ProgressLineType) 
             step={1}
             onSlidingComplete={setValueHandler}
             disabled={isDisabled}
+            onSlidingStart={setDisabledHandler}
             maximumTrackTintColor={theme.colors.grey0}
             minimumTrackTintColor={theme.colors.secondary}
             thumbStyle={isDisabled ? styles.disabledThumb : styles.thumb}
@@ -41,6 +52,7 @@ export const ProgressLine = ({ startValue, maxValue, idDoc }: ProgressLineType) 
                            ? { color: theme.colors.secondary }
                            : { color: theme.colors.white }
                      }
+                     onPress={() => console.log('tyt')}
                   >
                      {value}
                   </Text>
@@ -73,6 +85,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          height: 20,
          alignItems: 'center',
          bottom: 10,
+         borderRadius: 15,
          textAlign: 'center',
          backgroundColor: colors.colors.background,
       },
