@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
-import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
+import { Button, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { addItemToMyList } from '../bll/myDataReducer'
@@ -23,9 +23,9 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
-   const addToMyListHandler = () => {
+   const addToMyListHandler = async () => {
       if (currentAnime) {
-         dispatch(addItemToMyList(currentAnime))
+         await dispatch(addItemToMyList(currentAnime))
          dispatch(getCurrentAnimeItem(currentAnime.id))
       }
    }
@@ -40,44 +40,87 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    return (
       <ScrollView style={styles.container}>
          <LoadingIndicator />
-         <View>
-            <LinearGradient colors={[theme.colors.grey2, 'transparent']} style={styles.upperBlock}>
-               <TouchableOpacity
-                  onPress={() => navigation.navigate(chooseBackLink(filterScreen))}
-                  style={styles.goBackLink}
+         <View style={styles.headBlock}>
+            <View style={styles.imgBlock}>
+               <LinearGradient
+                  colors={[theme.colors.grey2, 'transparent']}
+                  style={styles.upperBlock}
                >
-                  <Icon name={'arrow-back'} color={theme.colors.white} />
-               </TouchableOpacity>
-            </LinearGradient>
-            <Image source={{ uri: currentAnime.main_picture.large }} style={styles.coverImg} />
-            {currentAnime.idDoc ? (
-               <View style={styles.myRatingBlock}>
-                  <RatingStars
-                     id={currentAnime.idDoc}
-                     myRating={currentAnime.myRating}
-                     selectedColor={theme.colors.secondary}
-                     currentAnimeId={currentAnime.id}
-                  />
-                  <ProgressLine
-                     startValue={currentAnime.myProgress}
-                     maxValue={+currentAnime.num_episodes}
-                     idDoc={currentAnime.idDoc}
-                  />
-                  <CustomSelectList
-                     idDoc={currentAnime.idDoc}
-                     myStatus={currentAnime.myStatus}
-                     currentAnimeId={currentAnime.id}
-                     isMyList={false}
-                     totalSeries={currentAnime.num_episodes}
-                  />
-               </View>
-            ) : (
-               uid && (
-                  <TouchableOpacity style={styles.myRatingBlock} onPress={addToMyListHandler}>
-                     <Icon name={'add'} color={theme.colors.secondary} />
+                  <TouchableOpacity
+                     onPress={() => navigation.navigate(chooseBackLink(filterScreen))}
+                     style={styles.goBackLink}
+                  >
+                     <Icon name={'arrow-back'} color={theme.colors.white} />
                   </TouchableOpacity>
-               )
-            )}
+               </LinearGradient>
+               <Image source={{ uri: currentAnime.main_picture.large }} style={styles.coverImg} />
+            </View>
+            <View style={styles.headerTitleBlock}>
+               {currentAnime.idDoc ? (
+                  <View style={styles.myRatingBlock}>
+                     <RatingStars
+                        id={currentAnime.idDoc}
+                        myRating={currentAnime.myRating}
+                        selectedColor={theme.colors.secondary}
+                        currentAnimeId={currentAnime.id}
+                     />
+                     <ProgressLine
+                        startValue={currentAnime.myProgress}
+                        maxValue={+currentAnime.num_episodes}
+                        idDoc={currentAnime.idDoc}
+                     />
+                     <CustomSelectList
+                        idDoc={currentAnime.idDoc}
+                        myStatus={currentAnime.myStatus}
+                        currentAnimeId={currentAnime.id}
+                        isMyList={false}
+                        totalSeries={currentAnime.num_episodes}
+                     />
+                  </View>
+               ) : (
+                  uid && (
+                     <Button
+                        title="+ My List"
+                        buttonStyle={{
+                           borderRadius: 30,
+                           marginLeft: 20,
+                           backgroundColor: theme.colors.secondary,
+                           width: 110,
+                        }}
+                        onPress={addToMyListHandler}
+                     />
+                  )
+               )}
+               <View style={styles.shortStatBlock}>
+                  <Icon name={'star'} color={theme.colors.secondary} size={20} />
+                  <Text style={styles.meanTitle}>{currentAnime.mean}</Text>
+                  <Text style={styles.smallTitle}>Ranked #{currentAnime.rank}</Text>
+                  <Text style={styles.smallTitle}>Popularity #{currentAnime.popularity}</Text>
+                  <Text style={styles.ratingTitle}>
+                     {currentAnime.rating.replace('_', ' ').toUpperCase()}
+                  </Text>
+               </View>
+               <View style={styles.shortStatBlock}>
+                  {currentAnime.start_date && (
+                     <Text style={styles.smallTitle}>{currentAnime.start_date.slice(0, 4)}</Text>
+                  )}
+                  <Text style={styles.smallTitle}>{statusAnimeItem(currentAnime.status)}</Text>
+                  <Text style={styles.smallTitle}>
+                     <Text style={styles.smallTitleGrey}>episodes: </Text>
+                     {currentAnime.num_episodes}
+                  </Text>
+               </View>
+               <View style={styles.shortStatBlock}>
+                  <Text style={styles.smallTitle}>
+                     <Text style={styles.smallTitleGrey}>type: </Text>
+                     {currentAnime.media_type}
+                  </Text>
+                  <Text style={styles.smallTitle}>
+                     <Text style={styles.smallTitleGrey}>source: </Text>
+                     {currentAnime.source.replace('_', ' ')}
+                  </Text>
+               </View>
+            </View>
          </View>
          <View style={styles.descriptionBlock}>
             <Text style={styles.nameTitle}>{currentAnime.title}</Text>
@@ -98,41 +141,12 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                </Text>
             </View>
             <View style={styles.shortStatBlock}>
-               <Icon name={'star'} color={theme.colors.secondary} size={20} />
-               <Text style={styles.meanTitle}>{currentAnime.mean}</Text>
-               <Text style={styles.smallTitle}>Ranked #{currentAnime.rank}</Text>
-               <Text style={styles.smallTitle}>Popularity #{currentAnime.popularity}</Text>
-               <Text style={styles.ratingTitle}>
-                  {currentAnime.rating.replace('_', ' ').toUpperCase()}
-               </Text>
-            </View>
-            <View style={styles.shortStatBlock}>
-               {currentAnime.start_date && (
-                  <Text style={styles.smallTitle}>{currentAnime.start_date.slice(0, 4)}</Text>
-               )}
-               <Text style={styles.smallTitle}>{statusAnimeItem(currentAnime.status)}</Text>
-               <Text style={styles.smallTitle}>
-                  <Text style={styles.smallTitleGrey}>episodes: </Text>
-                  {currentAnime.num_episodes}
-               </Text>
-            </View>
-            <View style={styles.shortStatBlock}>
                <Text style={styles.smallTitleGrey}>studios: </Text>
                {currentAnime.studios.map(s => (
                   <Text style={styles.smallTitle} key={s.id}>
                      {s.name}
                   </Text>
                ))}
-            </View>
-            <View style={styles.shortStatBlock}>
-               <Text style={styles.smallTitle}>
-                  <Text style={styles.smallTitleGrey}>type: </Text>
-                  {currentAnime.media_type}
-               </Text>
-               <Text style={styles.smallTitle}>
-                  <Text style={styles.smallTitleGrey}>source: </Text>
-                  {currentAnime.source.replace('_', ' ')}
-               </Text>
             </View>
             <View style={styles.shortStatBlock}>
                {currentAnime.genres.map(g => (
@@ -168,6 +182,7 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
 const makeStyles = (colors: { colors: Colors } & Theme) =>
    StyleSheet.create({
       container: {
+         paddingVertical: 5,
          backgroundColor: colors.colors.background,
       },
       descriptionBlock: {
@@ -188,7 +203,8 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          minHeight: 30,
       },
       coverImg: {
-         minHeight: 500,
+         minHeight: 300,
+         borderRadius: 10,
       },
       goBackLink: {
          position: 'absolute',
@@ -213,10 +229,6 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       myRatingBlock: {
          alignItems: 'center',
          gap: 5,
-         zIndex: 15,
-         position: 'absolute',
-         right: 10,
-         top: 10,
          padding: 10,
          borderRadius: 25,
          backgroundColor: colors.colors.grey2,
@@ -240,5 +252,18 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       smallTitleGrey: {
          color: colors.colors.grey0,
+      },
+      headBlock: {
+         paddingHorizontal: 5,
+         width: '100%',
+         flexDirection: 'row',
+         justifyContent: 'center',
+      },
+      imgBlock: {
+         width: '50%',
+      },
+      headerTitleBlock: {
+         paddingHorizontal: 5,
+         width: '50%',
       },
    })
