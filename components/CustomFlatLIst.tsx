@@ -81,7 +81,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          fontWeight: '600',
       },
       relatedBlock: {
-         width: 200,
+         width: 150,
          marginLeft: 10,
       },
       relatedTitle: {
@@ -109,7 +109,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          backgroundColor: colors.colors.grey2,
       },
       picture: {
-         width: 200,
+         width: 150,
          aspectRatio: 2 / 3,
          marginLeft: 5,
       },

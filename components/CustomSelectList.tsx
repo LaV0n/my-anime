@@ -22,11 +22,10 @@ export const CustomSelectList = ({
    const onSelectedHandler = async (status: string) => {
       if (myStatus !== status) {
          if (status === 'completed') {
-            await dispatch(
-               changeItemData({ id: idDoc, data: +totalSeries, requestType: 'myProgress' })
-            )
+            dispatch(changeItemData({ id: idDoc, data: +totalSeries, requestType: 'myProgress' }))
          }
-         dispatch(changeItemData({ id: idDoc, data: status, requestType: 'myStatus' }))
+         await dispatch(changeItemData({ id: idDoc, data: status, requestType: 'myStatus' }))
+
          if (currentAnimeId) {
             dispatch(getCurrentAnimeItem(currentAnimeId))
          }
