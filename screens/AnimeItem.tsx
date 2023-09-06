@@ -68,6 +68,7 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                      myStatus={currentAnime.myStatus}
                      currentAnimeId={currentAnime.id}
                      isMyList={false}
+                     totalSeries={currentAnime.num_episodes}
                   />
                </View>
             ) : (

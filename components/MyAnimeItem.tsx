@@ -52,7 +52,12 @@ export const MyAnimeItem = ({
                </Text>
             </View>
             <View style={styles.actionBlock}>
-               <CustomSelectList idDoc={anime.idDoc} myStatus={anime.myStatus} isMyList={true} />
+               <CustomSelectList
+                  idDoc={anime.idDoc}
+                  myStatus={anime.myStatus}
+                  isMyList={true}
+                  totalSeries={anime.num_episodes}
+               />
                <Icon
                   name={'delete'}
                   color={theme.colors.secondary}

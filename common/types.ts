@@ -131,6 +131,7 @@ export type CustomSelectListType = {
    myStatus: AnimeStatusType
    isMyList: boolean
    currentAnimeId?: string
+   totalSeries: string | number
 }
 export type FilterButtonType = {
    name: string

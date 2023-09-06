@@ -11,6 +11,7 @@ export const CustomSelectList = ({
    myStatus,
    isMyList,
    currentAnimeId,
+   totalSeries,
 }: CustomSelectListType) => {
    const [isOpen, setIsOpen] = useState(false)
    const dispatch = useAppDispatch()
@@ -18,8 +19,13 @@ export const CustomSelectList = ({
    const styles = makeStyles(theme)
    const animeStatus = ['completed', 'unwatched', 'dropped', 'watching']
 
-   const onSelectedHandler = (status: string) => {
+   const onSelectedHandler = async (status: string) => {
       if (myStatus !== status) {
+         if (status === 'completed') {
+            await dispatch(
+               changeItemData({ id: idDoc, data: +totalSeries, requestType: 'myProgress' })
+            )
+         }
          dispatch(changeItemData({ id: idDoc, data: status, requestType: 'myStatus' }))
          if (currentAnimeId) {
             dispatch(getCurrentAnimeItem(currentAnimeId))
