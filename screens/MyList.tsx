@@ -39,6 +39,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
                <MyStatusLink name={'all'} />
                <MyStatusLink name={'completed'} />
                <MyStatusLink name={'planned'} />
+               <MyStatusLink name={'waiting-for-next-season'} />
                <MyStatusLink name={'dropped'} />
                <MyStatusLink name={'watching'} />
             </ScrollView>

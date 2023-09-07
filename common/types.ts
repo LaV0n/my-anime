@@ -16,7 +16,12 @@ export type RootTabScreenProps<T extends keyof RootTabParamList> = BottomTabScre
    T
 >
 
-export type AnimeStatusType = 'completed' | 'planned' | 'dropped' | 'watching'
+export type AnimeStatusType =
+   | 'completed'
+   | 'planned'
+   | 'dropped'
+   | 'watching'
+   | 'waiting-for-next-season'
 export type CommonListType = {
    homeAnimeList: AnimeType[]
    currentAnimeItem: CurrentAnimeType | null

@@ -17,7 +17,13 @@ export const CustomSelectList = ({
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
-   const animeStatus: AnimeStatusType[] = ['completed', 'planned', 'dropped', 'watching']
+   const animeStatus: AnimeStatusType[] = [
+      'completed',
+      'planned',
+      'dropped',
+      'watching',
+      'waiting-for-next-season',
+   ]
 
    const onSelectedHandler = async (status: string) => {
       if (myStatus !== status) {
@@ -37,18 +43,18 @@ export const CustomSelectList = ({
       <View style={styles.container}>
          <TouchableOpacity onPress={() => setIsOpen(!isOpen)} style={styles.headerBlock}>
             <Text style={{ color: isMyList ? theme.colors.primary : theme.colors.white }}>
-               {myStatus}
+               {myStatus.replaceAll('-', ' ')}
             </Text>
             {isOpen ? (
                <Icon
                   name={'expand-less'}
-                  style={{ paddingLeft: 5 }}
+                  style={{ paddingRight: 5 }}
                   color={isMyList ? theme.colors.primary : theme.colors.white}
                />
             ) : (
                <Icon
                   name={'expand-more'}
-                  style={{ paddingLeft: 5 }}
+                  style={{ paddingRight: 5 }}
                   color={isMyList ? theme.colors.primary : theme.colors.white}
                />
             )}
@@ -58,7 +64,7 @@ export const CustomSelectList = ({
                {animeStatus.map(s => (
                   <TouchableOpacity key={s} onPress={() => onSelectedHandler(s)}>
                      <Text style={{ color: isMyList ? theme.colors.primary : theme.colors.white }}>
-                        {s}
+                        {s.replaceAll('-', ' ')}
                      </Text>
                   </TouchableOpacity>
                ))}
@@ -82,7 +88,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          borderWidth: 1,
          borderColor: colors.colors.grey0,
          borderRadius: 5,
-         width: 120,
+         width: 140,
       },
       itemsList: {
          gap: 5,

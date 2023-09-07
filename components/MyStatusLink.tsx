@@ -28,7 +28,7 @@ export const MyStatusLink = ({ name }: { name: string }) => {
          <Text
             style={filterMyStatus === name ? styles.statusLinkTitleActive : styles.statusLinkTitle}
          >
-            {name.charAt(0).toUpperCase() + name.slice(1)}
+            {name.charAt(0).toUpperCase() + name.slice(1).replaceAll('-', ' ')}
          </Text>
       </TouchableOpacity>
    )
