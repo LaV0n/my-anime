@@ -27,7 +27,7 @@ const filteredByOwnerData = (
       } else {
          result.push({
             ...allItems[i].node,
-            myStatus: 'unwatched',
+            myStatus: 'planned',
             myRating: 0,
             myProgress: 0,
             idDoc: '',
@@ -51,7 +51,7 @@ const initialState: CommonListType = {
       genre: ['all'],
    },
    currentPage: 0,
-   pageSize: 5,
+   pageSize: 50,
 }
 
 const slice = createSlice({

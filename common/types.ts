@@ -16,7 +16,7 @@ export type RootTabScreenProps<T extends keyof RootTabParamList> = BottomTabScre
    T
 >
 
-export type AnimeStatusType = 'completed' | 'unwatched' | 'dropped' | 'watching'
+export type AnimeStatusType = 'completed' | 'planned' | 'dropped' | 'watching'
 export type CommonListType = {
    homeAnimeList: AnimeType[]
    currentAnimeItem: CurrentAnimeType | null
@@ -44,6 +44,11 @@ export type PictureSourceType = {
 export type AnimeType = {
    id: string
    title: string
+   alternative_titles?: {
+      synonyms: string[]
+      en: string
+      ja: string
+   }
    main_picture: PictureSourceType
    start_date: string
    mean: number
@@ -56,11 +61,6 @@ export type AnimeType = {
    idDoc: string
 }
 export interface CurrentAnimeType extends AnimeType {
-   alternative_titles: {
-      synonyms: string[]
-      en: string
-      ja: string
-   }
    synopsis: string
    rank: number
    popularity: number
@@ -90,6 +90,11 @@ export type AnimeResponseType = {
    node: {
       id: string
       title: string
+      alternative_titles: {
+         synonyms: string[]
+         en: string
+         ja: string
+      }
       main_picture: PictureSourceType
       start_date: string
       end_date: string

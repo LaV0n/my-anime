@@ -38,7 +38,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
             <ScrollView style={styles.statusBlock} horizontal>
                <MyStatusLink name={'all'} />
                <MyStatusLink name={'completed'} />
-               <MyStatusLink name={'unwatched'} />
+               <MyStatusLink name={'planned'} />
                <MyStatusLink name={'dropped'} />
                <MyStatusLink name={'watching'} />
             </ScrollView>

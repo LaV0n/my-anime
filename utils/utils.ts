@@ -92,3 +92,9 @@ export const chooseBackLink = (link: FilterScreenType) => {
          return 'Search'
    }
 }
+export const titleNameSelector = (anime: AnimeType) => {
+   if (anime.alternative_titles && anime.alternative_titles.en) return anime.alternative_titles.en
+   else {
+      return anime.title
+   }
+}

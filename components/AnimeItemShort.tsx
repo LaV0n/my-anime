@@ -5,8 +5,9 @@ import { addItemToMyList } from '../bll/myDataReducer'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button, Colors, Theme, useTheme } from '@rneui/themed'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
-import { statusAnimeItem } from '../utils/utils'
+import { statusAnimeItem, titleNameSelector } from '../utils/utils'
 import { changeFilterScreen } from '../bll/appReducer'
+import { CustomSelectList } from './CustomSelectList'
 
 export const AnimeItemShort = ({
    anime,
@@ -39,7 +40,7 @@ export const AnimeItemShort = ({
             <Text style={styles.rating}>{anime.mean ? anime.mean : 0}</Text>
          </TouchableOpacity>
          <View style={styles.description}>
-            <Text style={styles.titleName}> {anime.title}</Text>
+            <Text style={styles.titleName}>{titleNameSelector(anime)}</Text>
             <View style={styles.descriptionStatus}>
                {anime.start_date && (
                   <Text style={styles.descriptionTitle}>{anime.start_date.slice(0, 4)}</Text>
@@ -58,17 +59,11 @@ export const AnimeItemShort = ({
                <View>
                   {myList.some(a => a.id === anime.id) ? (
                      <View style={styles.buttonBlock}>
-                        <Button
-                           title={anime.myStatus}
-                           type="outline"
-                           buttonStyle={{
-                              borderRadius: 30,
-                              borderColor: theme.colors.secondary,
-                              borderWidth: 2,
-                              width: 110,
-                           }}
-                           titleStyle={{ color: theme.colors.secondary }}
-                           onPress={() => {}}
+                        <CustomSelectList
+                           idDoc={anime.idDoc}
+                           myStatus={anime.myStatus}
+                           isMyList={false}
+                           totalSeries={anime.num_episodes}
                         />
                      </View>
                   ) : (

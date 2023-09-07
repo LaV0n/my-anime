@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { changeItemData } from '../bll/myDataReducer'
 import { useAppDispatch } from '../bll/store'
-import { CustomSelectListType } from '../common/types'
+import { AnimeStatusType, CustomSelectListType } from '../common/types'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
@@ -17,7 +17,7 @@ export const CustomSelectList = ({
    const dispatch = useAppDispatch()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
-   const animeStatus = ['completed', 'unwatched', 'dropped', 'watching']
+   const animeStatus: AnimeStatusType[] = ['completed', 'planned', 'dropped', 'watching']
 
    const onSelectedHandler = async (status: string) => {
       if (myStatus !== status) {

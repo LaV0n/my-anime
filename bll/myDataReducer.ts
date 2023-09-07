@@ -88,7 +88,7 @@ export const addItemToMyList = createAsyncThunk<
          status: anime.status,
          genres: anime.genres,
          num_episodes: anime.num_episodes,
-         myStatus: 'unwatched',
+         myStatus: 'planned',
          myRating: 0,
          myProgress: 0,
          idDoc: '',

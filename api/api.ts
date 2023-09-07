@@ -15,25 +15,25 @@ const anonymousParams = {
 export const MyAnimeListAPI = {
    getAnimeByType(type: string, currentPage: number, pageSize: number) {
       return instance.get(
-         `v2/anime/ranking?ranking_type=${type}&fields=start_date,end_date,mean,status,genres,num_episodes&limit=${pageSize.toString()}&offset=${currentPage.toString()}`,
+         `v2/anime/ranking?ranking_type=${type}&fields=start_date,end_date,mean,status,alternative_titles,genres,num_episodes&limit=${pageSize.toString()}&offset=${currentPage.toString()}`,
          anonymousParams
       )
    },
    getTitleShortInfo(id: string) {
       return instance.get(
-         `v2/anime/${id}?fields=start_date,end_date,mean,status,genres,num_episodes`,
+         `v2/anime/${id}?fields=start_date,end_date,mean,status,alternative_titles,genres,num_episodes`,
          anonymousParams
       )
    },
    getSearchAnime(anime: string, currentPage: number, pageSize: number) {
       return instance.get(
-         `v2/anime?q=${anime}&limit=${pageSize.toString()}&fields=start_date,end_date,mean,status,genres,num_episodes&offset=${currentPage.toString()}`,
+         `v2/anime?q=${anime}&limit=${pageSize.toString()}&fields=start_date,end_date,mean,status,alternative_titles,genres,num_episodes&offset=${currentPage.toString()}`,
          anonymousParams
       )
    },
    getRankingAnime(ranking: string, currentPage: number, pageSize: number) {
       return instance.get(
-         `v2/anime/ranking?ranking_type=${ranking}&limit=${pageSize.toString()}&fields=start_date,end_date,mean,status,genres,num_episodes&offset=${currentPage.toString()}`,
+         `v2/anime/ranking?ranking_type=${ranking}&limit=${pageSize.toString()}&fields=start_date,end_date,mean,alternative_titles,status,genres,num_episodes&offset=${currentPage.toString()}`,
          anonymousParams
       )
    },
@@ -41,7 +41,7 @@ export const MyAnimeListAPI = {
       return instance.get(
          `v2/anime/season/${data.year}/${
             data.season
-         }?fields=start_date,end_date,mean,status,genres,num_episodes&offset=${currentPage.toString()}&limit=${pageSize.toString()}`,
+         }?fields=start_date,end_date,mean,status,genres,alternative_titles,num_episodes&offset=${currentPage.toString()}&limit=${pageSize.toString()}`,
          anonymousParams
       )
    },

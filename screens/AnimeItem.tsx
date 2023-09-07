@@ -125,6 +125,15 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
          <View style={styles.descriptionBlock}>
             <Text style={styles.nameTitle}>{currentAnime.title}</Text>
             <View>
+               <Text style={styles.smallTitleGrey}>
+                  eng:{' '}
+                  <Text style={[styles.smallTitle, { fontSize: 18 }]}>
+                     {currentAnime.alternative_titles.en}
+                  </Text>
+               </Text>
+               <Text style={styles.smallTitleGrey}>
+                  jp: <Text style={styles.smallTitle}>{currentAnime.alternative_titles.ja}</Text>
+               </Text>
                {currentAnime.alternative_titles.synonyms.length !== 0 && (
                   <Text style={styles.smallTitleGrey}>
                      synonyms:{' '}
@@ -133,12 +142,6 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                      </Text>
                   </Text>
                )}
-               <Text style={styles.smallTitleGrey}>
-                  eng: <Text style={styles.smallTitle}>{currentAnime.alternative_titles.en}</Text>
-               </Text>
-               <Text style={styles.smallTitleGrey}>
-                  jp: <Text style={styles.smallTitle}>{currentAnime.alternative_titles.ja}</Text>
-               </Text>
             </View>
             <View style={styles.shortStatBlock}>
                <Text style={styles.smallTitleGrey}>studios: </Text>
@@ -187,11 +190,12 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       descriptionBlock: {
          padding: 5,
+         gap: 3,
       },
       nameTitle: {
          color: colors.colors.primary,
          marginVertical: 10,
-         fontSize: 24,
+         fontSize: 22,
          fontWeight: '600',
       },
       shortStatBlock: {
