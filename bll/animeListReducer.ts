@@ -49,6 +49,7 @@ const initialState: CommonListType = {
       releaseFilter: 'all',
       category: 'all',
       genre: ['all'],
+      mediaType: 'unknown',
    },
    currentPage: 0,
    pageSize: 50,

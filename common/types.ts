@@ -59,6 +59,7 @@ export type AnimeType = {
    mean: number
    status: string
    genres: NameType[]
+   media_type: string
    num_episodes: string | number
    myStatus: AnimeStatusType
    myRating: number
@@ -69,7 +70,6 @@ export interface CurrentAnimeType extends AnimeType {
    synopsis: string
    rank: number
    popularity: number
-   media_type: string
    source: string
    rating: string
    pictures: PictureSourceType[]
@@ -103,6 +103,7 @@ export type AnimeResponseType = {
       main_picture: PictureSourceType
       start_date: string
       end_date: string
+      media_type: string
       mean: number
       status: string
       genres: NameType[]
@@ -146,16 +147,18 @@ export type CustomSelectListType = {
 export type FilterButtonType = {
    name: string
    filterData: string | string[]
-   callback: (value: string) => void
+   callback: (value: MediaTypes) => void
 }
 export type FilterDataType = {
    sortByRating: string
    category: string
    genre: string[]
    releaseFilter: string
+   mediaType: MediaTypes
    myStatus?: string
    myStars?: string
 }
+export type MediaTypes = 'unknown' | 'tv' | 'ova' | 'movie' | 'special' | 'ona' | 'music' | string
 export type UserDataType = AuthType & ProfileDataType
 export type ColorModeType = 'dark' | 'light'
 export type ProfileDataType = {

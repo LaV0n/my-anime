@@ -21,6 +21,7 @@ const initialState: MyDataType = {
       genre: ['all'],
       myStatus: 'all',
       myStars: '0',
+      mediaType: 'unknown',
    },
 }
 
@@ -88,6 +89,7 @@ export const addItemToMyList = createAsyncThunk<
          status: anime.status,
          genres: anime.genres,
          num_episodes: anime.num_episodes,
+         media_type: anime.media_type,
          myStatus: 'planned',
          myRating: 0,
          myProgress: 0,

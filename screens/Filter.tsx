@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { RootTabScreenProps } from '../common/types'
+import { FilterDataType, RootTabScreenProps } from '../common/types'
 import { Button, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { FilterButton } from '../components/FilterButton'
 import { useAppDispatch, useAppSelector } from '../bll/store'
@@ -24,6 +24,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
    const [myStars, setMyStars] = useState<string>(
       filterData.myStars ? filterData.myStars.toString() : '0'
    )
+   const [mediaType, setMediaType] = useState(filterData.mediaType)
    const dispatch = useAppDispatch()
 
    const addGenre = (item: string) => {
@@ -44,13 +45,14 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
       setGenre(result)
    }
    const applyFilterHandler = async () => {
-      const data = {
+      const data: FilterDataType = {
          sortByRating,
          category,
          genre,
          releaseFilter,
          myStars,
          myStatus,
+         mediaType,
       }
       dispatch(setCurrentPage(0))
       if (filterScreen === 'myList') {
@@ -70,13 +72,14 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
       }
    }
    const resetFilterHAndler = () => {
-      const data = {
+      const data: FilterDataType = {
          sortByRating: 'all',
          category: 'all',
          genre: ['all'],
          releaseFilter: 'all',
          myStatus: 'all',
          myStars: '0',
+         mediaType: 'unknown',
       }
       if (filterScreen === 'myList') {
          dispatch(setFilterMyListData(data))
@@ -89,6 +92,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
       setReleaseFilter('all')
       setMyStars('0')
       setMyStatus('all')
+      setMediaType('unknown')
    }
    const goBackHandler = () => {
       if (filterScreen === 'myList') {
@@ -124,6 +128,26 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                      filterData={sortByRating}
                      callback={setSortByRating}
                   />
+               </View>
+               <View>
+                  <Text style={styles.titleName}>Type</Text>
+                  <View style={styles.sortButtonBlock}>
+                     <FilterButton
+                        name={'Unknown'}
+                        filterData={mediaType}
+                        callback={setMediaType}
+                     />
+                     <FilterButton name={'Tv'} filterData={mediaType} callback={setMediaType} />
+                     <FilterButton name={'Ova'} filterData={mediaType} callback={setMediaType} />
+                     <FilterButton name={'Movie'} filterData={mediaType} callback={setMediaType} />
+                     <FilterButton
+                        name={'Special'}
+                        filterData={mediaType}
+                        callback={setMediaType}
+                     />
+                     <FilterButton name={'Ona'} filterData={mediaType} callback={setMediaType} />
+                     <FilterButton name={'Music'} filterData={mediaType} callback={setMediaType} />
+                  </View>
                </View>
                {filterScreen === 'search' && (
                   <>
@@ -272,6 +296,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       sortButtonBlock: {
          flexDirection: 'row',
+         paddingTop: 5,
          flexWrap: 'wrap',
          justifyContent: 'flex-start',
          gap: 10,

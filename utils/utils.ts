@@ -46,6 +46,9 @@ export const filterAnimeListData = (animeList: AnimeType[], filter: FilterDataTy
          result = result.filter(a => a.myRating.toString() === filter.myStars)
       }
    }
+   if (filter.mediaType !== 'unknown') {
+      result = result.filter(a => a.media_type === filter.mediaType)
+   }
 
    return result
 }
