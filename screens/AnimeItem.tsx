@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
@@ -13,6 +13,7 @@ import { RatingStars } from '../components/RatingStars'
 import { CustomSelectList } from '../components/CustomSelectList'
 import { StatisticBlock } from '../components/StatisticBlock'
 import { ProgressLine } from '../components/ProgressLine'
+import ScrollViewOffset from 'react-native-scrollview-offset'
 
 export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
@@ -38,7 +39,7 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
    }
 
    return (
-      <ScrollView style={styles.container}>
+      <ScrollViewOffset style={styles.container} contentOffset={{ x: 0, y: 0 }}>
          <LoadingIndicator />
          <View style={styles.headBlock}>
             <View style={styles.imgBlock}>
@@ -125,16 +126,20 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
          <View style={styles.descriptionBlock}>
             <Text style={styles.nameTitle}>{currentAnime.title}</Text>
             <View>
-               <Text style={styles.smallTitleGrey}>
-                  eng:{' '}
-                  <Text style={[styles.smallTitle, { fontSize: 18 }]}>
-                     {currentAnime.alternative_titles.en}
+               {currentAnime.alternative_titles?.en && (
+                  <Text style={styles.smallTitleGrey}>
+                     eng:{' '}
+                     <Text style={[styles.smallTitle, { fontSize: 18 }]}>
+                        {currentAnime.alternative_titles.en}
+                     </Text>
                   </Text>
-               </Text>
-               <Text style={styles.smallTitleGrey}>
-                  jp: <Text style={styles.smallTitle}>{currentAnime.alternative_titles.ja}</Text>
-               </Text>
-               {currentAnime.alternative_titles.synonyms.length !== 0 && (
+               )}
+               {currentAnime.alternative_titles?.ja && (
+                  <Text style={styles.smallTitleGrey}>
+                     jp: <Text style={styles.smallTitle}>{currentAnime.alternative_titles.ja}</Text>
+                  </Text>
+               )}
+               {currentAnime.alternative_titles?.synonyms && (
                   <Text style={styles.smallTitleGrey}>
                      synonyms:{' '}
                      <Text style={styles.smallTitle}>
@@ -178,7 +183,7 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                num_list_users={currentAnime.statistics.num_list_users}
             />
          </View>
-      </ScrollView>
+      </ScrollViewOffset>
    )
 }
 
