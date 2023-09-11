@@ -37,11 +37,11 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
          <ScrollView>
             <ScrollView style={styles.statusBlock} horizontal>
                <MyStatusLink name={'all'} />
+               <MyStatusLink name={'watching'} />
                <MyStatusLink name={'completed'} />
                <MyStatusLink name={'planned'} />
                <MyStatusLink name={'waiting-for-next-season'} />
                <MyStatusLink name={'dropped'} />
-               <MyStatusLink name={'watching'} />
             </ScrollView>
             {myList.length === 0 && (
                <View style={styles.emptyBlock}>

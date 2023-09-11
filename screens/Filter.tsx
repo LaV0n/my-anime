@@ -290,7 +290,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          borderRadius: 20,
       },
       titleName: {
-         color: colors.colors.white,
+         color: colors.colors.primary,
          fontSize: 18,
          fontWeight: '600',
       },

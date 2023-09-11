@@ -18,11 +18,11 @@ export const CustomSelectList = ({
    const { theme } = useTheme()
    const styles = makeStyles(theme)
    const animeStatus: AnimeStatusType[] = [
+      'watching',
       'completed',
       'planned',
-      'dropped',
-      'watching',
       'waiting-for-next-season',
+      'dropped',
    ]
 
    const onSelectedHandler = async (status: string) => {
