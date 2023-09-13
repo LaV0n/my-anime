@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { CheckBox, Colors, Overlay, Theme, useTheme } from '@rneui/themed'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { ProfileSettingType } from '../common/types'
+import { OverlayMessageType } from '../common/types'
 import { defaultImg } from '../common/variables'
 import { setProfileImg, setStorageData, setUserName } from '../bll/profileReducer'
 
-export const ProfileSetting = ({ isOpen, setIsOpen }: ProfileSettingType) => {
+export const ProfileSetting = ({ isOpen, setIsOpen }: OverlayMessageType) => {
    const userName = useAppSelector(state => state.profile.name)
    const userImg = useAppSelector(state => state.profile.profileImg)
    const [name, setName] = useState(userName)

@@ -1,15 +1,15 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
-import { logout } from '../bll/authReducer'
 import { RootTabScreenProps } from '../common/types'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Avatar, Colors, Icon, Switch, Theme, useTheme } from '@rneui/themed'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { setColorMode, setStorageData } from '../bll/profileReducer'
 import { ProfileSetting } from '../components/ProfileSetting'
+import { OverlayMessage } from '../components/OverlayMessage'
 
-export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
+export const Profile = (navigate: RootTabScreenProps<'Profile'>) => {
    const emailUser = useAppSelector(state => state.auth.email)
    const userName = useAppSelector(state => state.profile.name)
    const colorMode = useAppSelector(state => state.profile.colorMode)
@@ -17,14 +17,11 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
    const error = useAppSelector(state => state.app.error)
    const profileImg = useAppSelector(state => state.profile.profileImg)
    const dispatch = useAppDispatch()
-   const [isOpen, setIsOpen] = useState(false)
+   const [isOpenSetting, setIsOpenSetting] = useState(false)
+   const [isOpenAlert, setIsOpenAlert] = useState(false)
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
-   const logoutHandler = () => {
-      dispatch(logout())
-      navigation.navigate('Login')
-   }
    const toggleMode = () => {
       if (colorMode === 'dark') {
          dispatch(setColorMode('light'))
@@ -35,28 +32,29 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
       }
    }
    const toggleSetting = () => {
-      setIsOpen(true)
+      setIsOpenSetting(true)
    }
    useEffect(() => {
-      const unsubscribe = navigation.addListener('tabPress', e => {
+      const unsubscribe = navigate.navigation.addListener('tabPress', e => {
          e.preventDefault()
          if (!uid) {
-            navigation.navigate('Login')
+            navigate.navigation.navigate('Login')
          } else {
-            navigation.navigate('Profile')
+            navigate.navigation.navigate('Profile')
          }
       })
       if (error && !uid) {
-         navigation.navigate('Login')
+         navigate.navigation.navigate('Login')
       }
       return unsubscribe
-   }, [navigation, uid, error])
+   }, [navigate.navigation, uid, error])
 
    return (
       <ScrollView style={styles.container}>
          <LoadingIndicator />
          <ErrorMessage />
-         <ProfileSetting isOpen={isOpen} setIsOpen={setIsOpen} />
+         <ProfileSetting isOpen={isOpenSetting} setIsOpen={setIsOpenSetting} />
+         <OverlayMessage isOpen={isOpenAlert} setIsOpen={setIsOpenAlert} navigation={navigate} />
          <View style={styles.profileBlock}>
             <Avatar
                size={100}
@@ -85,7 +83,10 @@ export const Profile = ({ navigation }: RootTabScreenProps<'Profile'>) => {
                <Icon name={'settings'} color={theme.colors.primary} />
                <Text style={styles.title}>Setting</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={logoutHandler} style={styles.titleBlock}>
+            <TouchableOpacity
+               onPress={() => setIsOpenAlert(!isOpenAlert)}
+               style={styles.titleBlock}
+            >
                <Icon name={'logout'} color={theme.colors.error} />
                <Text style={styles.logoutTitle}>Logout</Text>
             </TouchableOpacity>

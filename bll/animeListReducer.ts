@@ -149,7 +149,7 @@ export const getSearchAnimeList = createAsyncThunk<
 >('animeList/getSearchAnimeList', async (searchAnime, { dispatch, getState }) => {
    dispatch(changeStatus('loading'))
    try {
-      let res: any = {}
+      let res: { data: { data: AnimeResponseType[] } }
       if (searchAnime) {
          res = await MyAnimeListAPI.getSearchAnime(
             searchAnime,

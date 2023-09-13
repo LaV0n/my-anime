@@ -166,9 +166,10 @@ export type ProfileDataType = {
    colorMode: ColorModeType
    profileImg: string
 }
-export type ProfileSettingType = {
+export type OverlayMessageType = {
    isOpen: boolean
    setIsOpen: (value: boolean) => void
+   navigation?: RootTabScreenProps<'Profile'>
 }
 export type YearSelectType = {
    year: string
