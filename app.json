@@ -2,7 +2,8 @@
   "expo": {
     "name": "my-anime",
     "slug": "my-anime",
-    "version": "1.0.0",
+"runtimeVersion": "1.0.2",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.myanime"
+      "package": "com.anonymous.myanime"	
     },
     "web": {
       "favicon": "./assets/favicon.png"
