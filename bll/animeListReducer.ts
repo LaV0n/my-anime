@@ -90,6 +90,9 @@ const slice = createSlice({
       builder.addCase(getRandomAnimeItem.fulfilled, (state, action) => {
          state.randomAnimeItem = action.payload
       })
+      builder.addCase(getRandomAnimeItem.rejected, (state, action) => {
+         state.randomAnimeItem = action.payload ? action.payload : null
+      })
       builder.addCase(getSeasonAnimeList.fulfilled, (state, action) => {
          state.homeAnimeList = action.payload
       })
@@ -208,18 +211,16 @@ export const getCurrentAnimeItem = createAsyncThunk<
 export const getRandomAnimeItem = createAsyncThunk<
    AnimeType,
    undefined,
-   { state: AppRootStateType; rejectValue: { error: string } }
+   { state: AppRootStateType; rejectValue: AnimeType }
 >('animeList/getRandomAnimeItem', async (_, { dispatch, rejectWithValue }) => {
    dispatch(changeStatus('loading'))
    try {
-      const random = Math.floor(Math.random() * 1000 + 1).toString()
+      const random = Math.floor(Math.random() * 10000 + 1).toString()
       const res = await MyAnimeListAPI.getTitleShortInfo(random)
       dispatch(changeStatus('success'))
       return res.data
    } catch (err) {
-      const error = errorAsString(err)
-      dispatch(changeStatus('error'))
-      dispatch(setError(error))
-      return rejectWithValue({ error })
+      const res = await MyAnimeListAPI.getTitleShortInfo('996') //getting actually existing anime item
+      return rejectWithValue(res.data)
    }
 })
