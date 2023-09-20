@@ -1,10 +1,13 @@
 import {
    AnimeType,
+   CurrentAnimeType,
    FilterDataType,
    FilterScreenType,
+   PictureSourceType,
    SeasonKindType,
    SeasonType,
 } from '../common/types'
+import { defaultImg } from '../common/variables'
 
 export const statusAnimeItem = (status: string | undefined) => {
    let result = 'currently'
@@ -51,6 +54,18 @@ export const filterAnimeListData = (animeList: AnimeType[], filter: FilterDataTy
    }
 
    return result
+}
+
+export const checkingImg = (animeData: AnimeType[] | CurrentAnimeType) => {
+   const noPic: PictureSourceType = {
+      medium: defaultImg.noImg,
+      large: defaultImg.noImg,
+   }
+   if (Array.isArray(animeData)) {
+      return animeData.map(a => (a.main_picture ? a : { ...a, main_picture: noPic }))
+   } else {
+      return animeData.main_picture ? animeData : { ...animeData, main_picture: noPic }
+   }
 }
 
 export const seasonKind = ({ type }: SeasonKindType): SeasonType => {

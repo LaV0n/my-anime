@@ -192,6 +192,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       container: {
          paddingVertical: 5,
          backgroundColor: colors.colors.background,
+         minHeight: '100%',
       },
       descriptionBlock: {
          padding: 5,

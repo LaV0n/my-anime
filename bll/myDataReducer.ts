@@ -84,7 +84,7 @@ export const addItemToMyList = createAsyncThunk<
          id: anime.id,
          title: anime.title,
          main_picture: anime.main_picture,
-         start_date: anime.start_date,
+         start_date: anime.start_date ? anime.start_date : '',
          mean: anime.mean ? anime.mean : 0,
          status: anime.status,
          genres: anime.genres,

@@ -8,6 +8,7 @@ import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { statusAnimeItem, titleNameSelector } from '../utils/utils'
 import { changeFilterScreen } from '../bll/appReducer'
 import { CustomSelectList } from './CustomSelectList'
+import { defaultImg } from '../common/variables'
 
 export const AnimeItemShort = ({
    anime,
@@ -36,7 +37,12 @@ export const AnimeItemShort = ({
    return (
       <View style={styles.container}>
          <TouchableOpacity style={styles.pictureBlock} onPress={getCurrentAnimeItemHandler}>
-            <Image source={{ uri: anime.main_picture.medium }} style={styles.picture} />
+            <Image
+               source={{
+                  uri: anime.main_picture ? anime.main_picture.medium : defaultImg.animal,
+               }}
+               style={styles.picture}
+            />
             <Text style={styles.rating}>{anime.mean ? anime.mean : 0}</Text>
          </TouchableOpacity>
          <View style={styles.description}>
