@@ -25,6 +25,7 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
       season: 'spring',
       year: '2023',
    })
+   const [toTopScreenPosition, setToTopScreenPosition] = useState(true)
    const currentPage = useAppSelector(state => state.animeList.currentPage)
    const pageSize = useAppSelector(state => state.animeList.pageSize)
    const myAnimeList = useAppSelector(state => state.myData.animeList)
@@ -90,6 +91,14 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
          getSeasonAnimeListHandler()
       }
    }, [isFocused, currentPage, pageSize, myAnimeList, seasonTab, archiveDate])
+
+   useEffect(() => {
+      setToTopScreenPosition(true)
+      setTimeout(() => {
+         setToTopScreenPosition(false)
+      }, 2000)
+   }, [isFocused, currentPage, pageSize, seasonTab, archiveDate])
+
    useEffect(() => {
       dispatch(setCurrentPage(0))
    }, [isFocused])
@@ -111,7 +120,7 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
             <ArchiveSeason archiveDate={archiveDate} setArchiveDate={setArchiveDate} />
          )}
          <ScrollViewOffset
-            contentOffset={{ x: 0, y: 0 }}
+            contentOffset={toTopScreenPosition ? { x: 0, y: 0 } : undefined}
             style={seasonTab === 'Archive' ? { height: '85%' } : { height: '93%' }}
          >
             {animeList.length === 0 || !animeList ? (
