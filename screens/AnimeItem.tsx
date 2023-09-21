@@ -7,7 +7,7 @@ import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { addItemToMyList } from '../bll/myDataReducer'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { LinearGradient } from 'expo-linear-gradient'
-import { chooseBackLink, statusAnimeItem } from '../utils/utils'
+import { chooseBackLink, statusAnimeItem, titleNameSelector } from '../utils/utils'
 import { CustomFlatLIst } from '../components/CustomFlatLIst'
 import { RatingStars } from '../components/RatingStars'
 import { CustomSelectList } from '../components/CustomSelectList'
@@ -124,16 +124,17 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
             </View>
          </View>
          <View style={styles.descriptionBlock}>
-            <Text style={styles.nameTitle}>{currentAnime.title}</Text>
+            <Text style={styles.nameTitle}>{titleNameSelector(currentAnime)}</Text>
             <View>
-               {currentAnime.alternative_titles?.en && (
-                  <Text style={styles.smallTitleGrey}>
-                     eng:{' '}
-                     <Text style={[styles.smallTitle, { fontSize: 18 }]}>
-                        {currentAnime.alternative_titles.en}
+               {currentAnime.alternative_titles?.en &&
+                  currentAnime.alternative_titles?.en !== currentAnime.title && (
+                     <Text style={styles.smallTitleGrey}>
+                        orig:{' '}
+                        <Text style={[styles.smallTitle, { fontSize: 18 }]}>
+                           {currentAnime.title}
+                        </Text>
                      </Text>
-                  </Text>
-               )}
+                  )}
                {currentAnime.alternative_titles?.ja && (
                   <Text style={styles.smallTitleGrey}>
                      jp: <Text style={styles.smallTitle}>{currentAnime.alternative_titles.ja}</Text>
