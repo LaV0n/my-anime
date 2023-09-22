@@ -1,8 +1,8 @@
 import {
    AnimeType,
+   BackLinkType,
    CurrentAnimeType,
    FilterDataType,
-   FilterScreenType,
    PictureSourceType,
    SeasonKindType,
    SeasonType,
@@ -98,18 +98,26 @@ export const seasonKind = ({ type }: SeasonKindType): SeasonType => {
          return 'spring'
    }
 }
-export const chooseBackLink = (link: FilterScreenType) => {
-   switch (link) {
-      case 'home':
-         return 'Home'
-      case 'season':
-         return 'Seasonal'
-      case 'myList':
-         return 'MyList'
-      case 'search':
-         return 'Search'
+export const chooseBackLink = ({
+   backLinkSteps,
+   navigation,
+   delLastLink,
+   getLastAnime,
+}: BackLinkType) => {
+   const lastStep = backLinkSteps[backLinkSteps.length - 1]
+   delLastLink()
+   if (
+      lastStep === 'Search' ||
+      lastStep === 'MyList' ||
+      lastStep === 'Seasonal' ||
+      lastStep === 'Home'
+   ) {
+      return navigation.navigation.navigate(lastStep)
+   } else {
+      return getLastAnime ? getLastAnime(lastStep) : undefined
    }
 }
+
 export const titleNameSelector = (anime: AnimeType) => {
    if (anime.alternative_titles && anime.alternative_titles.en) return anime.alternative_titles.en
    else {

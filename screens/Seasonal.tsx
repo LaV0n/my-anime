@@ -11,9 +11,9 @@ import { ErrorMessage } from '../components/ErrorMessage'
 import { useIsFocused } from '@react-navigation/native'
 import { seasonKind } from '../utils/utils'
 import { ArchiveSeason } from '../components/ArchiveSeason'
-import { changeFilterScreen } from '../bll/appReducer'
 import { PagesBlock } from '../components/PagesBlock'
 import ScrollViewOffset from 'react-native-scrollview-offset'
+import { addBackLinkStep } from '../bll/appReducer'
 
 export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
    const { theme } = useTheme()
@@ -56,7 +56,7 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
    }
 
    const goFilterLink = () => {
-      dispatch(changeFilterScreen('season'))
+      dispatch(addBackLinkStep('Seasonal'))
       navigator.navigation.navigate('Filter')
    }
    const getSeasonAnimeListHandler = () => {
@@ -132,7 +132,7 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
                         anime={a}
                         key={a.id}
                         navigator={navigator}
-                        backKey={'season'}
+                        backKey={'Seasonal'}
                      />
                   ))}
                   <PagesBlock />

@@ -14,10 +14,11 @@ import { CustomSelectList } from '../components/CustomSelectList'
 import { StatisticBlock } from '../components/StatisticBlock'
 import { ProgressLine } from '../components/ProgressLine'
 import ScrollViewOffset from 'react-native-scrollview-offset'
+import { delBackLinkStep } from '../bll/appReducer'
 
-export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
+export const AnimeItem = (navigate: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
-   const filterScreen = useAppSelector(state => state.app.filterScreen)
+   const backLinkSteps = useAppSelector(state => state.app.backLinkSteps)
    const [viewMore, setViewMore] = useState(true)
    const uid = useAppSelector(state => state.auth.uid)
    const dispatch = useAppDispatch()
@@ -30,12 +31,17 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
          dispatch(getCurrentAnimeItem(currentAnime.id))
       }
    }
-
    const toggleViewMode = () => {
       setViewMore(!viewMore)
    }
    if (!currentAnime) {
       return <LoadingIndicator />
+   }
+   const delLastLink = () => {
+      dispatch(delBackLinkStep())
+   }
+   const getLastAnime = (item: string) => {
+      dispatch(getCurrentAnimeItem(item))
    }
 
    return (
@@ -48,7 +54,14 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                   style={styles.upperBlock}
                >
                   <TouchableOpacity
-                     onPress={() => navigation.navigate(chooseBackLink(filterScreen))}
+                     onPress={() =>
+                        chooseBackLink({
+                           backLinkSteps,
+                           navigation: navigate,
+                           delLastLink,
+                           getLastAnime,
+                        })
+                     }
                      style={styles.goBackLink}
                   >
                      <Icon name={'arrow-back'} color={theme.colors.white} />
@@ -173,11 +186,17 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                </Text>
             </View>
             <CustomFlatLIst name={'Covers images'} data={currentAnime.pictures} isLinked={false} />
-            <CustomFlatLIst name={'Related'} data={currentAnime.related_anime} isLinked={true} />
+            <CustomFlatLIst
+               name={'Related'}
+               data={currentAnime.related_anime}
+               isLinked={true}
+               parentId={currentAnime.id}
+            />
             <CustomFlatLIst
                name={'Recommendations'}
                data={currentAnime.recommendations}
                isLinked={true}
+               parentId={currentAnime.id}
             />
             <StatisticBlock
                status={currentAnime.statistics.status}

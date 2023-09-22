@@ -4,7 +4,7 @@ import { AppStatusType, AppType, FilterScreenType } from '../common/types'
 const initialState: AppType = {
    appStatus: 'success',
    error: '',
-   filterScreen: 'season',
+   backLinkSteps: ['Seasonal'],
 }
 
 const slice = createSlice({
@@ -17,11 +17,14 @@ const slice = createSlice({
       setError(state, action: PayloadAction<string>) {
          state.error = action.payload
       },
-      changeFilterScreen(state, action: PayloadAction<FilterScreenType>) {
-         state.filterScreen = action.payload
+      addBackLinkStep(state, action: PayloadAction<FilterScreenType | string>) {
+         state.backLinkSteps.push(action.payload)
+      },
+      delBackLinkStep(state) {
+         state.backLinkSteps.pop()
       },
    },
 })
 
 export const appReducer = slice.reducer
-export const { setError, changeStatus, changeFilterScreen } = slice.actions
+export const { setError, changeStatus, addBackLinkStep, delBackLinkStep } = slice.actions

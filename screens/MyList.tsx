@@ -9,7 +9,7 @@ import { RootTabScreenProps } from '../common/types'
 import { SearchBlock } from '../components/SearchBlock'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { MyStatusLink } from '../components/MyStatusLink'
-import { changeFilterScreen } from '../bll/appReducer'
+import { addBackLinkStep } from '../bll/appReducer'
 
 export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const myList = useAppSelector(state => state.myData.animeList)
@@ -19,7 +19,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
    const goFilterLink = () => {
-      dispatch(changeFilterScreen('myList'))
+      dispatch(addBackLinkStep('MyList'))
       navigator.navigation.navigate('Filter')
    }
 
@@ -33,7 +33,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
       <View style={styles.container}>
          <ErrorMessage />
          <LoadingIndicator />
-         <SearchBlock goFilterLink={goFilterLink} filterScreen={'myList'} />
+         <SearchBlock goFilterLink={goFilterLink} filterScreen={'MyList'} />
          <ScrollView style={styles.statusBlock} horizontal>
             <MyStatusLink name={'all'} />
             <MyStatusLink name={'watching'} />
@@ -42,7 +42,7 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
             <MyStatusLink name={'waiting-for-next-season'} />
             <MyStatusLink name={'dropped'} />
          </ScrollView>
-         <ScrollView>
+         <ScrollView style={styles.itemsBlock}>
             {myList.length === 0 && (
                <View style={styles.emptyBlock}>
                   <Icon
@@ -73,6 +73,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          height: '100%',
          backgroundColor: colors.colors.background,
          paddingVertical: 10,
+         justifyContent: 'center',
       },
       emptyBlock: {
          justifyContent: 'center',
@@ -97,5 +98,8 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       },
       statusBlock: {
          height: 40,
+      },
+      itemsBlock: {
+         height: '100%',
       },
    })

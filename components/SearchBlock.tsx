@@ -14,24 +14,24 @@ export const SearchBlock = ({ goFilterLink, filterScreen }: SearchBlockType) => 
    const styles = makeStyles(theme)
 
    const searchAnimeHandler = async () => {
-      if (filterScreen === 'search') {
+      if (filterScreen === 'Search') {
          dispatch(setCurrentPage(0))
          dispatch(setLastSearchRequest(search))
          dispatch(getSearchAnimeList(search))
       }
-      if (filterScreen === 'myList') {
+      if (filterScreen === 'MyList') {
          await dispatch(getMyAnimeList())
          dispatch(searchMyList(search))
       }
    }
    const closeIconHandler = () => {
       setSearch('')
-      if (filterScreen === 'search') {
+      if (filterScreen === 'Search') {
          dispatch(setCurrentPage(0))
          dispatch(setLastSearchRequest(search))
          dispatch(getSearchAnimeList())
       }
-      if (filterScreen === 'myList') {
+      if (filterScreen === 'MyList') {
          dispatch(getMyAnimeList())
       }
    }
