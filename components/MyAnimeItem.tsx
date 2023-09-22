@@ -9,7 +9,6 @@ import { RatingStars } from './RatingStars'
 import { CustomSelectList } from './CustomSelectList'
 import { ProgressLine } from './ProgressLine'
 import { changeFilterScreen } from '../bll/appReducer'
-import { titleNameSelector } from '../utils/utils'
 
 export const MyAnimeItem = ({
    anime,

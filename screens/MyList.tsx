@@ -34,15 +34,15 @@ export const MyList = (navigator: RootTabScreenProps<'MyList'>) => {
          <ErrorMessage />
          <LoadingIndicator />
          <SearchBlock goFilterLink={goFilterLink} filterScreen={'myList'} />
+         <ScrollView style={styles.statusBlock} horizontal>
+            <MyStatusLink name={'all'} />
+            <MyStatusLink name={'watching'} />
+            <MyStatusLink name={'completed'} />
+            <MyStatusLink name={'planned'} />
+            <MyStatusLink name={'waiting-for-next-season'} />
+            <MyStatusLink name={'dropped'} />
+         </ScrollView>
          <ScrollView>
-            <ScrollView style={styles.statusBlock} horizontal>
-               <MyStatusLink name={'all'} />
-               <MyStatusLink name={'watching'} />
-               <MyStatusLink name={'completed'} />
-               <MyStatusLink name={'planned'} />
-               <MyStatusLink name={'waiting-for-next-season'} />
-               <MyStatusLink name={'dropped'} />
-            </ScrollView>
             {myList.length === 0 && (
                <View style={styles.emptyBlock}>
                   <Icon
@@ -96,6 +96,6 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          opacity: 0.6,
       },
       statusBlock: {
-         height: 50,
+         height: 40,
       },
    })
