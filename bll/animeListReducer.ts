@@ -12,7 +12,7 @@ import { errorAsString } from '../utils/errorAsString'
 import { changeStatus, setError } from './appReducer'
 import { AppRootStateType } from './store'
 import { Ranking } from '../common/variables'
-import { filterAnimeListData } from '../utils/utils'
+import { checkingImg, filterAnimeListData } from '../utils/utils'
 
 const filteredByOwnerData = (
    allItems: AnimeResponseType[],
@@ -75,10 +75,10 @@ const slice = createSlice({
    },
    extraReducers: builder => {
       builder.addCase(getSearchAnimeList.fulfilled, (state, action) => {
-         state.homeAnimeList = action.payload
+         state.homeAnimeList = checkingImg(action.payload) as AnimeType[]
       })
       builder.addCase(getCurrentAnimeItem.fulfilled, (state, action) => {
-         state.currentAnimeItem = action.payload
+         state.currentAnimeItem = checkingImg(action.payload) as CurrentAnimeType
       })
       builder.addCase(getShortAnimeList.fulfilled, (state, action) => {
          if (action.payload.type === Ranking.AIRING) {
@@ -94,7 +94,7 @@ const slice = createSlice({
          state.randomAnimeItem = action.payload ? action.payload : null
       })
       builder.addCase(getSeasonAnimeList.fulfilled, (state, action) => {
-         state.homeAnimeList = action.payload
+         state.homeAnimeList = checkingImg(action.payload) as AnimeType[]
       })
    },
 })

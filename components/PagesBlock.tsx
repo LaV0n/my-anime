@@ -21,7 +21,7 @@ export const PagesBlock = () => {
       const [isOpen, setIsOpen] = useState(false)
       const [value, setValue] = useState(pageSize)
       const inputHandler = () => {
-         dispatch(setPageSize(value))
+         dispatch(setPageSize(value ? value : 5))
          setIsOpen(false)
       }
       return (

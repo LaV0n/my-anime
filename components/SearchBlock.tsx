@@ -14,14 +14,25 @@ export const SearchBlock = ({ goFilterLink, filterScreen }: SearchBlockType) => 
    const styles = makeStyles(theme)
 
    const searchAnimeHandler = async () => {
-      if (filterScreen === 'search') {
+      if (filterScreen === 'Search') {
          dispatch(setCurrentPage(0))
          dispatch(setLastSearchRequest(search))
          dispatch(getSearchAnimeList(search))
       }
-      if (filterScreen === 'myList') {
+      if (filterScreen === 'MyList') {
          await dispatch(getMyAnimeList())
          dispatch(searchMyList(search))
+      }
+   }
+   const closeIconHandler = () => {
+      setSearch('')
+      if (filterScreen === 'Search') {
+         dispatch(setCurrentPage(0))
+         dispatch(setLastSearchRequest(search))
+         dispatch(getSearchAnimeList())
+      }
+      if (filterScreen === 'MyList') {
+         dispatch(getMyAnimeList())
       }
    }
    return (
@@ -35,6 +46,11 @@ export const SearchBlock = ({ goFilterLink, filterScreen }: SearchBlockType) => 
                style={styles.searchBlock}
                onEndEditing={searchAnimeHandler}
             />
+            {search && (
+               <TouchableOpacity onPress={closeIconHandler} style={styles.closeIconBlock}>
+                  <Icon name={'close'} color={theme.colors.primary} />
+               </TouchableOpacity>
+            )}
             <TouchableOpacity onPress={goFilterLink}>
                <Icon name={'tune'} color={theme.colors.primary} />
             </TouchableOpacity>
@@ -69,5 +85,9 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
          alignItems: 'center',
          flexDirection: 'row',
          width: '90%',
+      },
+      closeIconBlock: {
+         left: '80%',
+         position: 'absolute',
       },
    })

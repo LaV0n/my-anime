@@ -10,7 +10,7 @@ import { MyAnimeListAPI } from '../api/api'
 import { errorAsString } from '../utils/errorAsString'
 import { AppRootStateType } from './store'
 import { changeStatus, setError } from './appReducer'
-import { filterAnimeListData } from '../utils/utils'
+import { filterAnimeListData, titleNameSelector } from '../utils/utils'
 
 const initialState: MyDataType = {
    animeList: [],
@@ -82,9 +82,9 @@ export const addItemToMyList = createAsyncThunk<
    try {
       const animeItem: AnimeType = {
          id: anime.id,
-         title: anime.title,
+         title: titleNameSelector(anime),
          main_picture: anime.main_picture,
-         start_date: anime.start_date,
+         start_date: anime.start_date ? anime.start_date : '',
          mean: anime.mean ? anime.mean : 0,
          status: anime.status,
          genres: anime.genres,

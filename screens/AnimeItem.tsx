@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { BackHandler, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
@@ -7,17 +7,19 @@ import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { addItemToMyList } from '../bll/myDataReducer'
 import { LoadingIndicator } from '../components/LoadingIndicator'
 import { LinearGradient } from 'expo-linear-gradient'
-import { chooseBackLink, statusAnimeItem } from '../utils/utils'
+import { chooseBackLink, statusAnimeItem, titleNameSelector } from '../utils/utils'
 import { CustomFlatLIst } from '../components/CustomFlatLIst'
 import { RatingStars } from '../components/RatingStars'
 import { CustomSelectList } from '../components/CustomSelectList'
 import { StatisticBlock } from '../components/StatisticBlock'
 import { ProgressLine } from '../components/ProgressLine'
 import ScrollViewOffset from 'react-native-scrollview-offset'
+import { delBackLinkStep } from '../bll/appReducer'
+import { useFocusEffect } from '@react-navigation/native'
 
-export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
+export const AnimeItem = (navigate: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
-   const filterScreen = useAppSelector(state => state.app.filterScreen)
+   const backLinkSteps = useAppSelector(state => state.app.backLinkSteps)
    const [viewMore, setViewMore] = useState(true)
    const uid = useAppSelector(state => state.auth.uid)
    const dispatch = useAppDispatch()
@@ -30,10 +32,39 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
          dispatch(getCurrentAnimeItem(currentAnime.id))
       }
    }
-
    const toggleViewMode = () => {
       setViewMore(!viewMore)
    }
+   const delLastLink = () => {
+      dispatch(delBackLinkStep())
+   }
+   const getLastAnime = (item: string) => {
+      dispatch(getCurrentAnimeItem(item))
+   }
+   const onBackButtonHandler = () => {
+      chooseBackLink({
+         backLinkSteps,
+         navigation: navigate,
+         delLastLink,
+         getLastAnime,
+      })
+   }
+
+   useFocusEffect(
+      React.useCallback(() => {
+         const onBackPress = () => {
+            if (backLinkSteps) {
+               onBackButtonHandler()
+               return true
+            } else {
+               return false
+            }
+         }
+         const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+         return () => subscription.remove()
+      }, [backLinkSteps])
+   )
    if (!currentAnime) {
       return <LoadingIndicator />
    }
@@ -47,10 +78,7 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                   colors={[theme.colors.grey2, 'transparent']}
                   style={styles.upperBlock}
                >
-                  <TouchableOpacity
-                     onPress={() => navigation.navigate(chooseBackLink(filterScreen))}
-                     style={styles.goBackLink}
-                  >
+                  <TouchableOpacity onPress={onBackButtonHandler} style={styles.goBackLink}>
                      <Icon name={'arrow-back'} color={theme.colors.white} />
                   </TouchableOpacity>
                </LinearGradient>
@@ -124,16 +152,17 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
             </View>
          </View>
          <View style={styles.descriptionBlock}>
-            <Text style={styles.nameTitle}>{currentAnime.title}</Text>
+            <Text style={styles.nameTitle}>{titleNameSelector(currentAnime)}</Text>
             <View>
-               {currentAnime.alternative_titles?.en && (
-                  <Text style={styles.smallTitleGrey}>
-                     eng:{' '}
-                     <Text style={[styles.smallTitle, { fontSize: 18 }]}>
-                        {currentAnime.alternative_titles.en}
+               {currentAnime.alternative_titles?.en &&
+                  currentAnime.alternative_titles?.en !== currentAnime.title && (
+                     <Text style={styles.smallTitleGrey}>
+                        orig:{' '}
+                        <Text style={[styles.smallTitle, { fontSize: 18 }]}>
+                           {currentAnime.title}
+                        </Text>
                      </Text>
-                  </Text>
-               )}
+                  )}
                {currentAnime.alternative_titles?.ja && (
                   <Text style={styles.smallTitleGrey}>
                      jp: <Text style={styles.smallTitle}>{currentAnime.alternative_titles.ja}</Text>
@@ -172,11 +201,17 @@ export const AnimeItem = ({ navigation }: RootTabScreenProps<'AnimeItem'>) => {
                </Text>
             </View>
             <CustomFlatLIst name={'Covers images'} data={currentAnime.pictures} isLinked={false} />
-            <CustomFlatLIst name={'Related'} data={currentAnime.related_anime} isLinked={true} />
+            <CustomFlatLIst
+               name={'Related'}
+               data={currentAnime.related_anime}
+               isLinked={true}
+               parentId={currentAnime.id}
+            />
             <CustomFlatLIst
                name={'Recommendations'}
                data={currentAnime.recommendations}
                isLinked={true}
+               parentId={currentAnime.id}
             />
             <StatisticBlock
                status={currentAnime.statistics.status}
@@ -192,6 +227,7 @@ const makeStyles = (colors: { colors: Colors } & Theme) =>
       container: {
          paddingVertical: 5,
          backgroundColor: colors.colors.background,
+         minHeight: '100%',
       },
       descriptionBlock: {
          padding: 5,

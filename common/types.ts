@@ -112,11 +112,23 @@ export type AnimeResponseType = {
    relation_type_formatted?: string
 }
 export type AppStatusType = 'success' | 'loading' | 'error'
-export type FilterScreenType = 'search' | 'myList' | 'season' | 'home'
+export type FilterScreenType = 'Search' | 'MyList' | 'Seasonal' | 'Home'
 export type AppType = {
    appStatus: AppStatusType
    error: string
-   filterScreen: FilterScreenType
+   backLinkSteps: FilterScreenType[] & string[]
+}
+export type BackLinkType = {
+   backLinkSteps: FilterScreenType[] & string[]
+   navigation:
+      | RootTabScreenProps<'Search'>
+      | RootTabScreenProps<'MyList'>
+      | RootTabScreenProps<'Seasonal'>
+      | RootTabScreenProps<'Home'>
+      | RootTabScreenProps<'AnimeItem'>
+      | RootTabScreenProps<'Filter'>
+   delLastLink: () => void
+   getLastAnime?: (value: string) => void
 }
 export type AuthType = {
    uid: string
@@ -128,6 +140,7 @@ export type SearchBlockType = {
 }
 export type CustomFlatListType = {
    name: string
+   parentId?: string
    data: AnimeResponseType[] | PictureSourceType[] | RelatedAnimeResponseType[]
    isLinked: boolean
 }

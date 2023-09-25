@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getSearchAnimeList, setCurrentPage } from '../bll/animeListReducer'
 import { AnimeItemShort } from '../components/AnimeItemShort'
@@ -11,8 +11,8 @@ import { LoadingIndicator } from '../components/LoadingIndicator'
 import { NotFound } from '../components/NotFound'
 import { useIsFocused } from '@react-navigation/native'
 import { PagesBlock } from '../components/PagesBlock'
-import { changeFilterScreen } from '../bll/appReducer'
 import ScrollViewOffset from 'react-native-scrollview-offset'
+import { addBackLinkStep } from '../bll/appReducer'
 
 export const Search = (navigator: RootTabScreenProps<'Search'>) => {
    const animeList = useAppSelector(state => state.animeList.homeAnimeList)
@@ -21,13 +21,14 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
    const lastRequest = useAppSelector(state => state.animeList.lastRequest)
    const currentPage = useAppSelector(state => state.animeList.currentPage)
    const pageSize = useAppSelector(state => state.animeList.pageSize)
+   const [toTopScreenPosition, setToTopScreenPosition] = useState(true)
    const isFocused = useIsFocused()
    const { theme } = useTheme()
    const styles = makeStyles(theme)
 
    const goFilterLink = () => {
       navigator.navigation.navigate('Filter')
-      dispatch(changeFilterScreen('search'))
+      dispatch(addBackLinkStep('Search'))
    }
    const getAnime = () => {
       lastRequest ? dispatch(getSearchAnimeList(lastRequest)) : dispatch(getSearchAnimeList())
@@ -38,16 +39,27 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
          getAnime()
       }
    }, [isFocused, myAnimeList, currentPage, pageSize])
+
    useEffect(() => {
       dispatch(setCurrentPage(0))
    }, [isFocused])
+
+   useEffect(() => {
+      setToTopScreenPosition(true)
+      setTimeout(() => {
+         setToTopScreenPosition(false)
+      }, 2000)
+   }, [isFocused, currentPage, pageSize])
 
    return (
       <View style={styles.container}>
          <LoadingIndicator />
          <ErrorMessage />
-         <SearchBlock goFilterLink={goFilterLink} filterScreen={'search'} />
-         <ScrollViewOffset contentOffset={{ x: 0, y: 0 }} style={{ height: '93%' }}>
+         <SearchBlock goFilterLink={goFilterLink} filterScreen={'Search'} />
+         <ScrollViewOffset
+            contentOffset={toTopScreenPosition ? { x: 0, y: 0 } : undefined}
+            style={{ height: '93%' }}
+         >
             {animeList.length === 0 ? (
                <NotFound />
             ) : (
@@ -57,7 +69,7 @@ export const Search = (navigator: RootTabScreenProps<'Search'>) => {
                         anime={a}
                         key={a.id}
                         navigator={navigator}
-                        backKey={'search'}
+                        backKey={'Search'}
                      />
                   ))}
                   <PagesBlock />

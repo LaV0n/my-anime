@@ -7,15 +7,18 @@ import { useAppDispatch, useAppSelector } from '../bll/store'
 import { getSearchAnimeList, setCurrentPage, setFilterData } from '../bll/animeListReducer'
 import { filterMyList, getMyAnimeList, setFilterMyListData } from '../bll/myDataReducer'
 import { YearSelect } from '../components/YearSelect'
+import { chooseBackLink } from '../utils/utils'
+import { delBackLinkStep } from '../bll/appReducer'
 
-export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
+export const Filter = (navigate: RootTabScreenProps<'Filter'>) => {
    const { theme } = useTheme()
    const styles = makeStyles(theme)
-   const filterScreen = useAppSelector(state => state.app.filterScreen)
+   const backLinkSteps = useAppSelector(state => state.app.backLinkSteps)
+   const lastBackLinkStep = backLinkSteps[backLinkSteps.length - 1]
    const filterSearchData = useAppSelector(state => state.animeList.filterData)
    const filterMyListData = useAppSelector(state => state.myData.filterData)
    const lastSearchRequest = useAppSelector(state => state.animeList.lastRequest)
-   const filterData = filterScreen === 'myList' ? filterMyListData : filterSearchData
+   const filterData = lastBackLinkStep === 'MyList' ? filterMyListData : filterSearchData
    const [sortByRating, setSortByRating] = useState(filterData.sortByRating)
    const [category, setCategory] = useState(filterData.category)
    const [genre, setGenre] = useState<string[]>(filterData.genre)
@@ -44,6 +47,9 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
       }
       setGenre(result)
    }
+   const delLastLink = () => {
+      dispatch(delBackLinkStep())
+   }
    const applyFilterHandler = async () => {
       const data: FilterDataType = {
          sortByRating,
@@ -55,37 +61,21 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
          mediaType,
       }
       dispatch(setCurrentPage(0))
-      if (filterScreen === 'myList') {
+      if (lastBackLinkStep === 'MyList') {
          dispatch(setFilterMyListData(data))
-         navigation.navigate('MyList')
          await dispatch(getMyAnimeList())
          dispatch(filterMyList())
       }
-      if (filterScreen === 'search') {
+      if (lastBackLinkStep === 'Search') {
          dispatch(setFilterData(data))
          dispatch(getSearchAnimeList(lastSearchRequest))
-         navigation.navigate('Search')
       }
-      if (filterScreen === 'season') {
+      if (lastBackLinkStep === 'Seasonal') {
          dispatch(setFilterData(data))
-         navigation.navigate('Seasonal')
       }
+      chooseBackLink({ backLinkSteps, navigation: navigate, delLastLink })
    }
    const resetFilterHAndler = () => {
-      const data: FilterDataType = {
-         sortByRating: 'all',
-         category: 'all',
-         genre: ['all'],
-         releaseFilter: 'all',
-         myStatus: 'all',
-         myStars: '0',
-         mediaType: 'unknown',
-      }
-      if (filterScreen === 'myList') {
-         dispatch(setFilterMyListData(data))
-      } else {
-         dispatch(setFilterData(data))
-      }
       setSortByRating('rating')
       setCategory('all')
       setGenre(['all'])
@@ -94,16 +84,8 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
       setMyStatus('all')
       setMediaType('unknown')
    }
-   const goBackHandler = () => {
-      if (filterScreen === 'myList') {
-         navigation.navigate('MyList')
-      }
-      if (filterScreen === 'search') {
-         navigation.navigate('Search')
-      }
-      if (filterScreen === 'season') {
-         navigation.navigate('Seasonal')
-      }
+   const goBackHandler = async () => {
+      await applyFilterHandler()
    }
 
    return (
@@ -149,7 +131,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                      <FilterButton name={'Music'} filterData={mediaType} callback={setMediaType} />
                   </View>
                </View>
-               {filterScreen === 'search' && (
+               {lastBackLinkStep === 'Search' && (
                   <>
                      <Text style={styles.titleName}>Category</Text>
                      <View style={styles.sortButtonBlock}>
@@ -204,7 +186,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                   <FilterButton name={'Supernatural'} filterData={genre} callback={addGenre} />
                   <FilterButton name={'Suspense'} filterData={genre} callback={addGenre} />
                </View>
-               {filterScreen !== 'season' && (
+               {lastBackLinkStep !== 'Seasonal' && (
                   <>
                      <Text style={styles.titleName}>Release Year</Text>
                      <View style={styles.sortButtonBlock}>
@@ -212,7 +194,7 @@ export const Filter = ({ navigation }: RootTabScreenProps<'Filter'>) => {
                      </View>
                   </>
                )}
-               {filterScreen === 'myList' && (
+               {lastBackLinkStep === 'MyList' && (
                   <>
                      <Text style={styles.titleName}>My Rating</Text>
                      <View style={styles.sortButtonBlock}>

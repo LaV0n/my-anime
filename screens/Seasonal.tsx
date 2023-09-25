@@ -11,9 +11,9 @@ import { ErrorMessage } from '../components/ErrorMessage'
 import { useIsFocused } from '@react-navigation/native'
 import { seasonKind } from '../utils/utils'
 import { ArchiveSeason } from '../components/ArchiveSeason'
-import { changeFilterScreen } from '../bll/appReducer'
 import { PagesBlock } from '../components/PagesBlock'
 import ScrollViewOffset from 'react-native-scrollview-offset'
+import { addBackLinkStep } from '../bll/appReducer'
 
 export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
    const { theme } = useTheme()
@@ -25,6 +25,7 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
       season: 'spring',
       year: '2023',
    })
+   const [toTopScreenPosition, setToTopScreenPosition] = useState(true)
    const currentPage = useAppSelector(state => state.animeList.currentPage)
    const pageSize = useAppSelector(state => state.animeList.pageSize)
    const myAnimeList = useAppSelector(state => state.myData.animeList)
@@ -55,7 +56,7 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
    }
 
    const goFilterLink = () => {
-      dispatch(changeFilterScreen('season'))
+      dispatch(addBackLinkStep('Seasonal'))
       navigator.navigation.navigate('Filter')
    }
    const getSeasonAnimeListHandler = () => {
@@ -90,6 +91,14 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
          getSeasonAnimeListHandler()
       }
    }, [isFocused, currentPage, pageSize, myAnimeList, seasonTab, archiveDate])
+
+   useEffect(() => {
+      setToTopScreenPosition(true)
+      setTimeout(() => {
+         setToTopScreenPosition(false)
+      }, 2000)
+   }, [isFocused, currentPage, pageSize, seasonTab, archiveDate])
+
    useEffect(() => {
       dispatch(setCurrentPage(0))
    }, [isFocused])
@@ -111,7 +120,7 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
             <ArchiveSeason archiveDate={archiveDate} setArchiveDate={setArchiveDate} />
          )}
          <ScrollViewOffset
-            contentOffset={{ x: 0, y: 0 }}
+            contentOffset={toTopScreenPosition ? { x: 0, y: 0 } : undefined}
             style={seasonTab === 'Archive' ? { height: '85%' } : { height: '93%' }}
          >
             {animeList.length === 0 || !animeList ? (
@@ -123,7 +132,7 @@ export const Seasonal = (navigator: RootTabScreenProps<'Seasonal'>) => {
                         anime={a}
                         key={a.id}
                         navigator={navigator}
-                        backKey={'season'}
+                        backKey={'Seasonal'}
                      />
                   ))}
                   <PagesBlock />

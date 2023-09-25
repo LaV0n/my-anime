@@ -5,9 +5,10 @@ import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { useAppDispatch } from '../bll/store'
 import { AnimeResponseType, CustomFlatListType, PictureSourceType } from '../common/types'
 import { defaultImg } from '../common/variables'
+import { addBackLinkStep } from '../bll/appReducer'
 
 const windowWidth = Dimensions.get('window').width
-export const CustomFlatLIst = ({ name, data, isLinked }: CustomFlatListType) => {
+export const CustomFlatLIst = ({ name, data, isLinked, parentId }: CustomFlatListType) => {
    const [visible, setVisible] = useState(false)
    const [uri, setUri] = useState<string>(defaultImg.girl)
    const { theme } = useTheme()
@@ -15,6 +16,7 @@ export const CustomFlatLIst = ({ name, data, isLinked }: CustomFlatListType) => 
    const dispatch = useAppDispatch()
 
    const openItem = (id: string) => {
+      dispatch(addBackLinkStep(parentId))
       dispatch(getCurrentAnimeItem(id))
    }
    const openCover = (url: string) => {

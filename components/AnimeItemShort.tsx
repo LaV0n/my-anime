@@ -6,8 +6,9 @@ import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button, Colors, Theme, useTheme } from '@rneui/themed'
 import { getCurrentAnimeItem } from '../bll/animeListReducer'
 import { statusAnimeItem, titleNameSelector } from '../utils/utils'
-import { changeFilterScreen } from '../bll/appReducer'
 import { CustomSelectList } from './CustomSelectList'
+import { defaultImg } from '../common/variables'
+import { addBackLinkStep } from '../bll/appReducer'
 
 export const AnimeItemShort = ({
    anime,
@@ -29,14 +30,19 @@ export const AnimeItemShort = ({
    }
    const getCurrentAnimeItemHandler = () => {
       dispatch(getCurrentAnimeItem(anime.id))
-      dispatch(changeFilterScreen(backKey))
+      dispatch(addBackLinkStep(backKey))
       navigator.navigation.navigate('AnimeItem')
    }
 
    return (
       <View style={styles.container}>
          <TouchableOpacity style={styles.pictureBlock} onPress={getCurrentAnimeItemHandler}>
-            <Image source={{ uri: anime.main_picture.medium }} style={styles.picture} />
+            <Image
+               source={{
+                  uri: anime.main_picture ? anime.main_picture.medium : defaultImg.animal,
+               }}
+               style={styles.picture}
+            />
             <Text style={styles.rating}>{anime.mean ? anime.mean : 0}</Text>
          </TouchableOpacity>
          <View style={styles.description}>

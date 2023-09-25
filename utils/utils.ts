@@ -1,10 +1,13 @@
 import {
    AnimeType,
+   BackLinkType,
+   CurrentAnimeType,
    FilterDataType,
-   FilterScreenType,
+   PictureSourceType,
    SeasonKindType,
    SeasonType,
 } from '../common/types'
+import { defaultImg } from '../common/variables'
 
 export const statusAnimeItem = (status: string | undefined) => {
    let result = 'currently'
@@ -53,6 +56,18 @@ export const filterAnimeListData = (animeList: AnimeType[], filter: FilterDataTy
    return result
 }
 
+export const checkingImg = (animeData: AnimeType[] | CurrentAnimeType) => {
+   const noPic: PictureSourceType = {
+      medium: defaultImg.noImg,
+      large: defaultImg.noImg,
+   }
+   if (Array.isArray(animeData)) {
+      return animeData.map(a => (a.main_picture ? a : { ...a, main_picture: noPic }))
+   } else {
+      return animeData.main_picture ? animeData : { ...animeData, main_picture: noPic }
+   }
+}
+
 export const seasonKind = ({ type }: SeasonKindType): SeasonType => {
    let date = new Date().getMonth()
    if (type === 'next') date += 3
@@ -83,18 +98,26 @@ export const seasonKind = ({ type }: SeasonKindType): SeasonType => {
          return 'spring'
    }
 }
-export const chooseBackLink = (link: FilterScreenType) => {
-   switch (link) {
-      case 'home':
-         return 'Home'
-      case 'season':
-         return 'Seasonal'
-      case 'myList':
-         return 'MyList'
-      case 'search':
-         return 'Search'
+export const chooseBackLink = ({
+   backLinkSteps,
+   navigation,
+   delLastLink,
+   getLastAnime,
+}: BackLinkType) => {
+   const lastStep = backLinkSteps[backLinkSteps.length - 1]
+   delLastLink()
+   if (
+      lastStep === 'Search' ||
+      lastStep === 'MyList' ||
+      lastStep === 'Seasonal' ||
+      lastStep === 'Home'
+   ) {
+      return navigation.navigation.navigate(lastStep)
+   } else {
+      return getLastAnime ? getLastAnime(lastStep) : undefined
    }
 }
+
 export const titleNameSelector = (anime: AnimeType) => {
    if (anime.alternative_titles && anime.alternative_titles.en) return anime.alternative_titles.en
    else {
