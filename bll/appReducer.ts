@@ -18,7 +18,16 @@ const slice = createSlice({
          state.error = action.payload
       },
       addBackLinkStep(state, action: PayloadAction<FilterScreenType | string>) {
-         state.backLinkSteps.push(action.payload)
+         if (
+            action.payload === 'Search' ||
+            action.payload === 'MyList' ||
+            action.payload === 'Seasonal' ||
+            action.payload === 'Home'
+         ) {
+            state.backLinkSteps = [action.payload]
+         } else {
+            state.backLinkSteps.push(action.payload)
+         }
       },
       delBackLinkStep(state) {
          state.backLinkSteps.pop()

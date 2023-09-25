@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { BackHandler, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../bll/store'
 import { Button, Colors, Icon, Theme, useTheme } from '@rneui/themed'
 import { RootTabScreenProps } from '../common/types'
@@ -15,6 +15,7 @@ import { StatisticBlock } from '../components/StatisticBlock'
 import { ProgressLine } from '../components/ProgressLine'
 import ScrollViewOffset from 'react-native-scrollview-offset'
 import { delBackLinkStep } from '../bll/appReducer'
+import { useFocusEffect } from '@react-navigation/native'
 
 export const AnimeItem = (navigate: RootTabScreenProps<'AnimeItem'>) => {
    const currentAnime = useAppSelector(state => state.animeList.currentAnimeItem)
@@ -34,14 +35,38 @@ export const AnimeItem = (navigate: RootTabScreenProps<'AnimeItem'>) => {
    const toggleViewMode = () => {
       setViewMore(!viewMore)
    }
-   if (!currentAnime) {
-      return <LoadingIndicator />
-   }
    const delLastLink = () => {
       dispatch(delBackLinkStep())
    }
    const getLastAnime = (item: string) => {
       dispatch(getCurrentAnimeItem(item))
+   }
+   const onBackButtonHandler = () => {
+      chooseBackLink({
+         backLinkSteps,
+         navigation: navigate,
+         delLastLink,
+         getLastAnime,
+      })
+   }
+
+   useFocusEffect(
+      React.useCallback(() => {
+         const onBackPress = () => {
+            if (backLinkSteps) {
+               onBackButtonHandler()
+               return true
+            } else {
+               return false
+            }
+         }
+         const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+         return () => subscription.remove()
+      }, [backLinkSteps])
+   )
+   if (!currentAnime) {
+      return <LoadingIndicator />
    }
 
    return (
@@ -53,17 +78,7 @@ export const AnimeItem = (navigate: RootTabScreenProps<'AnimeItem'>) => {
                   colors={[theme.colors.grey2, 'transparent']}
                   style={styles.upperBlock}
                >
-                  <TouchableOpacity
-                     onPress={() =>
-                        chooseBackLink({
-                           backLinkSteps,
-                           navigation: navigate,
-                           delLastLink,
-                           getLastAnime,
-                        })
-                     }
-                     style={styles.goBackLink}
-                  >
+                  <TouchableOpacity onPress={onBackButtonHandler} style={styles.goBackLink}>
                      <Icon name={'arrow-back'} color={theme.colors.white} />
                   </TouchableOpacity>
                </LinearGradient>
