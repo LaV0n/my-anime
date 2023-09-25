@@ -4,10 +4,10 @@ import { collection, getDocs, deleteDoc, doc, addDoc, updateDoc } from 'firebase
 import { db } from '../config/firebase'
 import { AnimeType, RequestItemType, SeasonDateType } from '../common/types'
 
-const instance = axios.create({
+export const instance = axios.create({
    baseURL: 'https://api.myanimelist.net',
 })
-const anonymousParams = {
+export const anonymousParams = {
    headers: {
       'X-MAL-CLIENT-ID': MY_API_KEY,
    },
