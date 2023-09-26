@@ -1,4 +1,4 @@
-import { AnimeType, CurrentAnimeType } from '../common/types'
+import { AnimeResponseType, AnimeType, CurrentAnimeType } from '../common/types'
 
 export const testAnimeItem1: AnimeType = {
    id: '001',
@@ -46,7 +46,7 @@ export const testAnimeItem2: AnimeType = {
    myProgress: 0,
    idDoc: 'testIDDoc2',
 }
-export const responseAnimeTestItem: CurrentAnimeType = {
+export const currentAnimeTestItem: CurrentAnimeType = {
    id: '003',
    title: 'test Title 3',
    alternative_titles: {
@@ -92,4 +92,68 @@ export const responseAnimeTestItem: CurrentAnimeType = {
       },
       num_list_users: 100,
    },
+}
+export const responseShortTestItem = {
+   id: '001',
+   title: 'test Title 1',
+   alternative_titles: {
+      synonyms: ['test synonyms 1'],
+      en: 'test english title 1',
+      ja: 'test japanese title 1',
+   },
+   main_picture: {
+      medium: 'medium src test 1 img',
+      large: 'large src test 1 img',
+   },
+   start_date: '19-03-1989',
+   mean: 9,
+   status: 'finished_airing',
+   genres: [{ id: 1, name: 'action' }],
+   media_type: 'movie',
+   num_episodes: '13',
+}
+export const responseTestAnimeItem: AnimeResponseType = {
+   node: {
+      id: '001',
+      title: 'test Title 1',
+      alternative_titles: {
+         synonyms: ['test synonyms 1'],
+         en: 'test english title 1',
+         ja: 'test japanese title 1',
+      },
+      main_picture: {
+         medium: 'medium src test 1 img',
+         large: 'large src test 1 img',
+      },
+      start_date: '19-03-1989',
+      mean: 9,
+      status: 'finished_airing',
+      genres: [{ id: 1, name: 'action' }],
+      media_type: 'movie',
+      num_episodes: '13',
+   },
+   relation_type_formatted: 'string',
+}
+export const testNewAnimeItem: AnimeType = {
+   id: '001',
+   title: 'test Title 1',
+   alternative_titles: {
+      synonyms: ['test synonyms 1'],
+      en: 'test english title 1',
+      ja: 'test japanese title 1',
+   },
+   main_picture: {
+      medium: 'medium src test 1 img',
+      large: 'large src test 1 img',
+   },
+   start_date: '19-03-1989',
+   mean: 9,
+   status: 'finished_airing',
+   genres: [{ id: 1, name: 'action' }],
+   media_type: 'movie',
+   num_episodes: '13',
+   myStatus: 'planned',
+   myRating: 0,
+   myProgress: 0,
+   idDoc: '',
 }

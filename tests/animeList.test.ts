@@ -1,8 +1,11 @@
-import { CommonListType, FilterDataType } from '../common/types'
+import { CommonListType, FilterDataType, SeasonDateType } from '../common/types'
 import {
    animeListReducer,
    getCurrentAnimeItem,
    getRandomAnimeItem,
+   getSearchAnimeList,
+   getSeasonAnimeList,
+   getShortAnimeList,
    setCurrentPage,
    setFilterData,
    setLastSearchRequest,
@@ -11,7 +14,13 @@ import {
 import MockAdapter from 'axios-mock-adapter'
 import { setupStore } from '../utils/test-utils'
 import { instance } from '../api/api'
-import { responseAnimeTestItem, testAnimeItem1 } from './testData'
+import {
+   currentAnimeTestItem,
+   responseShortTestItem,
+   responseTestAnimeItem,
+   testAnimeItem1,
+   testNewAnimeItem,
+} from './testData'
 
 let state: CommonListType = {
    homeAnimeList: [],
@@ -44,7 +53,32 @@ const mockNetworkRequests = () => {
       .onGet(
          'v2/anime/100?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,media_type,status,genres,num_episodes,source,rating,pictures,related_anime,recommendations,studios,statistics'
       )
-      .reply(200, responseAnimeTestItem)
+      .reply(200, currentAnimeTestItem)
+   mock
+      .onGet(
+         'v2/anime?q=sailor&limit=50&fields=start_date,end_date,mean,status,alternative_titles,genres,media_type,num_episodes&offset=0'
+      )
+      .reply(200, { data: [responseTestAnimeItem] })
+   mock
+      .onGet(
+         'v2/anime/ranking?ranking_type=all&limit=50&fields=start_date,end_date,mean,alternative_titles,media_type,status,genres,num_episodes&offset=0'
+      )
+      .reply(200, { data: [responseTestAnimeItem] })
+   mock
+      .onGet(
+         'v2/anime/ranking?ranking_type=airing&fields=start_date,end_date,mean,status,alternative_titles,genres,num_episode,media_types&limit=5&offset=0'
+      )
+      .reply(200, { data: [responseShortTestItem] })
+   mock
+      .onGet(
+         'v2/anime/ranking?ranking_type=bypopularity&fields=start_date,end_date,mean,status,alternative_titles,genres,num_episode,media_types&limit=5&offset=0'
+      )
+      .reply(200, { data: [responseShortTestItem] })
+   mock
+      .onGet(
+         'v2/anime/season/2007/summer?fields=start_date,end_date,mean,status,genres,alternative_titles,media_type,num_episodes&offset=0&limit=50'
+      )
+      .reply(200, { data: [responseTestAnimeItem] })
 }
 
 const unMockNetworkRequests = () => {
@@ -125,6 +159,35 @@ describe('anime list slice tests', () => {
    test('get current anime', async () => {
       await mockedStore.dispatch(getCurrentAnimeItem('100'))
       const currentAnimeItem = mockedStore.getState().animeList.currentAnimeItem
-      expect(currentAnimeItem).toEqual(responseAnimeTestItem)
+      expect(currentAnimeItem).toEqual(currentAnimeTestItem)
+   })
+   test('get search anime list', async () => {
+      await mockedStore.dispatch(getSearchAnimeList('sailor'))
+      const searchAnimeList = mockedStore.getState().animeList.homeAnimeList
+      expect(searchAnimeList[0]).toEqual(testNewAnimeItem)
+   })
+   test('get clean search request ', async () => {
+      await mockedStore.dispatch(getSearchAnimeList())
+      const searchAnimeList = mockedStore.getState().animeList.homeAnimeList
+      expect(searchAnimeList[0]).toEqual(testNewAnimeItem)
+   })
+   test('get new anime list', async () => {
+      await mockedStore.dispatch(getShortAnimeList('airing'))
+      const newAnimeList = mockedStore.getState().animeList.newAnimeList
+      expect(newAnimeList[0]).toEqual(responseShortTestItem)
+   })
+   test('get new anime list', async () => {
+      await mockedStore.dispatch(getShortAnimeList('bypopularity'))
+      const topAnimeList = mockedStore.getState().animeList.topAnimeList
+      expect(topAnimeList[0]).toEqual(responseShortTestItem)
+   })
+   test('get season summer 2007 anime list', async () => {
+      const seasonData: SeasonDateType = {
+         year: '2007',
+         season: 'summer',
+      }
+      await mockedStore.dispatch(getSeasonAnimeList(seasonData))
+      const seasonAnimeList = mockedStore.getState().animeList.homeAnimeList
+      expect(seasonAnimeList[0]).toEqual(testNewAnimeItem)
    })
 })

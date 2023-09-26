@@ -102,7 +102,7 @@ export type AnimeResponseType = {
       }
       main_picture: PictureSourceType
       start_date: string
-      end_date: string
+      end_date?: string
       media_type: string
       mean: number
       status: string
